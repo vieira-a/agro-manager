@@ -31,3 +31,7 @@ Mostra como será aplicado o padrão Repository para abstrair acesso ao banco de
 - [ADR 003 Definição do agregado Produtor](https://github.com/vieira-a/agro-manager/blob/main/docs/adr/003-producer-aggregate-root-definition.md)
 
 Mostra a definição do `Producer` como raiz de um agragado que encapsula `Farm`, `Harvest` e `Crop`, garantindo consistência dos dados desde a criação do produtor.
+
+- [ADR 004 Validação de CPF e CNPJ](https://github.com/vieira-a/agro-manager/blob/main/docs/adr/004-cpf-cnpj-validator.md)
+
+Mostra a definição de uma estratégia para validação de CPF ou CNPJ do `Producer` no momento da sua criação, garantindo coesão e imutabilidade.
