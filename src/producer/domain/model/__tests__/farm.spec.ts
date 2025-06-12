@@ -34,6 +34,11 @@ describe('Farm', () => {
     expect(farm).toBeInstanceOf(Farm);
   });
 
+  it('should create a farm successfully without harvest', () => {
+    const farm = Farm.create({ ...validProps, harvest: undefined });
+    expect(farm).toBeInstanceOf(Farm);
+  });
+
   it('should throw if name is empty', () => {
     expect(() => Farm.create({ ...validProps, name: '' })).toThrow(
       InvalidFarmParamException,
