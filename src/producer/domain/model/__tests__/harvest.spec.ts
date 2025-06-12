@@ -28,4 +28,10 @@ describe('Harvest', () => {
       Harvest.create({ ...validProps, year: undefined as any }),
     ).toThrow(UnprocessableEntityException);
   });
+
+  it('should throw if crops array is empty', () => {
+    expect(() => Harvest.create({ ...validProps, crops: [] })).toThrow(
+      UnprocessableEntityException,
+    );
+  });
 });
