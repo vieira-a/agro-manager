@@ -56,4 +56,14 @@ describe('Producer', () => {
       }),
     ).toThrow(UnprocessableEntityException);
   });
+
+  it('should throw if document is null', () => {
+    expect(() =>
+      Producer.create({
+        document: null as any,
+        name: 'João da Silva',
+        farm: validFarm,
+      }),
+    ).toThrow(UnprocessableEntityException);
+  });
 });
