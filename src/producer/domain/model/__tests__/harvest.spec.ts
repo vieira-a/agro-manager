@@ -1,3 +1,4 @@
+import { UnprocessableEntityException } from '@nestjs/common';
 import { Crop } from '../crop';
 import { Harvest } from '../harvest';
 
@@ -14,5 +15,11 @@ describe('Harvest', () => {
   it('should create a harvest successfully with valid data', () => {
     const harvest = Harvest.create(validProps);
     expect(harvest).toBeInstanceOf(Harvest);
+  });
+
+  it('should throw if description is empty', () => {
+    expect(() => Harvest.create({ ...validProps, description: '' })).toThrow(
+      UnprocessableEntityException,
+    );
   });
 });
