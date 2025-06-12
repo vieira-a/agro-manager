@@ -16,4 +16,10 @@ describe('CNPJValidator', () => {
     const invalidCNPJ = '11111111111111';
     expect(validator.validate(invalidCNPJ)).toBe(false);
   });
+
+  it('should format the CNPJ correctly', () => {
+    const rawCNPJ = '11444777000161';
+    const formattedCNPJ = '11.444.777/0001-61';
+    expect(validator.format(rawCNPJ)).toBe(formattedCNPJ);
+  });
 });
