@@ -1,5 +1,5 @@
-import { UnprocessableEntityException } from '@nestjs/common';
 import { randomUUID } from 'crypto';
+import { InvalidCropParamException } from '../exception';
 
 type CropProps = {
   id: string;
@@ -22,7 +22,7 @@ export class Crop {
 
   validate() {
     if (!this.name) {
-      throw new UnprocessableEntityException('Nome da cultura é obrigatório');
+      throw new InvalidCropParamException('Nome');
     }
   }
 }
