@@ -1,7 +1,6 @@
 import { DocumentValidatorFactory } from '../document-validator.factory';
 import { CPF } from '../cpf';
 import { CNPJ } from '../cnpj';
-import { UnprocessableEntityException } from '@nestjs/common';
 import { InvalidDocumentException } from '../../exception';
 
 describe('DocumentValidatorFactory', () => {
