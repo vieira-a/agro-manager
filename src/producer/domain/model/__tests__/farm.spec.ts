@@ -34,4 +34,10 @@ describe('Farm', () => {
       UnprocessableEntityException,
     );
   });
+
+  it('should throw if totalArea is less than sum of agriculturalArea and vegetationArea', () => {
+    expect(() => Farm.create({ ...validProps, totalArea: 80 })).toThrow(
+      UnprocessableEntityException,
+    );
+  });
 });
