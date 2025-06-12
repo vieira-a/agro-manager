@@ -2,7 +2,7 @@
 
 | Responsável     | Criado em  | Versão | Atualizado em | Status |
 | --------------- | ---------- | ------ | ------------- | ------ |
-| Anderson Vieira | 2025-10-07 | 001    | 2025-10-07    | Aceito |
+| Anderson Vieira | 2025-10-07 | 001    | 2025-10-12    | Substituida pela [ADR-005](https://github.com/vieira-a/agro-manager/blob/main/docs/adr/005-producer-aggregate-root-revised.md) |
 
 ## Contexto
 
@@ -39,3 +39,8 @@ Com isso, o agregado `Producer` será responsável por manter a consistência de
 ## Alternativas Consideradas
 
 - Criar domínios próprios para `Farm`, `Harvest` e `Crop`: rejeitado para este caso, pois implicaria em um domínio excessivamente granular, visto que o requisito principal do teste técnico é a criação do Produtor `Producer`
+
+## Revisão e Atualização
+
+Esta ADR foi substituída parcialmente pela [ADR-005](https://github.com/vieira-a/agro-manager/blob/main/docs/adr/005-producer-aggregate-root-revised.md), trazendo maior flexibilidade para o processo de criação do produtor.
+
