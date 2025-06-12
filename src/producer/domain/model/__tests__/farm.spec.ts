@@ -1,3 +1,4 @@
+import { UnprocessableEntityException } from '@nestjs/common';
 import { Farm } from '../farm';
 
 describe('Farm', () => {
@@ -14,5 +15,11 @@ describe('Farm', () => {
   it('should create a farm successfully with valid data', () => {
     const farm = Farm.create(validProps);
     expect(farm).toBeInstanceOf(Farm);
+  });
+
+  it('should throw if name is empty', () => {
+    expect(() => Farm.create({ ...validProps, name: '' })).toThrow(
+      UnprocessableEntityException,
+    );
   });
 });
