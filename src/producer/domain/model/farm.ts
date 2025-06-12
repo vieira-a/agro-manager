@@ -26,10 +26,7 @@ export class Farm {
     private readonly totalArea: number,
     private readonly agriculturalArea: number,
     private readonly vegetationArea: number,
-    harvest?: Harvest,
-  ) {
-    this.harvest = harvest;
-  }
+  ) {}
 
   static create(props: FarmProps): Farm {
     const name = props.name.trim();
@@ -44,11 +41,10 @@ export class Farm {
       props.totalArea,
       props.agriculturalArea,
       props.vegetationArea,
-      props.harvest,
     );
 
     if (props.harvest) {
-      props.harvest.validate();
+      farm.addHarvest(props.harvest);
     }
 
     farm.validate();
