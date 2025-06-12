@@ -40,4 +40,32 @@ describe('ProducerApplicationService', () => {
     const farm = producer.getFarms()[0];
     expect(farm.getHarvest()).toBeUndefined();
   });
+
+  it('should create a producer with farm and harvest', async () => {
+    const input: CreateProducerDto = {
+      name: 'João da Silva',
+      document: '09779679057',
+      farm: {
+        name: 'Fazenda Monte Alto',
+        city: 'Cruz das Almas',
+        state: 'BA',
+        totalArea: 100,
+        agriculturalArea: 60,
+        vegetationArea: 40,
+        harvest: {
+          description: 'Safra de Milho 2025',
+          year: 2025,
+          crop: {
+            name: 'Milho',
+          },
+        },
+      },
+    };
+
+    const producer = await service.create(input);
+
+    const farm = producer.getFarms()[0];
+    const harvest = farm.getHarvest();
+    expect(harvest).toBeDefined();
+  });
 });
