@@ -1,4 +1,5 @@
 import { CPF } from '../cpf';
+import { InvalidDocumentException } from '../../exception';
 import { DocumentValidator } from '../document-validator.interface';
 
 describe('CPF', () => {
@@ -19,5 +20,13 @@ describe('CPF', () => {
   it('should format the CPF if format method is available', () => {
     const cpf = new CPF(validCPF, mockValidator);
     expect(cpf.format()).toBe(`formatted-${normalizedCPF}`);
+  });
+
+  it('should return raw value in format if format method is not provided', () => {
+    const validatorWithoutFormat: DocumentValidator = {
+      validate: jest.fn(() => true),
+    };
+    const cpf = new CPF(validCPF, validatorWithoutFormat);
+    expect(cpf.format()).toBe(normalizedCPF);
   });
 });
