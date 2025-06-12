@@ -22,4 +22,10 @@ describe('Farm', () => {
       UnprocessableEntityException,
     );
   });
+
+  it('should throw if city is empty', () => {
+    expect(() => Farm.create({ ...validProps, city: '' })).toThrow(
+      UnprocessableEntityException,
+    );
+  });
 });
