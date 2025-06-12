@@ -1,6 +1,7 @@
 import { UnprocessableEntityException } from '@nestjs/common';
 import { Crop } from './crop';
 import { randomUUID } from 'crypto';
+import { InvalidHarvestParamException } from '../exception';
 
 type HarvestProps = {
   id: string;
@@ -33,19 +34,15 @@ export class Harvest {
 
   validate() {
     if (!this.description) {
-      throw new UnprocessableEntityException(
-        'A descrição da Safra é obrigatória',
-      );
+      throw new InvalidHarvestParamException('Descrição');
     }
 
     if (!this.year) {
-      throw new UnprocessableEntityException('O ano da Safra é obrigatório');
+      throw new InvalidHarvestParamException('Ano');
     }
 
     if (!this.crop) {
-      throw new UnprocessableEntityException(
-        'É necessário informar ao menos uma cultura para a safra',
-      );
+      throw new InvalidHarvestParamException('Cultura');
     }
   }
 }
