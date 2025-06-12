@@ -22,4 +22,10 @@ describe('Harvest', () => {
       UnprocessableEntityException,
     );
   });
+
+  it('should throw if year is not provided', () => {
+    expect(() =>
+      Harvest.create({ ...validProps, year: undefined as any }),
+    ).toThrow(UnprocessableEntityException);
+  });
 });
