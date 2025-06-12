@@ -2,7 +2,7 @@
 
 | Responsável     | Criado em  | Versão | Atualizado em | Status |
 | --------------- | ---------- | ------ | ------------- | ------ |
-| Anderson Vieira | 2025-10-07 | 001    | 2025-10-12    | Substituida pela [ADR-005](https://github.com/vieira-a/agro-manager/blob/main/docs/adr/005-producer-aggregate-root-revised.md) |
+| Anderson Vieira | 10-06-2025 | 001    | 12-06-2025   | Substituida pela [ADR-005](https://github.com/vieira-a/agro-manager/blob/main/docs/adr/005-producer-aggregate-root-revised.md) |
 
 ## Contexto
 
