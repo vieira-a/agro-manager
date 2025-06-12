@@ -1,3 +1,4 @@
+import { UnprocessableEntityException } from '@nestjs/common';
 import { DocumentValidatorFactory } from '../document-validator.factory';
 import { Farm } from '../farm';
 import { Producer } from '../producer';
@@ -34,5 +35,15 @@ describe('Producer', () => {
     });
 
     expect(producer).toBeInstanceOf(Producer);
+  });
+
+  it('should throw if name is empty', () => {
+    expect(() =>
+      Producer.create({
+        document: validCPF,
+        name: '',
+        farm: validFarm,
+      }),
+    ).toThrow(UnprocessableEntityException);
   });
 });

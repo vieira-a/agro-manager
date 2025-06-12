@@ -19,7 +19,7 @@ export class Producer {
   ) {}
 
   static create(props: ProducerProps) {
-    const name = this.name.trim();
+    const name = props.name.trim();
 
     const producer = new Producer(
       randomUUID(),
