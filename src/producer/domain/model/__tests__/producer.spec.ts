@@ -46,4 +46,14 @@ describe('Producer', () => {
       }),
     ).toThrow(UnprocessableEntityException);
   });
+
+  it('should throw if farm is not provided', () => {
+    expect(() =>
+      Producer.create({
+        document: validCPF,
+        name: 'João da Silva',
+        farm: null as any,
+      }),
+    ).toThrow(UnprocessableEntityException);
+  });
 });
