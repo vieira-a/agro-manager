@@ -15,4 +15,9 @@ describe('CNPJ', () => {
     expect(cnpj.toString()).toBe(normalizedCNPJ);
     expect(mockValidator.validate).toHaveBeenCalledWith(normalizedCNPJ);
   });
+
+  it('should format the CNPJ if format method is available', () => {
+    const cnpj = new CNPJ(validCNPJ, mockValidator);
+    expect(cnpj.format()).toBe(`formatted-${normalizedCNPJ}`);
+  });
 });
