@@ -2,10 +2,23 @@ import { UnprocessableEntityException } from '@nestjs/common';
 import { DocumentValidatorFactory } from '../document-validator.factory';
 import { Farm } from '../farm';
 import { Producer } from '../producer';
+import { Crop } from '../crop';
+import { Harvest } from '../harvest';
 
 describe('Producer', () => {
   const validCPF = DocumentValidatorFactory.create('66452197096');
   const validCNPJ = DocumentValidatorFactory.create('11444777000161');
+
+  const crops = [Crop.create({ name: 'Milho' }), Crop.create({ name: 'Soja' })];
+
+  const harvests = [
+    Harvest.create({
+      id: '34b47b6a-27f7-4480-996d-1254194caa91',
+      description: 'Safra 2024',
+      year: 2024,
+      crops: crops,
+    }),
+  ];
 
   const validFarm = Farm.create({
     name: 'Fazenda Teste',
@@ -14,10 +27,10 @@ describe('Producer', () => {
     totalArea: 100,
     agriculturalArea: 50,
     vegetationArea: 30,
-    harvest: [],
+    harvest: harvests,
   });
 
-  it('should create a valid Producer with valid CPF and Farm', () => {
+  it('should create a valid Producer with valid CPF and all nested entities', () => {
     const producer = Producer.create({
       document: validCPF,
       name: 'John Doe',
