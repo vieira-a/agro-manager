@@ -29,4 +29,14 @@ describe('CPF', () => {
     const cpf = new CPF(validCPF, validatorWithoutFormat);
     expect(cpf.format()).toBe(normalizedCPF);
   });
+
+  it('should throw InvalidDocumentException for invalid CPF', () => {
+    const invalidValidator: DocumentValidator = {
+      validate: jest.fn(() => false),
+    };
+
+    expect(() => new CPF(validCPF, invalidValidator)).toThrow(
+      InvalidDocumentException,
+    );
+  });
 });
