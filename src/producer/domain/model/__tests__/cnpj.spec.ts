@@ -1,4 +1,5 @@
 import { CNPJ } from '../cnpj';
+import { InvalidDocumentException } from '../../exception';
 import { DocumentValidator } from '../document-validator.interface';
 
 describe('CNPJ', () => {
@@ -27,5 +28,15 @@ describe('CNPJ', () => {
     };
     const cnpj = new CNPJ(validCNPJ, validatorWithoutFormat);
     expect(cnpj.format()).toBe(normalizedCNPJ);
+  });
+
+  it('should throw InvalidDocumentException for invalid CNPJ', () => {
+    const invalidValidator: DocumentValidator = {
+      validate: jest.fn(() => false),
+    };
+
+    expect(() => new CNPJ(validCNPJ, invalidValidator)).toThrow(
+      InvalidDocumentException,
+    );
   });
 });
