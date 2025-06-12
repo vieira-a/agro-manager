@@ -15,4 +15,9 @@ describe('CPF', () => {
     expect(cpf.toString()).toBe(normalizedCPF);
     expect(mockValidator.validate).toHaveBeenCalledWith(normalizedCPF);
   });
+
+  it('should format the CPF if format method is available', () => {
+    const cpf = new CPF(validCPF, mockValidator);
+    expect(cpf.format()).toBe(`formatted-${normalizedCPF}`);
+  });
 });
