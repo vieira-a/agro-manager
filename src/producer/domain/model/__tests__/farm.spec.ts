@@ -1,7 +1,8 @@
-import { UnprocessableEntityException } from '@nestjs/common';
 import { Farm } from '../farm';
-import { InvalidFarmParamException } from '../../exception/invalid-farm-param.exception';
-import { InvalidFarmAreaException } from '../../exception/invalid-farm-area.exception';
+import {
+  InvalidFarmParamException,
+  InvalidFarmAreaException,
+} from '../../exception';
 
 describe('Farm', () => {
   const validProps = {

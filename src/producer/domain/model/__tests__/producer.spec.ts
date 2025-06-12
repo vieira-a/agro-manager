@@ -1,10 +1,9 @@
-import { UnprocessableEntityException } from '@nestjs/common';
 import { DocumentValidatorFactory } from '../document-validator.factory';
 import { Farm } from '../farm';
 import { Producer } from '../producer';
 import { Crop } from '../crop';
 import { Harvest } from '../harvest';
-import { InvalidProducerParamException } from '../../exception/invalid-producer-param.exception';
+import { InvalidProducerParamException } from '../../exception';
 
 describe('Producer', () => {
   const validCPF = DocumentValidatorFactory.create('66452197096');
