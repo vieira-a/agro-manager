@@ -34,6 +34,13 @@ describe('Farm', () => {
     expect(farm).toBeInstanceOf(Farm);
   });
 
+  it('should allow adding a harvest to an existing farm', () => {
+    const farm = Farm.create(validProps);
+
+    farm.addHarvest(validHarvest);
+    expect(farm.getHarvest()).toBe(validHarvest);
+  });
+
   it('should create a farm successfully without harvest', () => {
     const farm = Farm.create({ ...validProps, harvest: undefined });
     expect(farm).toBeInstanceOf(Farm);

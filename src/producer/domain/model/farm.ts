@@ -1,8 +1,9 @@
 import { randomUUID } from 'crypto';
 import { Harvest } from './harvest';
-import { UnprocessableEntityException } from '@nestjs/common';
-import { InvalidFarmParamException } from '../exception/invalid-farm-param.exception';
-import { InvalidFarmAreaException } from '../exception/invalid-farm-area.exception';
+import {
+  InvalidFarmParamException,
+  InvalidFarmAreaException,
+} from '../exception/';
 
 type FarmProps = {
   name: string;
@@ -56,12 +57,6 @@ export class Farm {
 
   addHarvest(harvest: Harvest) {
     harvest.validate();
-
-    if (this.harvest) {
-      throw new InvalidFarmParamException(
-        'Apenas 1 safra pode ser adicionada ao criar uma fazenda',
-      );
-    }
     this.harvest = harvest;
   }
 
