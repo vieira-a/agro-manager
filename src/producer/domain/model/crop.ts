@@ -2,7 +2,6 @@ import { randomUUID } from 'crypto';
 import { InvalidCropParamException } from '../exception';
 
 type CropProps = {
-  id: string;
   name: string;
 };
 

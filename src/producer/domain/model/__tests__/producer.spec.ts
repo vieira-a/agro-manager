@@ -10,18 +10,14 @@ describe('Producer', () => {
   const validCNPJ = DocumentValidatorFactory.create('11444777000161');
 
   const crop = Crop.create({
-    id: 'e2945ac5-0223-406b-b6e6-0f218dc167c8',
     name: 'Milho',
   });
 
-  const harvests = [
-    Harvest.create({
-      id: '34b47b6a-27f7-4480-996d-1254194caa91',
-      description: 'Safra 2024',
-      year: 2024,
-      crop: crop,
-    }),
-  ];
+  const harvests = Harvest.create({
+    description: 'Safra 2024',
+    year: 2024,
+    crop: crop,
+  });
 
   const validFarm = Farm.create({
     name: 'Fazenda Teste',
@@ -43,6 +39,18 @@ describe('Producer', () => {
     expect(producer).toBeInstanceOf(Producer);
   });
 
+  it('should allow adding a farm to an existing producer', () => {
+    const producer = Producer.create({
+      document: validCPF,
+      name: 'João da Silva',
+    });
+
+    producer.addFarm(validFarm);
+
+    expect(producer.getFarms()).toHaveLength(1);
+    expect(producer.getFarms()[0]).toBe(validFarm);
+  });
+
   it('should create a Producer with valid CNPJ document and Farm', () => {
     const producer = Producer.create({
       document: validCNPJ,
@@ -53,22 +61,23 @@ describe('Producer', () => {
     expect(producer).toBeInstanceOf(Producer);
   });
 
+  it('should throw if trying to add an invalid farm', () => {
+    const producer = Producer.create({
+      document: validCPF,
+      name: 'João da Silva',
+    });
+
+    expect(() => producer.addFarm(null as any)).toThrow(
+      InvalidProducerParamException,
+    );
+  });
+
   it('should throw if name is empty', () => {
     expect(() =>
       Producer.create({
         document: validCPF,
         name: '',
         farm: validFarm,
-      }),
-    ).toThrow(InvalidProducerParamException);
-  });
-
-  it('should throw if farm is not provided', () => {
-    expect(() =>
-      Producer.create({
-        document: validCPF,
-        name: 'João da Silva',
-        farm: null as any,
       }),
     ).toThrow(InvalidProducerParamException);
   });

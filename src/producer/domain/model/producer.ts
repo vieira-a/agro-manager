@@ -7,42 +7,51 @@ import { InvalidProducerParamException } from '../exception/invalid-producer-par
 type ProducerProps = {
   document: CPF | CNPJ;
   name: string;
-  farm: Farm;
+  farm?: Farm;
 };
 
 export class Producer {
+  private readonly farms: Farm[] = [];
+
   private constructor(
     private readonly id: string,
     private readonly document: CPF | CNPJ,
     private readonly name: string,
-    private readonly farm: Farm,
   ) {}
 
   static create(props: ProducerProps) {
     const name = props.name.trim();
 
-    const producer = new Producer(
-      randomUUID(),
-      props.document,
-      name,
-      props.farm,
-    );
+    const producer = new Producer(randomUUID(), props.document, name);
+
+    if (props.farm) {
+      producer.addFarm(props.farm);
+    }
 
     producer.validate();
     return producer;
   }
 
-  validate() {
+  addFarm(farm: Farm): void {
+    if (!farm) {
+      throw new InvalidProducerParamException('Fazenda');
+    }
+
+    farm.validate();
+    this.farms.push(farm);
+  }
+
+  getFarms(): ReadonlyArray<Farm> {
+    return [...this.farms];
+  }
+
+  validate(): void {
     if (!this.name) {
       throw new InvalidProducerParamException('Nome');
     }
 
     if (!this.document || this.document === undefined) {
       throw new InvalidProducerParamException('CPF ou CNPJ');
-    }
-
-    if (!this.farm) {
-      throw new InvalidProducerParamException('Fazenda');
     }
   }
 }

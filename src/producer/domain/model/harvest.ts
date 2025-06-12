@@ -1,10 +1,8 @@
-import { UnprocessableEntityException } from '@nestjs/common';
 import { Crop } from './crop';
 import { randomUUID } from 'crypto';
 import { InvalidHarvestParamException } from '../exception';
 
 type HarvestProps = {
-  id: string;
   description: string;
   year: number;
   crop: Crop;

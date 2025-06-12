@@ -1,8 +1,9 @@
 import { randomUUID } from 'crypto';
 import { Harvest } from './harvest';
-import { UnprocessableEntityException } from '@nestjs/common';
-import { InvalidFarmParamException } from '../exception/invalid-farm-param.exception';
-import { InvalidFarmAreaException } from '../exception/invalid-farm-area.exception';
+import {
+  InvalidFarmParamException,
+  InvalidFarmAreaException,
+} from '../exception/';
 
 type FarmProps = {
   name: string;
@@ -11,10 +12,12 @@ type FarmProps = {
   totalArea: number;
   agriculturalArea: number;
   vegetationArea: number;
-  harvest: Harvest[];
+  harvest?: Harvest;
 };
 
 export class Farm {
+  private harvest?: Harvest;
+
   private constructor(
     private readonly id: string,
     private readonly name: string,
@@ -23,7 +26,6 @@ export class Farm {
     private readonly totalArea: number,
     private readonly agriculturalArea: number,
     private readonly vegetationArea: number,
-    private readonly harvest: Harvest[],
   ) {}
 
   static create(props: FarmProps): Farm {
@@ -39,25 +41,33 @@ export class Farm {
       props.totalArea,
       props.agriculturalArea,
       props.vegetationArea,
-      props.harvest,
     );
+
+    if (props.harvest) {
+      farm.addHarvest(props.harvest);
+    }
 
     farm.validate();
     return farm;
   }
 
+  addHarvest(harvest: Harvest) {
+    if (!harvest) {
+      throw new InvalidFarmParamException('Safra');
+    }
+
+    harvest.validate();
+    this.harvest = harvest;
+  }
+
+  getHarvest(): Harvest | undefined {
+    return this.harvest;
+  }
+
   validate() {
-    if (!this.name) {
-      throw new InvalidFarmParamException('Nome');
-    }
-
-    if (!this.city) {
-      throw new InvalidFarmParamException('Cidade');
-    }
-
-    if (!this.state) {
-      throw new InvalidFarmParamException('Estado');
-    }
+    if (!this.name) throw new InvalidFarmParamException('Nome');
+    if (!this.city) throw new InvalidFarmParamException('Cidade');
+    if (!this.state) throw new InvalidFarmParamException('Estado');
 
     const totalSubAreas = this.agriculturalArea + this.vegetationArea;
 
