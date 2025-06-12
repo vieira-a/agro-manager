@@ -99,4 +99,4 @@ erDiagram
 
 | Responsável     | Criado em  | Versão | Atualizado em |
 | --------------- | ---------- | ------ | ------------- |
-| Anderson Vieira | 2025-06-10 | 002    | 2025-06-12    |
+| Anderson Vieira | 10-06-2025 | 002    | 10-06-2025    |
