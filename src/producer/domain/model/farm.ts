@@ -11,10 +11,12 @@ type FarmProps = {
   totalArea: number;
   agriculturalArea: number;
   vegetationArea: number;
-  harvest: Harvest[];
+  harvest?: Harvest;
 };
 
 export class Farm {
+  private harvest?: Harvest;
+
   private constructor(
     private readonly id: string,
     private readonly name: string,
@@ -23,8 +25,10 @@ export class Farm {
     private readonly totalArea: number,
     private readonly agriculturalArea: number,
     private readonly vegetationArea: number,
-    private readonly harvest: Harvest[],
-  ) {}
+    harvest?: Harvest,
+  ) {
+    this.harvest = harvest;
+  }
 
   static create(props: FarmProps): Farm {
     const name = props.name.trim();
@@ -42,22 +46,33 @@ export class Farm {
       props.harvest,
     );
 
+    if (props.harvest) {
+      props.harvest.validate();
+    }
+
     farm.validate();
     return farm;
   }
 
+  addHarvest(harvest: Harvest) {
+    harvest.validate();
+
+    if (this.harvest) {
+      throw new InvalidFarmParamException(
+        'Apenas 1 safra pode ser adicionada ao criar uma fazenda',
+      );
+    }
+    this.harvest = harvest;
+  }
+
+  getHarvest(): Harvest | undefined {
+    return this.harvest;
+  }
+
   validate() {
-    if (!this.name) {
-      throw new InvalidFarmParamException('Nome');
-    }
-
-    if (!this.city) {
-      throw new InvalidFarmParamException('Cidade');
-    }
-
-    if (!this.state) {
-      throw new InvalidFarmParamException('Estado');
-    }
+    if (!this.name) throw new InvalidFarmParamException('Nome');
+    if (!this.city) throw new InvalidFarmParamException('Cidade');
+    if (!this.state) throw new InvalidFarmParamException('Estado');
 
     const totalSubAreas = this.agriculturalArea + this.vegetationArea;
 
