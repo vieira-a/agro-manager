@@ -9,14 +9,14 @@ describe('Producer', () => {
   const validCPF = DocumentValidatorFactory.create('66452197096');
   const validCNPJ = DocumentValidatorFactory.create('11444777000161');
 
-  const crops = [Crop.create({ name: 'Milho' }), Crop.create({ name: 'Soja' })];
+  const crop = Crop.create({ name: 'Milho' });
 
   const harvests = [
     Harvest.create({
       id: '34b47b6a-27f7-4480-996d-1254194caa91',
       description: 'Safra 2024',
       year: 2024,
-      crops: crops,
+      crop: crop,
     }),
   ];
 

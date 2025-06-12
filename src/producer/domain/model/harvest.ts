@@ -6,7 +6,7 @@ type HarvestProps = {
   id: string;
   description: string;
   year: number;
-  crops: Crop[];
+  crop: Crop;
 };
 
 export class Harvest {
@@ -14,7 +14,7 @@ export class Harvest {
     private readonly id: string,
     private readonly description: string,
     private readonly year: number,
-    private readonly crops: Crop[],
+    private readonly crop: Crop,
   ) {}
 
   static create(props: HarvestProps): Harvest {
@@ -24,7 +24,7 @@ export class Harvest {
       randomUUID(),
       description,
       props.year,
-      props.crops,
+      props.crop,
     );
 
     harvest.validate();
@@ -42,7 +42,7 @@ export class Harvest {
       throw new UnprocessableEntityException('O ano da Safra é obrigatório');
     }
 
-    if (!this.crops || this.crops.length === 0) {
+    if (!this.crop) {
       throw new UnprocessableEntityException(
         'É necessário informar ao menos uma cultura para a safra',
       );

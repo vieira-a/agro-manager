@@ -3,13 +3,13 @@ import { Crop } from '../crop';
 import { Harvest } from '../harvest';
 
 describe('Harvest', () => {
-  const validCrops = [Crop.create({ name: 'Soja' })];
+  const validCrop = Crop.create({ name: 'Soja' });
 
   const validProps = {
     id: 'e3989eb5-7001-451f-a3fe-3fb03d7f39fb',
     description: 'Safra de Verão',
     year: 2023,
-    crops: validCrops,
+    crop: validCrop,
   };
 
   it('should create a harvest successfully with valid data', () => {
@@ -30,8 +30,8 @@ describe('Harvest', () => {
   });
 
   it('should throw if crops array is empty', () => {
-    expect(() => Harvest.create({ ...validProps, crops: [] })).toThrow(
-      UnprocessableEntityException,
-    );
+    expect(() =>
+      Harvest.create({ ...validProps, crop: undefined as any }),
+    ).toThrow(UnprocessableEntityException);
   });
 });
