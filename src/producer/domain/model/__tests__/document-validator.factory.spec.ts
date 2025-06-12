@@ -2,6 +2,7 @@ import { DocumentValidatorFactory } from '../document-validator.factory';
 import { CPF } from '../cpf';
 import { CNPJ } from '../cnpj';
 import { UnprocessableEntityException } from '@nestjs/common';
+import { InvalidDocumentException } from '../../exception';
 
 describe('DocumentValidatorFactory', () => {
   it('should create a valid CPF instance for 11-digit document', () => {
@@ -18,11 +19,11 @@ describe('DocumentValidatorFactory', () => {
     expect(document).toBeInstanceOf(CNPJ);
   });
 
-  it('should throw UnprocessableEntityException for invalid length document', () => {
+  it('should throw for invalid document', () => {
     const invalidDoc = '123456789';
 
     expect(() => DocumentValidatorFactory.create(invalidDoc)).toThrow(
-      UnprocessableEntityException,
+      InvalidDocumentException,
     );
   });
 });
