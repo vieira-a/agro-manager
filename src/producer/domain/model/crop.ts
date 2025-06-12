@@ -19,6 +19,20 @@ export class Crop {
     return crop;
   }
 
+  static restore(props: CropProps & { id: string }): Crop {
+    const crop = new Crop(props.id, props.name);
+
+    return crop;
+  }
+
+  getId(): string {
+    return this.id;
+  }
+
+  getName(): string {
+    return this.name;
+  }
+
   validate() {
     if (!this.name) {
       throw new InvalidCropParamException('Nome');

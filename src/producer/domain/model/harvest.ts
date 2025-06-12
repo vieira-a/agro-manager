@@ -30,6 +30,33 @@ export class Harvest {
     return harvest;
   }
 
+  static restore(props: HarvestProps & { id: string; crop: Crop }): Harvest {
+    const harvest = new Harvest(
+      props.id,
+      props.description,
+      props.year,
+      props.crop,
+    );
+
+    return harvest;
+  }
+
+  getId(): string {
+    return this.id;
+  }
+
+  getDescription(): string {
+    return this.description;
+  }
+
+  getYear(): number {
+    return this.year;
+  }
+
+  getCrop(): Crop {
+    return this.crop;
+  }
+
   validate() {
     if (!this.description) {
       throw new InvalidHarvestParamException('Descrição');
