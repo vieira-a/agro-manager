@@ -1,4 +1,7 @@
-import { InvalidCropParamException } from '../../../../producer/domain/exception';
+import {
+  InvalidCropParamException,
+  InvalidProducerParamException,
+} from '../../../../producer/domain/exception';
 import { CreateProducerDto } from '../../dto/create-producer.dto';
 import { ProducerApplicationService } from '../producer-application.service';
 
@@ -68,6 +71,17 @@ describe('ProducerApplicationService', () => {
     const farm = producer.getFarms()[0];
     const harvest = farm.getHarvest();
     expect(harvest).toBeDefined();
+  });
+
+  it('should throw when name is empty', async () => {
+    const input: CreateProducerDto = {
+      document: '09779679057',
+      name: '',
+    };
+
+    await expect(service.create(input)).rejects.toThrow(
+      InvalidProducerParamException,
+    );
   });
 
   it('should throw when crop name is empty', async () => {
