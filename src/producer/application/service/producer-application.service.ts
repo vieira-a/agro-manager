@@ -1,10 +1,12 @@
 import { Injectable } from '@nestjs/common';
 import { CreateProducerDto } from '../dto/create-producer.dto';
-import { Producer } from '../../../producer/domain/model/producer';
-import { DocumentValidatorFactory } from '../../../producer/domain/model/document-validator.factory';
-import { Farm } from '../../../producer/domain/model/farm';
-import { Harvest } from '../../../producer/domain/model/harvest';
-import { Crop } from '../../../producer/domain/model/crop';
+import {
+  Producer,
+  Crop,
+  Farm,
+  Harvest,
+  DocumentValidatorFactory,
+} from '../../../producer/domain/model';
 
 @Injectable()
 export class ProducerApplicationService {
