@@ -14,14 +14,12 @@ describe('Producer', () => {
     name: 'Milho',
   });
 
-  const harvests = [
-    Harvest.create({
-      id: '34b47b6a-27f7-4480-996d-1254194caa91',
-      description: 'Safra 2024',
-      year: 2024,
-      crop: crop,
-    }),
-  ];
+  const harvests = Harvest.create({
+    id: '34b47b6a-27f7-4480-996d-1254194caa91',
+    description: 'Safra 2024',
+    year: 2024,
+    crop: crop,
+  });
 
   const validFarm = Farm.create({
     name: 'Fazenda Teste',
@@ -59,16 +57,6 @@ describe('Producer', () => {
         document: validCPF,
         name: '',
         farm: validFarm,
-      }),
-    ).toThrow(InvalidProducerParamException);
-  });
-
-  it('should throw if farm is not provided', () => {
-    expect(() =>
-      Producer.create({
-        document: validCPF,
-        name: 'João da Silva',
-        farm: null as any,
       }),
     ).toThrow(InvalidProducerParamException);
   });

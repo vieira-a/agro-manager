@@ -7,7 +7,7 @@ import { InvalidProducerParamException } from '../exception/invalid-producer-par
 type ProducerProps = {
   document: CPF | CNPJ;
   name: string;
-  farm: Farm;
+  farm?: Farm;
 };
 
 export class Producer {
@@ -15,7 +15,7 @@ export class Producer {
     private readonly id: string,
     private readonly document: CPF | CNPJ,
     private readonly name: string,
-    private readonly farm: Farm,
+    private readonly farm?: Farm,
   ) {}
 
   static create(props: ProducerProps) {
@@ -41,8 +41,8 @@ export class Producer {
       throw new InvalidProducerParamException('CPF ou CNPJ');
     }
 
-    if (!this.farm) {
-      throw new InvalidProducerParamException('Fazenda');
+    if (this.farm) {
+      this.farm.validate();
     }
   }
 }
