@@ -3,7 +3,10 @@ import { Crop } from '../crop';
 import { Harvest } from '../harvest';
 
 describe('Harvest', () => {
-  const validCrop = Crop.create({ name: 'Soja' });
+  const validCrop = Crop.create({
+    id: '220377ba-5aa0-41c7-8f37-033b5c0ff1ae',
+    name: 'Soja',
+  });
 
   const validProps = {
     id: 'e3989eb5-7001-451f-a3fe-3fb03d7f39fb',
