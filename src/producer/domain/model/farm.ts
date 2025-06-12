@@ -1,6 +1,8 @@
 import { randomUUID } from 'crypto';
 import { Harvest } from './harvest';
 import { UnprocessableEntityException } from '@nestjs/common';
+import { InvalidFarmParamException } from '../exception/invalid-farm-param.exception';
+import { InvalidFarmAreaException } from '../exception/invalid-farm-area.exception';
 
 type FarmProps = {
   name: string;
@@ -46,22 +48,24 @@ export class Farm {
 
   validate() {
     if (!this.name) {
-      throw new UnprocessableEntityException('Nome da fazenda é obrigatória');
+      throw new InvalidFarmParamException('Nome');
     }
 
     if (!this.city) {
-      throw new UnprocessableEntityException('Nome da cidade é obrigatória');
+      throw new InvalidFarmParamException('Cidade');
     }
 
     if (!this.state) {
-      throw new UnprocessableEntityException('Nome do estado é obrigatório');
+      throw new InvalidFarmParamException('Estado');
     }
 
     const totalSubAreas = this.agriculturalArea + this.vegetationArea;
+
     if (this.totalArea < totalSubAreas) {
-      throw new UnprocessableEntityException(
-        'Área total não pode ser menor que a soma das áreas agrícola e de vegetação',
-      );
+      throw new InvalidFarmAreaException({
+        totalArea: this.totalArea,
+        totalSubArea: totalSubAreas,
+      });
     }
   }
 }
