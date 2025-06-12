@@ -39,3 +39,7 @@ Mostra a definição de uma estratégia para validação de CPF ou CNPJ do `Prod
 - [ADR 005 Revisão da definição do agregado Produtor](https://github.com/vieira-a/agro-manager/blob/main/docs/adr/005-producer-aggregate-root-revised.md)
 
 Mostra a revisão da definição do `Producer` como raiz de um agragado e seus relacionamentos com `Farm`, garantindo consistência dos dados e flexibilização na criação do produtor.
+
+- [ADR 006 Estratégia de mapeamento entre entidades de domínio e entidades de persistência](https://github.com/vieira-a/agro-manager/blob/main/docs/adr/006-persistence-mapper-strategy.md)
+
+Mostra a abordagem adotada para o mapeamento manual entre entidades de domínio e entidades de persistência, garantindo desacoplamento do domínio da infraestrutura, melhor testabilidade e controle sobre a transformação dos dados.
