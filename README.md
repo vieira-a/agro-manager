@@ -28,10 +28,14 @@ Mostra a visão geral da arquitetura adotada com base em monólito modular, equi
 
 Mostra como será aplicado o padrão Repository para abstrair acesso ao banco de dados, mantendo o domínio desacoplado da tecnologia de persistência
 
-- [ADR 003 Definição do agregado Produtor](https://github.com/vieira-a/agro-manager/blob/main/docs/adr/003-producer-aggregate-root-definition.md)
+- [ADR 003 Definição do agregado Produtor (Substituída pela ADR-005)](https://github.com/vieira-a/agro-manager/blob/main/docs/adr/003-producer-aggregate-root-definition.md)
 
 Mostra a definição do `Producer` como raiz de um agragado que encapsula `Farm`, `Harvest` e `Crop`, garantindo consistência dos dados desde a criação do produtor.
 
 - [ADR 004 Validação de CPF e CNPJ](https://github.com/vieira-a/agro-manager/blob/main/docs/adr/004-cpf-cnpj-validator.md)
 
 Mostra a definição de uma estratégia para validação de CPF ou CNPJ do `Producer` no momento da sua criação, garantindo coesão e imutabilidade.
+
+- [ADR 005 Revisão da definição do agregado Produtor](https://github.com/vieira-a/agro-manager/blob/main/docs/adr/005-producer-aggregate-root-revised.md)
+
+Mostra a revisão da definição do `Producer` como raiz de um agragado e seus relacionamentos com `Farm`, garantindo consistência dos dados e flexibilização na criação do produtor.
