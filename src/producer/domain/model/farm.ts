@@ -52,6 +52,10 @@ export class Farm {
   }
 
   addHarvest(harvest: Harvest) {
+    if (!harvest) {
+      throw new InvalidFarmParamException('Safra');
+    }
+
     harvest.validate();
     this.harvest = harvest;
   }

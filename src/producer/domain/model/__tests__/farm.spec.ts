@@ -6,19 +6,19 @@ import {
 import { Harvest } from '../harvest';
 import { Crop } from '../crop';
 
-const validCrop = Crop.create({
-  id: 'e2945ac5-0223-406b-b6e6-0f218dc167c8',
-  name: 'Milho',
-});
-
-const validHarvest = Harvest.create({
-  id: '34b47b6a-27f7-4480-996d-1254194caa91',
-  description: 'Safra 2024',
-  year: 2024,
-  crop: validCrop,
-});
-
 describe('Farm', () => {
+  const validCrop = Crop.create({
+    id: 'e2945ac5-0223-406b-b6e6-0f218dc167c8',
+    name: 'Milho',
+  });
+
+  const validHarvest = Harvest.create({
+    id: '34b47b6a-27f7-4480-996d-1254194caa91',
+    description: 'Safra 2024',
+    year: 2024,
+    crop: validCrop,
+  });
+
   const validProps = {
     name: 'Fazenda Teste',
     city: 'Cidade Exemplo',
@@ -44,6 +44,15 @@ describe('Farm', () => {
   it('should create a farm successfully without harvest', () => {
     const farm = Farm.create({ ...validProps, harvest: undefined });
     expect(farm).toBeInstanceOf(Farm);
+  });
+
+  it('should throw if trying to create a farm with an invalid harvest', () => {
+    const invalidHarvest = null as any;
+    const farm = Farm.create({ ...validProps, harvest: invalidHarvest });
+
+    expect(() => farm.addHarvest(null as any)).toThrow(
+      InvalidFarmParamException,
+    );
   });
 
   it('should throw if name is empty', () => {
