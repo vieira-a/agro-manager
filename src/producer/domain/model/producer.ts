@@ -33,6 +33,10 @@ export class Producer {
   }
 
   addFarm(farm: Farm): void {
+    if (!farm) {
+      throw new InvalidProducerParamException('Fazenda');
+    }
+
     farm.validate();
     this.farms.push(farm);
   }

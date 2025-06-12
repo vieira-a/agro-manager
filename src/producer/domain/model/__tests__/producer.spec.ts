@@ -63,6 +63,17 @@ describe('Producer', () => {
     expect(producer).toBeInstanceOf(Producer);
   });
 
+  it('should throw if trying to add an invalid farm', () => {
+    const producer = Producer.create({
+      document: validCPF,
+      name: 'João da Silva',
+    });
+
+    expect(() => producer.addFarm(null as any)).toThrow(
+      InvalidProducerParamException,
+    );
+  });
+
   it('should throw if name is empty', () => {
     expect(() =>
       Producer.create({
