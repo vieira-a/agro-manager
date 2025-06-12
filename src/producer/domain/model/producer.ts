@@ -1,13 +1,13 @@
 import { randomUUID } from 'crypto';
-import { Farm } from './farm';
 import { CPF } from './cpf';
 import { CNPJ } from './cnpj';
-import { InvalidProducerParamException } from '../exception/invalid-producer-param.exception';
+import { InvalidProducerParamException } from '../exception';
+import { Farm } from './farm';
 
 type ProducerProps = {
   document: CPF | CNPJ;
   name: string;
-  farm?: Farm;
+  farms?: Farm[];
 };
 
 export class Producer {
@@ -24,11 +24,23 @@ export class Producer {
 
     const producer = new Producer(randomUUID(), props.document, name);
 
-    if (props.farm) {
-      producer.addFarm(props.farm);
+    if (props.farms && props.farms.length > 0) {
+      props.farms.forEach((farm) => producer.addFarm(farm));
     }
 
     producer.validate();
+    return producer;
+  }
+
+  static restore(
+    props: ProducerProps & { id: string; farms?: Farm[] },
+  ): Producer {
+    const producer = new Producer(props.id, props.document, props.name);
+
+    if (props.farms && props.farms.length > 0) {
+      props.farms.forEach((farm) => producer.addFarm(farm));
+    }
+
     return producer;
   }
 
@@ -41,6 +53,18 @@ export class Producer {
     this.farms.push(farm);
   }
 
+  getId(): string {
+    return this.id;
+  }
+
+  getDocument(): string {
+    return this.document.toString();
+  }
+
+  getName(): string {
+    return this.name;
+  }
+
   getFarms(): ReadonlyArray<Farm> {
     return [...this.farms];
   }
@@ -50,7 +74,7 @@ export class Producer {
       throw new InvalidProducerParamException('Nome');
     }
 
-    if (!this.document || this.document === undefined) {
+    if (!this.document) {
       throw new InvalidProducerParamException('CPF ou CNPJ');
     }
   }

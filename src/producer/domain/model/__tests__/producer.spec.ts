@@ -33,7 +33,7 @@ describe('Producer', () => {
     const producer = Producer.create({
       document: validCPF,
       name: 'John Doe',
-      farm: validFarm,
+      farms: [validFarm],
     });
 
     expect(producer).toBeInstanceOf(Producer);
@@ -55,7 +55,7 @@ describe('Producer', () => {
     const producer = Producer.create({
       document: validCNPJ,
       name: 'Empresa Agro',
-      farm: validFarm,
+      farms: [validFarm],
     });
 
     expect(producer).toBeInstanceOf(Producer);
@@ -77,7 +77,7 @@ describe('Producer', () => {
       Producer.create({
         document: validCPF,
         name: '',
-        farm: validFarm,
+        farms: [validFarm],
       }),
     ).toThrow(InvalidProducerParamException);
   });
@@ -87,7 +87,7 @@ describe('Producer', () => {
       Producer.create({
         document: null as any,
         name: 'João da Silva',
-        farm: validFarm,
+        farms: [validFarm],
       }),
     ).toThrow(InvalidProducerParamException);
   });
@@ -97,7 +97,7 @@ describe('Producer', () => {
       Producer.create({
         document: undefined as any,
         name: 'João da Silva',
-        farm: validFarm,
+        farms: [validFarm],
       }),
     ).toThrow(InvalidProducerParamException);
   });
