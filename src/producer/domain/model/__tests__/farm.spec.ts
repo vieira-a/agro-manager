@@ -28,4 +28,10 @@ describe('Farm', () => {
       UnprocessableEntityException,
     );
   });
+
+  it('should throw if state is empty', () => {
+    expect(() => Farm.create({ ...validProps, state: '' })).toThrow(
+      UnprocessableEntityException,
+    );
+  });
 });
