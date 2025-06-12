@@ -1,5 +1,8 @@
-import { UnprocessableEntityException } from '@nestjs/common';
 import { Farm } from '../farm';
+import {
+  InvalidFarmParamException,
+  InvalidFarmAreaException,
+} from '../../exception';
 
 describe('Farm', () => {
   const validProps = {
@@ -19,25 +22,25 @@ describe('Farm', () => {
 
   it('should throw if name is empty', () => {
     expect(() => Farm.create({ ...validProps, name: '' })).toThrow(
-      UnprocessableEntityException,
+      InvalidFarmParamException,
     );
   });
 
   it('should throw if city is empty', () => {
     expect(() => Farm.create({ ...validProps, city: '' })).toThrow(
-      UnprocessableEntityException,
+      InvalidFarmParamException,
     );
   });
 
   it('should throw if state is empty', () => {
     expect(() => Farm.create({ ...validProps, state: '' })).toThrow(
-      UnprocessableEntityException,
+      InvalidFarmParamException,
     );
   });
 
   it('should throw if totalArea is less than sum of agriculturalArea and vegetationArea', () => {
     expect(() => Farm.create({ ...validProps, totalArea: 80 })).toThrow(
-      UnprocessableEntityException,
+      InvalidFarmAreaException,
     );
   });
 });

@@ -1,9 +1,9 @@
-import { UnprocessableEntityException } from '@nestjs/common';
 import { DocumentValidatorFactory } from '../document-validator.factory';
 import { Farm } from '../farm';
 import { Producer } from '../producer';
 import { Crop } from '../crop';
 import { Harvest } from '../harvest';
+import { InvalidProducerParamException } from '../../exception';
 
 describe('Producer', () => {
   const validCPF = DocumentValidatorFactory.create('66452197096');
@@ -60,7 +60,7 @@ describe('Producer', () => {
         name: '',
         farm: validFarm,
       }),
-    ).toThrow(UnprocessableEntityException);
+    ).toThrow(InvalidProducerParamException);
   });
 
   it('should throw if farm is not provided', () => {
@@ -70,7 +70,7 @@ describe('Producer', () => {
         name: 'João da Silva',
         farm: null as any,
       }),
-    ).toThrow(UnprocessableEntityException);
+    ).toThrow(InvalidProducerParamException);
   });
 
   it('should throw if document is null', () => {
@@ -80,7 +80,7 @@ describe('Producer', () => {
         name: 'João da Silva',
         farm: validFarm,
       }),
-    ).toThrow(UnprocessableEntityException);
+    ).toThrow(InvalidProducerParamException);
   });
 
   it('should throw if document is undefined', () => {
@@ -90,6 +90,6 @@ describe('Producer', () => {
         name: 'João da Silva',
         farm: validFarm,
       }),
-    ).toThrow(UnprocessableEntityException);
+    ).toThrow(InvalidProducerParamException);
   });
 });

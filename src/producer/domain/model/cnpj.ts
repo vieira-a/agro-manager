@@ -1,5 +1,5 @@
-import { UnprocessableEntityException } from '@nestjs/common';
 import { DocumentValidator } from './document-validator.interface';
+import { InvalidDocumentException } from '../exception';
 
 export class CNPJ {
   private readonly value: string;
@@ -11,7 +11,7 @@ export class CNPJ {
     const normalized = value.replace(/\D/g, '');
 
     if (!validator.validate(normalized)) {
-      throw new UnprocessableEntityException('CNPJ inválido');
+      throw new InvalidDocumentException(`CNPJ: ${value}`);
     }
 
     this.value = normalized;

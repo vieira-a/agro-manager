@@ -1,5 +1,5 @@
-import { UnprocessableEntityException } from '@nestjs/common';
 import { DocumentValidator } from './document-validator.interface';
+import { InvalidDocumentException } from '../exception';
 
 export class CPF {
   private readonly value: string;
@@ -11,7 +11,7 @@ export class CPF {
     const normalized = value.replace(/\D/g, '');
 
     if (!validator.validate(normalized)) {
-      throw new UnprocessableEntityException('CPF inválido');
+      throw new InvalidDocumentException(`CPF: ${value}`);
     }
 
     this.value = normalized;

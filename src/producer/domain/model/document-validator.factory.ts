@@ -3,6 +3,7 @@ import { CNPJ } from './cnpj';
 import { CNPJValidator } from '../../infrastructure/validators/cnpj.validator';
 import { CPF } from './cpf';
 import { CPFValidator } from '../../infrastructure/validators/cpf.validator';
+import { InvalidDocumentException } from '../exception';
 
 export class DocumentValidatorFactory {
   private static cpfValidator = new CPFValidator();
@@ -19,6 +20,6 @@ export class DocumentValidatorFactory {
       return new CNPJ(normalized, this.cnpjValidator);
     }
 
-    throw new UnprocessableEntityException('Documento inválido');
+    throw new InvalidDocumentException(document);
   }
 }

@@ -2,7 +2,7 @@ import { randomUUID } from 'crypto';
 import { Farm } from './farm';
 import { CPF } from './cpf';
 import { CNPJ } from './cnpj';
-import { UnprocessableEntityException } from '@nestjs/common';
+import { InvalidProducerParamException } from '../exception/invalid-producer-param.exception';
 
 type ProducerProps = {
   document: CPF | CNPJ;
@@ -34,17 +34,15 @@ export class Producer {
 
   validate() {
     if (!this.name) {
-      throw new UnprocessableEntityException('Nome do Produtor é obrigatório');
+      throw new InvalidProducerParamException('Nome');
     }
 
     if (!this.document || this.document === undefined) {
-      throw new UnprocessableEntityException('CPF ou CNPJ obrigatório');
+      throw new InvalidProducerParamException('CPF ou CNPJ');
     }
 
     if (!this.farm) {
-      throw new UnprocessableEntityException(
-        'Produtor deve possuir ao menos uma propriedade',
-      );
+      throw new InvalidProducerParamException('Fazenda');
     }
   }
 }
