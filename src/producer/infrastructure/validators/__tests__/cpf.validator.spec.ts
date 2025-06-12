@@ -16,4 +16,10 @@ describe('CPFValidator', () => {
     const invalidCPF = '11111111111';
     expect(validator.validate(invalidCPF)).toBe(false);
   });
+
+  it('should format the CPF correctly', () => {
+    const rawCPF = '52998224725';
+    const formattedCPF = '529.982.247-25';
+    expect(validator.format(rawCPF)).toBe(formattedCPF);
+  });
 });
