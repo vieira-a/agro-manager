@@ -7,13 +7,9 @@ import { Harvest } from '../harvest';
 import { Crop } from '../crop';
 
 describe('Farm', () => {
-  const validCrop = Crop.create({
-    id: 'e2945ac5-0223-406b-b6e6-0f218dc167c8',
-    name: 'Milho',
-  });
+  const validCrop = Crop.create({ name: 'Milho' });
 
   const validHarvest = Harvest.create({
-    id: '34b47b6a-27f7-4480-996d-1254194caa91',
     description: 'Safra 2024',
     year: 2024,
     crop: validCrop,
