@@ -41,6 +41,18 @@ describe('Producer', () => {
     expect(producer).toBeInstanceOf(Producer);
   });
 
+  it('should allow adding a farm to an existing producer', () => {
+    const producer = Producer.create({
+      document: validCPF,
+      name: 'João da Silva',
+    });
+
+    producer.addFarm(validFarm);
+
+    expect(producer.getFarms()).toHaveLength(1);
+    expect(producer.getFarms()[0]).toBe(validFarm);
+  });
+
   it('should create a Producer with valid CNPJ document and Farm', () => {
     const producer = Producer.create({
       document: validCNPJ,

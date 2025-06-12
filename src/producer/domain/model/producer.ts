@@ -11,38 +11,43 @@ type ProducerProps = {
 };
 
 export class Producer {
+  private readonly farms: Farm[] = [];
+
   private constructor(
     private readonly id: string,
     private readonly document: CPF | CNPJ,
     private readonly name: string,
-    private readonly farm?: Farm,
   ) {}
 
   static create(props: ProducerProps) {
     const name = props.name.trim();
 
-    const producer = new Producer(
-      randomUUID(),
-      props.document,
-      name,
-      props.farm,
-    );
+    const producer = new Producer(randomUUID(), props.document, name);
+
+    if (props.farm) {
+      producer.addFarm(props.farm);
+    }
 
     producer.validate();
     return producer;
   }
 
-  validate() {
+  addFarm(farm: Farm): void {
+    farm.validate();
+    this.farms.push(farm);
+  }
+
+  getFarms(): ReadonlyArray<Farm> {
+    return [...this.farms];
+  }
+
+  validate(): void {
     if (!this.name) {
       throw new InvalidProducerParamException('Nome');
     }
 
     if (!this.document || this.document === undefined) {
       throw new InvalidProducerParamException('CPF ou CNPJ');
-    }
-
-    if (this.farm) {
-      this.farm.validate();
     }
   }
 }
