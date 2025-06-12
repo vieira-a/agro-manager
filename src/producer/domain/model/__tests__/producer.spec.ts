@@ -66,4 +66,14 @@ describe('Producer', () => {
       }),
     ).toThrow(UnprocessableEntityException);
   });
+
+  it('should throw if document is undefined', () => {
+    expect(() =>
+      Producer.create({
+        document: undefined as any,
+        name: 'João da Silva',
+        farm: validFarm,
+      }),
+    ).toThrow(UnprocessableEntityException);
+  });
 });
