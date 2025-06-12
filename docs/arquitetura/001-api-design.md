@@ -76,4 +76,4 @@ Cadastra um novo produtor com fazendas e culturas.
 
 | Responsável     | Criado em  | Versão | Atualizado em |
 | --------------- | ---------- | ------ | ------------- |
-| Anderson Vieira | 2025-10-06 | 001    | 2025-10-06    |
+| Anderson Vieira | 10-06-2025 | 001    | 10-06-2025   |
