@@ -1,5 +1,6 @@
 import { DocumentValidatorFactory } from '../document-validator.factory';
 import { CPF } from '../cpf';
+import { CNPJ } from '../cnpj';
 
 describe('DocumentValidatorFactory', () => {
   it('should create a valid CPF instance for 11-digit document', () => {
@@ -7,5 +8,12 @@ describe('DocumentValidatorFactory', () => {
     const document = DocumentValidatorFactory.create(cpfString);
 
     expect(document).toBeInstanceOf(CPF);
+  });
+
+  it('should create a valid CNPJ instance for 14-digit document', () => {
+    const cnpjString = '11444777000161';
+    const document = DocumentValidatorFactory.create(cnpjString);
+
+    expect(document).toBeInstanceOf(CNPJ);
   });
 });
