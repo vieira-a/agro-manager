@@ -2,7 +2,7 @@
 
 | Responsável     | Criado em  | Versão | Atualizado em | Status    |
 | --------------- | ---------- | ------ | ------------- | --------- |
-| Anderson Vieira | 2025-06-12 | 001    | 2025-06-12    | Aceito    |
+| Anderson Vieira | 12-06-2025 | 001    | 12-06-2025   | Aceito    |
 
 ## Contexto
 
