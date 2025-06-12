@@ -20,4 +20,12 @@ describe('CNPJ', () => {
     const cnpj = new CNPJ(validCNPJ, mockValidator);
     expect(cnpj.format()).toBe(`formatted-${normalizedCNPJ}`);
   });
+
+  it('should return raw value in format if format method is not provided', () => {
+    const validatorWithoutFormat: DocumentValidator = {
+      validate: jest.fn(() => true),
+    };
+    const cnpj = new CNPJ(validCNPJ, validatorWithoutFormat);
+    expect(cnpj.format()).toBe(normalizedCNPJ);
+  });
 });
