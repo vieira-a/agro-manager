@@ -64,4 +64,4 @@ Rel(service, usecase, "Executa lógica de negócio")
 
 | Responsável     | Criado em  | Versão | Atualizado em |
 | --------------- | ---------- | ------ | ------------- |
-| Anderson Vieira | 06-10-2025 | 001    | 06-10-2025    |
+| Anderson Vieira | 10-06-2025 | 001    | 10-06-2025    |
