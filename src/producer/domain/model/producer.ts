@@ -37,7 +37,7 @@ export class Producer {
       throw new UnprocessableEntityException('Nome do Produtor é obrigatório');
     }
 
-    if (!this.document) {
+    if (!this.document || this.document === undefined) {
       throw new UnprocessableEntityException('CPF ou CNPJ obrigatório');
     }
 
