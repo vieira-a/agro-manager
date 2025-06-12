@@ -2,7 +2,6 @@ import { randomUUID } from 'crypto';
 import { Farm } from './farm';
 import { CPF } from './cpf';
 import { CNPJ } from './cnpj';
-import { UnprocessableEntityException } from '@nestjs/common';
 import { InvalidProducerParamException } from '../exception/invalid-producer-param.exception';
 
 type ProducerProps = {
