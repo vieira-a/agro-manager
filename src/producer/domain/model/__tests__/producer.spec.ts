@@ -4,6 +4,7 @@ import { Producer } from '../producer';
 
 describe('Producer', () => {
   const validCPF = DocumentValidatorFactory.create('66452197096');
+  const validCNPJ = DocumentValidatorFactory.create('11444777000161');
 
   const validFarm = Farm.create({
     name: 'Fazenda Teste',
@@ -19,6 +20,16 @@ describe('Producer', () => {
     const producer = Producer.create({
       document: validCPF,
       name: 'John Doe',
+      farm: validFarm,
+    });
+
+    expect(producer).toBeInstanceOf(Producer);
+  });
+
+  it('should create a Producer with valid CNPJ document and Farm', () => {
+    const producer = Producer.create({
+      document: validCNPJ,
+      name: 'Empresa Agro',
       farm: validFarm,
     });
 
