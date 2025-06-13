@@ -1,4 +1,4 @@
-import { CreateProducerResponse } from '../../../../producer/web/rest/dto/response/create-producer.response';
+import { ProducerResponse } from '../../../web/rest/dto/response/producer.response';
 import {
   CPF,
   DocumentValidatorFactory,
@@ -30,7 +30,7 @@ export class ProducerMapper {
     });
   }
 
-  static toResponse(domain: Producer): CreateProducerResponse {
+  static toResponse(domain: Producer): ProducerResponse {
     return {
       id: domain.getId(),
       document: domain.getDocument(),

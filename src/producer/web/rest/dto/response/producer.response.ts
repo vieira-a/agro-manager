@@ -1,22 +1,22 @@
 import { ApiProperty } from '@nestjs/swagger';
 
-export class CreateCropResponse {
+export class CropResponse {
   @ApiProperty({ example: 'Milho' })
   name: string;
 }
 
-export class CreateHarvestResponse {
+export class HarvestResponse {
   @ApiProperty({ example: 'Safra Verão' })
   description: string;
 
   @ApiProperty({ example: 2023 })
   year: number;
 
-  @ApiProperty({ type: CreateCropResponse })
-  crop: CreateCropResponse;
+  @ApiProperty({ type: CropResponse })
+  crop: CropResponse;
 }
 
-export class CreateFarmResponse {
+export class FarmResponse {
   @ApiProperty({ example: 'Fazenda São João' })
   name: string;
 
@@ -35,11 +35,11 @@ export class CreateFarmResponse {
   @ApiProperty({ example: 40.5 })
   vegetationArea: number;
 
-  @ApiProperty({ type: CreateHarvestResponse, required: false })
-  harvest?: CreateHarvestResponse;
+  @ApiProperty({ type: HarvestResponse, required: false })
+  harvest?: HarvestResponse;
 }
 
-export class CreateProducerResponse {
+export class ProducerResponse {
   @ApiProperty({ example: '4a50d41f-d02e-4de6-976c-d15f944f8a26' })
   id: string;
 
@@ -49,6 +49,6 @@ export class CreateProducerResponse {
   @ApiProperty({ example: 'João Silva' })
   name: string;
 
-  @ApiProperty({ type: [CreateFarmResponse] })
-  farms: CreateFarmResponse[];
+  @ApiProperty({ type: [FarmResponse] })
+  farms: FarmResponse[];
 }

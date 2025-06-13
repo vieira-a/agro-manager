@@ -1,4 +1,4 @@
-import { CreateFarmResponse } from '../../../../producer/web/rest/dto/response/create-producer.response';
+import { FarmResponse } from '../../../web/rest/dto/response/producer.response';
 import { Farm } from '../../../../producer/domain/model';
 import { FarmEntity } from '../entity/farm.entity';
 import { HarvestMapper } from './harvest.mapper';
@@ -37,7 +37,7 @@ export class FarmMapper {
     return entity;
   }
 
-  static toResponse(farm: Farm): CreateFarmResponse {
+  static toResponse(farm: Farm): FarmResponse {
     return {
       name: farm.getName(),
       city: farm.getCity(),

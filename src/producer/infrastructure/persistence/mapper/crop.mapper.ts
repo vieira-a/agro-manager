@@ -1,4 +1,4 @@
-import { CreateCropResponse } from '../../../../producer/web/rest/dto/response/create-producer.response';
+import { CropResponse } from '../../../web/rest/dto/response/producer.response';
 import { Crop } from '../../../../producer/domain/model';
 import { CropEntity } from '../entity/crop.entity';
 
@@ -14,7 +14,7 @@ export class CropMapper {
     return entity;
   }
 
-  static toResponse(crop: Crop): CreateCropResponse {
+  static toResponse(crop: Crop): CropResponse {
     return {
       name: crop.getName(),
     };
