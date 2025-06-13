@@ -38,6 +38,23 @@ describe('Farm', () => {
     expect(farm.getHarvests()).toContain(validHarvest);
   });
 
+  it('should add different harvests correctly', () => {
+    const farm = Farm.create(validProps);
+
+    const anotherHarvest = Harvest.create({
+      description: 'Safra 2025',
+      year: 2025,
+      crop: validCrop,
+    });
+
+    farm.addHarvest(anotherHarvest);
+
+    expect(farm.getHarvests()).toHaveLength(2);
+    expect(farm.getHarvests()).toEqual(
+      expect.arrayContaining([validHarvest, anotherHarvest]),
+    );
+  });
+
   it('should create a farm successfully without harvest', () => {
     const farm = Farm.create({ ...validProps, harvests: [] });
     expect(farm).toBeInstanceOf(Farm);
