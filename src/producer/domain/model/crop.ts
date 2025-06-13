@@ -34,7 +34,7 @@ export class Crop {
   }
 
   validate() {
-    if (!this.name) {
+    if (!this.name || this.name.trim().length == 0) {
       throw new InvalidCropParamException('Nome');
     }
   }
