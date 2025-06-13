@@ -14,7 +14,11 @@ async function bootstrap() {
     .build();
 
   const documentFactory = () => SwaggerModule.createDocument(app, config);
-  SwaggerModule.setup('api/v1/docs', app, documentFactory);
+  SwaggerModule.setup('api/v1/docs', app, documentFactory, {
+    swaggerOptions: {
+      supportedSubmitMethods: [],
+    },
+  });
 
   app.useGlobalFilters(new GlobalExceptionFilter());
   app.setGlobalPrefix('api/v1');
