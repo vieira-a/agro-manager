@@ -11,7 +11,7 @@ export class ApiResponse<T> {
   message?: string;
 
   @ApiPropertyOptional()
-  data?: T;
+  data?: T | T[];
 
   constructor(statusCode: number, data?: T, message?: string) {
     this.statusCode = statusCode;

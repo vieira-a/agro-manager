@@ -2,6 +2,7 @@ import {
   Body,
   Controller,
   Delete,
+  Get,
   HttpCode,
   HttpStatus,
   Param,
@@ -10,10 +11,15 @@ import {
 import { ProducerApplicationService } from 'src/producer/application/service/producer-application.service';
 import { CreateProducerRequest } from '../dto/request/create-producer.request';
 import { ApiResponse } from '../dto/response/api.response';
-import { ApiBody, ApiCreatedResponse, ApiParam } from '@nestjs/swagger';
-import { CreateProducerResponse } from '../dto/response/create-producer.response';
+import {
+  ApiBody,
+  ApiCreatedResponse,
+  ApiOkResponse,
+  ApiParam,
+} from '@nestjs/swagger';
+import { ProducerResponse } from '../dto/response/producer.response';
 import { ProducerMapper } from '../../../../producer/infrastructure/persistence/mapper/producer.mapper';
-import { ApiResponseCreateProducerResponse } from '../dto/response/api-create-producer.response';
+import { ApiProducerResponse } from '../dto/response/api-producer.response';
 
 @Controller('producers')
 export class ProducerController {
@@ -23,15 +29,15 @@ export class ProducerController {
   @ApiBody({ type: CreateProducerRequest })
   @ApiCreatedResponse({
     description: 'Produtor criado com sucesso',
-    type: ApiResponseCreateProducerResponse,
+    type: ApiProducerResponse,
   })
   async createProducer(
     @Body() request: CreateProducerRequest,
-  ): Promise<ApiResponse<CreateProducerResponse>> {
+  ): Promise<ApiResponse<ProducerResponse>> {
     const producer = await this.producerService.create(request);
     const response = ProducerMapper.toResponse(producer);
 
-    return new ApiResponse<CreateProducerResponse>(
+    return new ApiResponse<ProducerResponse>(
       HttpStatus.CREATED,
       response,
       'Produtor criado com sucesso',
@@ -43,5 +49,23 @@ export class ProducerController {
   @HttpCode(HttpStatus.NO_CONTENT)
   async deleteProducer(@Param('id') id: string): Promise<void> {
     await this.producerService.delete(id);
+  }
+
+  @Get()
+  @HttpCode(HttpStatus.OK)
+  @ApiOkResponse({
+    description: 'Lista de todos os produtores',
+    type: ApiProducerResponse,
+    isArray: true,
+  })
+  async getAllProducers(): Promise<ApiResponse<ProducerResponse[]>> {
+    const producers = await this.producerService.findAll();
+    const response = producers.map(ProducerMapper.toResponse);
+
+    return new ApiResponse<ProducerResponse[]>(
+      HttpStatus.OK,
+      response,
+      'Dados carregados com sucesso',
+    );
   }
 }

@@ -28,4 +28,11 @@ export class ProducerTypeOrmRepository implements IProducerRepository {
     }
     return false;
   }
+
+  async findAll(): Promise<Producer[]> {
+    const producerEntities = await this.repository.find({
+      relations: ['farms', 'farms.harvests', 'farms.harvests.crop'],
+    });
+    return producerEntities.map(ProducerMapper.toDomain);
+  }
 }

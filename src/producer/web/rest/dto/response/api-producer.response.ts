@@ -1,5 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { ProducerResponse } from './create-producer.response';
+import { ProducerResponse } from './producer.response';
 
 export class ApiProducerResponse {
   @ApiProperty()

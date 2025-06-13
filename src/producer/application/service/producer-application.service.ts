@@ -95,4 +95,8 @@ export class ProducerApplicationService {
   async delete(id: string): Promise<boolean> {
     return await this.producerRepository.remove(id);
   }
+
+  async findAll(): Promise<Producer[]> {
+    return await this.producerRepository.findAll();
+  }
 }
