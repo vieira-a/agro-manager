@@ -7,6 +7,7 @@ import {
   HttpStatus,
   NotFoundException,
   Param,
+  Patch,
   Post,
 } from '@nestjs/common';
 import { ProducerApplicationService } from 'src/producer/application/service/producer-application.service';
@@ -91,6 +92,22 @@ export class ProducerController {
       HttpStatus.OK,
       response,
       'Dados carregados com sucesso',
+    );
+  }
+
+  @Patch(':id')
+  @ApiParam({ name: 'id', type: String, description: 'ID do produtor' })
+  @HttpCode(HttpStatus.OK)
+  async updateProducerName(
+    @Param('id') id: string,
+    @Body('name') name: string,
+  ) {
+    await this.producerService.updateName(id, name);
+
+    return new ApiResponse<null>(
+      HttpStatus.OK,
+      null,
+      'Dados atualizados com sucesso',
     );
   }
 }
