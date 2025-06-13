@@ -1,3 +1,4 @@
+import { DashBoardResponse } from 'src/producer/web/rest/dto/response/dashboard.response';
 import { Farm, Producer } from '../../domain/model';
 
 export class ProducerSummary {
@@ -35,12 +36,12 @@ export class ProducerSummary {
     return summary;
   }
 
-  toJSON() {
+  toJSON(): DashBoardResponse {
     return {
       totalFarms: this.totalFarms,
       totalHectares: this.totalHectares,
       totalState: this.totalState,
-      totalCulture: this.totalCrop,
+      totalCrop: this.totalCrop,
       landUsage: {
         agricultural: this.agricultural,
         vegetation: this.vegetation,

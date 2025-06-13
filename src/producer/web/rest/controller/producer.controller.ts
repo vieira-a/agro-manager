@@ -22,6 +22,7 @@ import {
 import { ProducerResponse } from '../dto/response/producer.response';
 import { ProducerMapper } from '../../../../producer/infrastructure/persistence/mapper/producer.mapper';
 import { ApiProducerResponse } from '../dto/response/api-producer.response';
+import { DashBoardResponse } from '../dto/response/dashboard.response';
 
 @Controller('producers')
 export class ProducerController {
@@ -71,11 +72,15 @@ export class ProducerController {
     );
   }
 
-  @Get('summary')
-  async getProducerSummary() {
+  @Get('dashboard')
+  @ApiOkResponse({
+    description: 'Dados carregados com sucesso',
+    type: DashBoardResponse,
+  })
+  async getProducerSummary(): Promise<ApiResponse<DashBoardResponse>> {
     const summary = await this.producerService.getSummary();
 
-    return new ApiResponse(
+    return new ApiResponse<DashBoardResponse>(
       HttpStatus.OK,
       summary,
       'Dados carregados com sucesso',
