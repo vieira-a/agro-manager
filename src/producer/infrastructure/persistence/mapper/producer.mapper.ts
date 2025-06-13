@@ -1,3 +1,4 @@
+import { CreateProducerResponse } from '../../../../producer/web/rest/dto/response/create-producer.response';
 import {
   CPF,
   DocumentValidatorFactory,
@@ -27,5 +28,14 @@ export class ProducerMapper {
       document,
       farms,
     });
+  }
+
+  static toResponse(domain: Producer): CreateProducerResponse {
+    return {
+      id: domain.getId(),
+      document: domain.getDocument(),
+      name: domain.getName(),
+      farms: domain.getFarms().map((farm) => FarmMapper.toResponse(farm)),
+    };
   }
 }

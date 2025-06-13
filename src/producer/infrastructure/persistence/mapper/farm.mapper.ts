@@ -1,3 +1,4 @@
+import { CreateFarmResponse } from '../../../../producer/web/rest/dto/response/create-producer.response';
 import { Farm } from '../../../../producer/domain/model';
 import { FarmEntity } from '../entity/farm.entity';
 import { HarvestMapper } from './harvest.mapper';
@@ -34,5 +35,19 @@ export class FarmMapper {
     entity.harvests = harvest ? [HarvestMapper.toEntity(harvest)] : [];
 
     return entity;
+  }
+
+  static toResponse(farm: Farm): CreateFarmResponse {
+    return {
+      name: farm.getName(),
+      city: farm.getCity(),
+      state: farm.getState(),
+      totalArea: farm.getTotalArea(),
+      agriculturalArea: farm.getAgriculturalArea(),
+      vegetationArea: farm.getVegetationArea(),
+      harvest: farm.getHarvest()
+        ? HarvestMapper.toResponse(farm.getHarvest()!)
+        : undefined,
+    };
   }
 }

@@ -1,3 +1,4 @@
+import { CreateHarvestResponse } from '../../../../producer/web/rest/dto/response/create-producer.response';
 import { Harvest } from '../../../../producer/domain/model';
 import { HarvestEntity } from '../entity/harvest.entity';
 import { CropMapper } from './crop.mapper';
@@ -20,5 +21,13 @@ export class HarvestMapper {
     entity.year = domain.getYear();
     entity.crop = CropMapper.toEntity(domain.getCrop());
     return entity;
+  }
+
+  static toResponse(harvest: Harvest): CreateHarvestResponse {
+    return {
+      description: harvest.getDescription(),
+      year: harvest.getYear(),
+      crop: CropMapper.toResponse(harvest.getCrop()),
+    };
   }
 }
