@@ -142,7 +142,7 @@ Adiciona uma nova safra com cultura a uma fazenda de um produtor.
 }
 ```
 
-#### GET /dashboard/summary
+#### GET /dashboard/dashboard
 
 Retorna os dados agregados do sistema.
 
@@ -175,4 +175,4 @@ Retorna os dados agregados do sistema.
 
 | Responsável     | Criado em  | Versão | Atualizado em |
 | --------------- | ---------- | ------ | ------------- |
-| Anderson Vieira | 10-06-2025 | 002    | 13-06-2025   |
+| Anderson Vieira | 10-06-2025 | 003    | 13-06-2025   |
