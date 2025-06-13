@@ -23,10 +23,12 @@ async function bootstrap() {
     },
   });
 
-  app.useGlobalFilters(new GlobalExceptionFilter());
+  const logger = app.get(Logger);
+
+  app.useGlobalFilters(new GlobalExceptionFilter(logger));
   app.setGlobalPrefix('api/v1');
 
-  app.useLogger(app.get(Logger));
+  app.useLogger(logger);
   await app.listen(process.env.PORT ?? 3000);
 }
 bootstrap();
