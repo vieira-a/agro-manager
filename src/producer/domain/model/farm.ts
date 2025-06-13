@@ -51,6 +51,24 @@ export class Farm {
     return farm;
   }
 
+  static restore(props: FarmProps & { id: string; harvest?: Harvest }): Farm {
+    const farm = new Farm(
+      props.id,
+      props.name,
+      props.city,
+      props.state,
+      props.totalArea,
+      props.agriculturalArea,
+      props.vegetationArea,
+    );
+
+    if (props.harvest) {
+      farm.addHarvest(props.harvest);
+    }
+
+    return farm;
+  }
+
   addHarvest(harvest: Harvest) {
     if (!harvest) {
       throw new InvalidFarmParamException('Safra');
@@ -58,6 +76,34 @@ export class Farm {
 
     harvest.validate();
     this.harvest = harvest;
+  }
+
+  getId(): string {
+    return this.id;
+  }
+
+  getName(): string {
+    return this.name;
+  }
+
+  getCity(): string {
+    return this.city;
+  }
+
+  getState(): string {
+    return this.state;
+  }
+
+  getTotalArea(): number {
+    return this.totalArea;
+  }
+
+  getAgriculturalArea(): number {
+    return this.agriculturalArea;
+  }
+
+  getVegetationArea(): number {
+    return this.vegetationArea;
   }
 
   getHarvest(): Harvest | undefined {

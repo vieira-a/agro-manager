@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Inject, Injectable } from '@nestjs/common';
 import { CreateProducerDto } from '../dto/create-producer.dto';
 import {
   Producer,
@@ -7,9 +7,26 @@ import {
   Harvest,
   DocumentValidatorFactory,
 } from '../../../producer/domain/model';
+import {
+  IProducerRepository,
+  IFarmRepository,
+  IHarvestRepository,
+  ICropRepository,
+} from '../repository';
 
 @Injectable()
 export class ProducerApplicationService {
+  constructor(
+    @Inject('IProducerRepository')
+    private readonly producerRepository: IProducerRepository,
+    @Inject('IFarmRepository')
+    private readonly farmRepository: IFarmRepository,
+    @Inject('IHarvestRepository')
+    private readonly harvestRepository: IHarvestRepository,
+    @Inject('ICropRepository')
+    private readonly cropRepository: ICropRepository,
+  ) {}
+
   async create(input: CreateProducerDto): Promise<Producer> {
     const producerDocument = DocumentValidatorFactory.create(input.document);
 
@@ -20,28 +37,51 @@ export class ProducerApplicationService {
 
     if (input.farm) {
       const farmProps = input.farm;
-      const farm = Farm.create({
-        name: farmProps.name,
-        city: farmProps.city,
-        state: farmProps.state,
-        totalArea: farmProps.totalArea,
-        agriculturalArea: farmProps.agriculturalArea,
-        vegetationArea: farmProps.vegetationArea,
-      });
+
+      let farm = await this.farmRepository.findUnique(
+        farmProps.name,
+        farmProps.city,
+        farmProps.state,
+      );
+
+      if (!farm) {
+        farm = Farm.create({
+          name: farmProps.name,
+          city: farmProps.city,
+          state: farmProps.state,
+          totalArea: farmProps.totalArea,
+          agriculturalArea: farmProps.agriculturalArea,
+          vegetationArea: farmProps.vegetationArea,
+        });
+
+        await this.farmRepository.save(farm);
+      }
 
       if (farmProps.harvest) {
         const harvestProps = farmProps.harvest;
         const cropProps = harvestProps.crop;
 
-        const crop = Crop.create({
-          name: cropProps.name,
-        });
+        let harvest = await this.harvestRepository.findUnique(
+          harvestProps.description,
+          harvestProps.year,
+        );
 
-        const harvest = Harvest.create({
-          description: harvestProps.description,
-          year: harvestProps.year,
-          crop: crop,
-        });
+        if (!harvest) {
+          let crop = await this.cropRepository.findUnique(cropProps.name);
+
+          if (!crop) {
+            crop = Crop.create({ name: cropProps.name });
+            await this.cropRepository.save(crop);
+          }
+
+          harvest = Harvest.create({
+            description: harvestProps.description,
+            year: harvestProps.year,
+            crop,
+          });
+
+          await this.harvestRepository.save(harvest);
+        }
 
         farm.addHarvest(harvest);
       }
@@ -49,6 +89,6 @@ export class ProducerApplicationService {
       producer.addFarm(farm);
     }
 
-    return producer;
+    return this.producerRepository.save(producer);
   }
 }
