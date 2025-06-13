@@ -25,6 +25,10 @@ export class CNPJ {
     return this.value;
   }
 
+  toJSON() {
+    return this.value;
+  }
+
   toString(): string {
     return this.value;
   }
