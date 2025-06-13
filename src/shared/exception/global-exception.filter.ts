@@ -7,9 +7,11 @@ import {
 } from '@nestjs/common';
 import { Request, Response } from 'express';
 import { DomainException } from './domain.exeption';
+import { Logger } from 'nestjs-pino';
 
 @Catch()
 export class GlobalExceptionFilter implements ExceptionFilter {
+  constructor(private readonly logger: Logger) {}
   catch(exception: unknown, host: ArgumentsHost) {
     const ctx = host.switchToHttp();
     const response = ctx.getResponse<Response>();
@@ -52,7 +54,15 @@ export class GlobalExceptionFilter implements ExceptionFilter {
       };
     }
 
-    console.log(exception);
+    this.logger.error(
+      {
+        exception,
+        params: exceptionParams,
+        path: request.url,
+        method: request.method,
+      },
+      `Exception caught: ${exceptionDetails.name} - ${exceptionDetails.message}`,
+    );
 
     response.status(status).json({
       statusCode: status,

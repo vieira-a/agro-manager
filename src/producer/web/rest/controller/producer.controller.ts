@@ -23,10 +23,14 @@ import { ProducerResponse } from '../dto/response/producer.response';
 import { ProducerMapper } from '../../../../producer/infrastructure/persistence/mapper/producer.mapper';
 import { ApiProducerResponse } from '../dto/response/api-producer.response';
 import { DashBoardResponse } from '../dto/response/dashboard.response';
+import { Logger } from 'nestjs-pino';
 
 @Controller('producers')
 export class ProducerController {
-  constructor(private readonly producerService: ProducerApplicationService) {}
+  constructor(
+    private readonly producerService: ProducerApplicationService,
+    private readonly logger: Logger,
+  ) {}
 
   @Post()
   @ApiBody({ type: CreateProducerRequest })
@@ -37,7 +41,12 @@ export class ProducerController {
   async createProducer(
     @Body() request: CreateProducerRequest,
   ): Promise<ApiResponse<ProducerResponse>> {
+    this.logger.log('Criando produtor', { payload: request });
+
     const producer = await this.producerService.create(request);
+
+    this.logger.log(`Produtor criado com ID: ${producer.getId()}`);
+
     const response = ProducerMapper.toResponse(producer);
 
     return new ApiResponse<ProducerResponse>(
@@ -51,7 +60,11 @@ export class ProducerController {
   @ApiParam({ name: 'id', type: String, description: 'ID do produtor' })
   @HttpCode(HttpStatus.NO_CONTENT)
   async deleteProducer(@Param('id') id: string): Promise<void> {
+    this.logger.log('Deletando produtor', { payload: id });
+
     await this.producerService.delete(id);
+
+    this.logger.log(`Produtor com ID: ${id} deletado com sucesso`);
   }
 
   @Get()
@@ -62,8 +75,14 @@ export class ProducerController {
     isArray: true,
   })
   async getAllProducers(): Promise<ApiResponse<ProducerResponse[]>> {
+    this.logger.log('Solicitando lista de produtores');
+
     const producers = await this.producerService.findAll();
     const response = producers.map(ProducerMapper.toResponse);
+
+    this.logger.log(
+      `Lista de produtores carregada com ${producers.length} produtores`,
+    );
 
     return new ApiResponse<ProducerResponse[]>(
       HttpStatus.OK,
@@ -78,7 +97,11 @@ export class ProducerController {
     type: DashBoardResponse,
   })
   async getProducerSummary(): Promise<ApiResponse<DashBoardResponse>> {
+    this.logger.log('Solicitando resumo de produtores para o dashboard');
+
     const summary = await this.producerService.getSummary();
+
+    this.logger.log('Dados de resumo dos produtores carregados com sucesso');
 
     return new ApiResponse<DashBoardResponse>(
       HttpStatus.OK,
@@ -97,11 +120,17 @@ export class ProducerController {
   async getProducerById(
     @Param('id') id: string,
   ): Promise<ApiResponse<ProducerResponse>> {
+    this.logger.log('Solicitando dados do produtor', { payload: id });
+
     const producer = await this.producerService.findById(id);
 
     if (!producer) {
       throw new NotFoundException('Produtor não encontrado');
     }
+
+    this.logger.log(
+      `Dados do produtor com id ${producer?.getId} carregados com sucesso`,
+    );
 
     const response = ProducerMapper.toResponse(producer);
     return new ApiResponse<ProducerResponse>(
@@ -121,7 +150,11 @@ export class ProducerController {
     @Param('id') id: string,
     @Body('name') name: string,
   ) {
+    this.logger.log('Atualizando produtor', { payload: { id, name } });
+
     await this.producerService.updateName(id, name);
+
+    this.logger.log(`Produtor com id ${id} atualizado com sucesso`);
 
     return new ApiResponse<null>(
       HttpStatus.OK,

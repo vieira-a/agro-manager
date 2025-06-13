@@ -3,9 +3,28 @@ import { ProducerModule } from './producer/producer.module';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { AppConfigModule } from './shared/config/config.module';
 import { ConfigService } from '@nestjs/config';
+import { LoggerModule } from 'nestjs-pino';
+import pino from 'pino';
 
 @Module({
   imports: [
+    LoggerModule.forRoot({
+      pinoHttp: {
+        transport:
+          process.env.NODE_ENV !== 'production'
+            ? {
+                target: 'pino-pretty',
+                options: {
+                  colorize: true,
+                  translateTime: 'SYS:standard',
+                  ignore: 'pid,hostname',
+                },
+              }
+            : undefined,
+        level: process.env.NODE_ENV === 'production' ? 'info' : 'debug',
+        autoLogging: true,
+      },
+    }),
     TypeOrmModule.forRootAsync({
       imports: [AppConfigModule],
       inject: [ConfigService],
@@ -23,7 +42,5 @@ import { ConfigService } from '@nestjs/config';
     }),
     ProducerModule,
   ],
-  controllers: [],
-  providers: [],
 })
 export class AppModule {}
