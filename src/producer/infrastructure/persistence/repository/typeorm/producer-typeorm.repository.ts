@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
+import { DeleteResult, Repository } from 'typeorm';
 
 import { Producer } from '../../../../../producer/domain/model';
 import { ProducerEntity } from '../../entity/producer.entity';
@@ -19,5 +19,13 @@ export class ProducerTypeOrmRepository implements IProducerRepository {
 
     const savedProducer = await this.repository.save(producerEntity);
     return ProducerMapper.toDomain(savedProducer);
+  }
+
+  async remove(id: string): Promise<boolean> {
+    const deleteResult = await this.repository.delete(id);
+    if (deleteResult.affected === 0) {
+      return true;
+    }
+    return false;
   }
 }

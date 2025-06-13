@@ -91,4 +91,8 @@ export class ProducerApplicationService {
 
     return this.producerRepository.save(producer);
   }
+
+  async delete(id: string): Promise<boolean> {
+    return await this.producerRepository.remove(id);
+  }
 }
