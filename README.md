@@ -6,6 +6,12 @@
 
 - [ERS 1 - Especificação de Requisitos de Software](https://github.com/vieira-a/agro-manager/blob/main/docs/requisitos/001-especificacao-requisitos.md)
 
+### Board do Projeto (Gighub Project)
+
+Nesta seção, demonstro como organizei o backlog do produto: em um quadro do tipo `Kanban`, dispus os épicos, seguidos de tarefas que representam as histórias de usuário, conforme especificações dos requisitos.
+
+- [Projeto Agro Manager](https://github.com/users/vieira-a/projects/5)
+
 ### Arquitetura
 
 - [API Design](https://github.com/vieira-a/agro-manager/blob/main/docs/arquitetura/001-api-design.md)
