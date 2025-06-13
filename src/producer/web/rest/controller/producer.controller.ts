@@ -114,6 +114,9 @@ export class ProducerController {
   @Patch(':id')
   @ApiParam({ name: 'id', type: String, description: 'ID do produtor' })
   @HttpCode(HttpStatus.OK)
+  @ApiOkResponse({
+    description: 'Dados atualizados com sucesso',
+  })
   async updateProducerName(
     @Param('id') id: string,
     @Body('name') name: string,
