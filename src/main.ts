@@ -2,9 +2,12 @@ import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
 import { GlobalExceptionFilter } from './shared/exception/global-exception.filter';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
+import { Logger } from 'nestjs-pino';
 
 async function bootstrap() {
-  const app = await NestFactory.create(AppModule);
+  const app = await NestFactory.create(AppModule, {
+    bufferLogs: true,
+  });
 
   const config = new DocumentBuilder()
     .setTitle('Agro Manager')
@@ -23,6 +26,7 @@ async function bootstrap() {
   app.useGlobalFilters(new GlobalExceptionFilter());
   app.setGlobalPrefix('api/v1');
 
+  app.useLogger(app.get(Logger));
   await app.listen(process.env.PORT ?? 3000);
 }
 bootstrap();
