@@ -49,7 +49,7 @@ Retorna todos os produtores cadastrados.
 ]
 ```
 
-### GET /producers/:id
+#### GET /producers/:id
 
 Retorna os dados completos de um produtor específico.
 
