@@ -36,7 +36,7 @@ export class FarmResponse {
   vegetationArea: number;
 
   @ApiProperty({ type: HarvestResponse, required: false })
-  harvest?: HarvestResponse;
+  harvests?: HarvestResponse[];
 }
 
 export class ProducerResponse {

@@ -12,11 +12,11 @@ type FarmProps = {
   totalArea: number;
   agriculturalArea: number;
   vegetationArea: number;
-  harvest?: Harvest;
+  harvests?: Harvest[];
 };
 
 export class Farm {
-  private harvest?: Harvest;
+  private harvests?: Harvest[] = [];
 
   private constructor(
     private readonly id: string,
@@ -43,15 +43,17 @@ export class Farm {
       props.vegetationArea,
     );
 
-    if (props.harvest) {
-      farm.addHarvest(props.harvest);
+    if (props.harvests && props.harvests.length) {
+      props.harvests.forEach((harvest) => farm.addHarvest(harvest));
     }
 
     farm.validate();
     return farm;
   }
 
-  static restore(props: FarmProps & { id: string; harvest?: Harvest }): Farm {
+  static restore(
+    props: FarmProps & { id: string; harvests?: Harvest[] },
+  ): Farm {
     const farm = new Farm(
       props.id,
       props.name,
@@ -62,8 +64,8 @@ export class Farm {
       props.vegetationArea,
     );
 
-    if (props.harvest) {
-      farm.addHarvest(props.harvest);
+    if (props.harvests && props.harvests.length > 0) {
+      props.harvests.forEach((harvest) => farm.addHarvest(harvest));
     }
 
     return farm;
@@ -74,8 +76,16 @@ export class Farm {
       throw new InvalidFarmParamException('Safra');
     }
 
+    const harvestExists = this.harvests?.some(
+      (existantHarvest) =>
+        existantHarvest.getDescription() === harvest.getDescription() &&
+        existantHarvest.getYear() === harvest.getYear(),
+    );
+
+    if (harvestExists) return;
+
     harvest.validate();
-    this.harvest = harvest;
+    this.harvests?.push(harvest);
   }
 
   getId(): string {
@@ -106,8 +116,8 @@ export class Farm {
     return this.vegetationArea;
   }
 
-  getHarvest(): Harvest | undefined {
-    return this.harvest;
+  getHarvests(): Harvest[] {
+    return this.harvests ?? [];
   }
 
   validate() {

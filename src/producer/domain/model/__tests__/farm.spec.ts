@@ -22,7 +22,7 @@ describe('Farm', () => {
     totalArea: 100,
     agriculturalArea: 60,
     vegetationArea: 30,
-    harvest: validHarvest,
+    harvests: [validHarvest],
   };
 
   it('should create a farm successfully with valid data', () => {
@@ -34,17 +34,17 @@ describe('Farm', () => {
     const farm = Farm.create(validProps);
 
     farm.addHarvest(validHarvest);
-    expect(farm.getHarvest()).toBe(validHarvest);
+    expect(farm.getHarvests()).toContain(validHarvest);
   });
 
   it('should create a farm successfully without harvest', () => {
-    const farm = Farm.create({ ...validProps, harvest: undefined });
+    const farm = Farm.create({ ...validProps, harvests: [] });
     expect(farm).toBeInstanceOf(Farm);
   });
 
   it('should throw if trying to create a farm with an invalid harvest', () => {
     const invalidHarvest = null as any;
-    const farm = Farm.create({ ...validProps, harvest: invalidHarvest });
+    const farm = Farm.create({ ...validProps, harvests: invalidHarvest });
 
     expect(() => farm.addHarvest(null as any)).toThrow(
       InvalidFarmParamException,

@@ -114,7 +114,7 @@ describe('ProducerApplicationService', () => {
     const producer = await service.create(input);
 
     const farm = producer.getFarms()[0];
-    const harvest = farm.getHarvest();
+    const harvest = farm.getHarvests();
     expect(harvest).toBeDefined();
 
     expect(mockFarmRepository.findUnique).toHaveBeenCalled();
