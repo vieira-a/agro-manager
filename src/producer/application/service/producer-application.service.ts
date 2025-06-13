@@ -13,6 +13,7 @@ import {
   IHarvestRepository,
   ICropRepository,
 } from '../repository';
+import { ProducerSummary } from '../dto/producer-summary';
 
 @Injectable()
 export class ProducerApplicationService {
@@ -52,6 +53,7 @@ export class ProducerApplicationService {
           totalArea: farmProps.totalArea,
           agriculturalArea: farmProps.agriculturalArea,
           vegetationArea: farmProps.vegetationArea,
+          harvests: [],
         });
 
         await this.farmRepository.save(farm);
@@ -83,7 +85,16 @@ export class ProducerApplicationService {
           await this.harvestRepository.save(harvest);
         }
 
-        farm.addHarvest(harvest);
+        farm = Farm.restore({
+          id: farm.getId(),
+          name: farm.getName(),
+          city: farm.getCity(),
+          state: farm.getState(),
+          totalArea: farm.getTotalArea(),
+          agriculturalArea: farm.getAgriculturalArea(),
+          vegetationArea: farm.getVegetationArea(),
+          harvests: [...farm.getHarvests(), harvest],
+        });
       }
 
       producer.addFarm(farm);
@@ -113,5 +124,12 @@ export class ProducerApplicationService {
 
     producer.updateName(newName);
     await this.producerRepository.save(producer);
+  }
+
+  async getSummary(): Promise<any> {
+    const producers = await this.producerRepository.findAll();
+    const summary = ProducerSummary.buid(producers);
+
+    return summary.toJSON();
   }
 }

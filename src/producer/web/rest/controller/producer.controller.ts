@@ -71,6 +71,17 @@ export class ProducerController {
     );
   }
 
+  @Get('summary')
+  async getProducerSummary() {
+    const summary = await this.producerService.getSummary();
+
+    return new ApiResponse(
+      HttpStatus.OK,
+      summary,
+      'Dados carregados com sucesso',
+    );
+  }
+
   @Get(':id')
   @ApiParam({ name: 'id', type: String, description: 'ID do produtor' })
   @HttpCode(HttpStatus.OK)
