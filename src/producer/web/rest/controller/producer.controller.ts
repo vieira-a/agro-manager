@@ -5,6 +5,7 @@ import {
   Get,
   HttpCode,
   HttpStatus,
+  NotFoundException,
   Param,
   Post,
 } from '@nestjs/common';
@@ -63,6 +64,30 @@ export class ProducerController {
     const response = producers.map(ProducerMapper.toResponse);
 
     return new ApiResponse<ProducerResponse[]>(
+      HttpStatus.OK,
+      response,
+      'Dados carregados com sucesso',
+    );
+  }
+
+  @Get(':id')
+  @ApiParam({ name: 'id', type: String, description: 'ID do produtor' })
+  @HttpCode(HttpStatus.OK)
+  @ApiOkResponse({
+    description: 'Dados de um produtor',
+    type: ApiProducerResponse,
+  })
+  async getProducerById(
+    @Param('id') id: string,
+  ): Promise<ApiResponse<ProducerResponse>> {
+    const producer = await this.producerService.findById(id);
+
+    if (!producer) {
+      throw new NotFoundException('Produtor não encontrado');
+    }
+
+    const response = ProducerMapper.toResponse(producer);
+    return new ApiResponse<ProducerResponse>(
       HttpStatus.OK,
       response,
       'Dados carregados com sucesso',

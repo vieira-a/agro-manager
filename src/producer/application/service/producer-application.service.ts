@@ -99,4 +99,8 @@ export class ProducerApplicationService {
   async findAll(): Promise<Producer[]> {
     return await this.producerRepository.findAll();
   }
+
+  async findById(id: string): Promise<Producer | null> {
+    return await this.producerRepository.findById(id);
+  }
 }

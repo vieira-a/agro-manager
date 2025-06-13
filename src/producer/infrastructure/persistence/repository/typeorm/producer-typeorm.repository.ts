@@ -35,4 +35,16 @@ export class ProducerTypeOrmRepository implements IProducerRepository {
     });
     return producerEntities.map(ProducerMapper.toDomain);
   }
+
+  async findById(id: string): Promise<Producer | null> {
+    const producerEntity = await this.repository.findOne({
+      where: { id },
+      relations: ['farms', 'farms.harvests', 'farms.harvests.crop'],
+    });
+    if (producerEntity) {
+      return ProducerMapper.toDomain(producerEntity);
+    }
+
+    return null;
+  }
 }
