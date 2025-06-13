@@ -24,12 +24,11 @@ export class HarvestTypeOrmRepository implements IHarvestRepository {
   async findUnique(description: string, year: number): Promise<Harvest | null> {
     const harvestEntity = await this.repository.findOne({
       where: { description, year },
+      relations: ['crop'],
     });
 
-    if (harvestEntity) {
-      return HarvestMapper.toDomain(harvestEntity);
-    }
+    if (!harvestEntity) return null;
 
-    return null;
+    return HarvestMapper.toDomain(harvestEntity);
   }
 }
