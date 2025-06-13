@@ -1,12 +1,11 @@
+import { FarmResponse } from '../../../web/rest/dto/response/producer.response';
 import { Farm } from '../../../../producer/domain/model';
 import { FarmEntity } from '../entity/farm.entity';
 import { HarvestMapper } from './harvest.mapper';
 
 export class FarmMapper {
   static toDomain(entity: FarmEntity): Farm {
-    const harvest = entity.harvests?.[0]
-      ? HarvestMapper.toDomain(entity.harvests[0])
-      : undefined;
+    const harvests = entity.harvests?.map(HarvestMapper.toDomain) ?? [];
 
     return Farm.restore({
       id: entity.id,
@@ -16,7 +15,7 @@ export class FarmMapper {
       totalArea: entity.totalArea,
       agriculturalArea: entity.agriculturalArea,
       vegetationArea: entity.vegetationArea,
-      harvest,
+      harvests,
     });
   }
 
@@ -30,9 +29,20 @@ export class FarmMapper {
     entity.agriculturalArea = domain.getAgriculturalArea();
     entity.vegetationArea = domain.getVegetationArea();
 
-    const harvest = domain.getHarvest();
-    entity.harvests = harvest ? [HarvestMapper.toEntity(harvest)] : [];
+    entity.harvests = domain.getHarvests().map(HarvestMapper.toEntity) ?? [];
 
     return entity;
+  }
+
+  static toResponse(farm: Farm): FarmResponse {
+    return {
+      name: farm.getName(),
+      city: farm.getCity(),
+      state: farm.getState(),
+      totalArea: farm.getTotalArea(),
+      agriculturalArea: farm.getAgriculturalArea(),
+      vegetationArea: farm.getVegetationArea(),
+      harvests: farm.getHarvests().map(HarvestMapper.toResponse) ?? [],
+    };
   }
 }

@@ -25,7 +25,9 @@ export class FarmEntity {
   @Column('float')
   vegetationArea: number;
 
-  @ManyToOne(() => ProducerEntity, (producer) => producer.farms)
+  @ManyToOne(() => ProducerEntity, (producer) => producer.farms, {
+    onDelete: 'CASCADE',
+  })
   producer: ProducerEntity;
 
   @OneToMany(() => HarvestEntity, (harvest) => harvest.farm, { cascade: true })

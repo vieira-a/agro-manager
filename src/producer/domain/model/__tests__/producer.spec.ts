@@ -26,7 +26,7 @@ describe('Producer', () => {
     totalArea: 100,
     agriculturalArea: 50,
     vegetationArea: 30,
-    harvest: harvests,
+    harvests: [harvests],
   });
 
   it('should create a valid Producer with valid CPF and all nested entities', () => {

@@ -1,3 +1,4 @@
+import { CropResponse } from '../../../web/rest/dto/response/producer.response';
 import { Crop } from '../../../../producer/domain/model';
 import { CropEntity } from '../entity/crop.entity';
 
@@ -11,5 +12,11 @@ export class CropMapper {
     entity.id = domain.getId();
     entity.name = domain.getName();
     return entity;
+  }
+
+  static toResponse(crop: Crop): CropResponse {
+    return {
+      name: crop.getName(),
+    };
   }
 }

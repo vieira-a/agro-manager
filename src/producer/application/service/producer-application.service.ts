@@ -1,4 +1,4 @@
-import { Inject, Injectable } from '@nestjs/common';
+import { Inject, Injectable, NotFoundException } from '@nestjs/common';
 import { CreateProducerDto } from '../dto/create-producer.dto';
 import {
   Producer,
@@ -13,6 +13,7 @@ import {
   IHarvestRepository,
   ICropRepository,
 } from '../repository';
+import { ProducerSummary } from '../dto/producer-summary';
 
 @Injectable()
 export class ProducerApplicationService {
@@ -52,6 +53,7 @@ export class ProducerApplicationService {
           totalArea: farmProps.totalArea,
           agriculturalArea: farmProps.agriculturalArea,
           vegetationArea: farmProps.vegetationArea,
+          harvests: [],
         });
 
         await this.farmRepository.save(farm);
@@ -83,12 +85,51 @@ export class ProducerApplicationService {
           await this.harvestRepository.save(harvest);
         }
 
-        farm.addHarvest(harvest);
+        farm = Farm.restore({
+          id: farm.getId(),
+          name: farm.getName(),
+          city: farm.getCity(),
+          state: farm.getState(),
+          totalArea: farm.getTotalArea(),
+          agriculturalArea: farm.getAgriculturalArea(),
+          vegetationArea: farm.getVegetationArea(),
+          harvests: [...farm.getHarvests(), harvest],
+        });
       }
 
       producer.addFarm(farm);
     }
 
     return this.producerRepository.save(producer);
+  }
+
+  async delete(id: string): Promise<boolean> {
+    return await this.producerRepository.remove(id);
+  }
+
+  async findAll(): Promise<Producer[]> {
+    return await this.producerRepository.findAll();
+  }
+
+  async findById(id: string): Promise<Producer | null> {
+    return await this.producerRepository.findById(id);
+  }
+
+  async updateName(id: string, newName: string): Promise<void> {
+    const producer = await this.producerRepository.findById(id);
+
+    if (!producer) {
+      throw new NotFoundException(`Produtor com id ${id} não encontrado`);
+    }
+
+    producer.updateName(newName);
+    await this.producerRepository.save(producer);
+  }
+
+  async getSummary(): Promise<any> {
+    const producers = await this.producerRepository.findAll();
+    const summary = ProducerSummary.buid(producers);
+
+    return summary.toJSON();
   }
 }

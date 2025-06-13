@@ -13,7 +13,7 @@ export class HarvestEntity {
   @Column()
   year: number;
 
-  @ManyToOne(() => FarmEntity, (farm) => farm.harvests)
+  @ManyToOne(() => FarmEntity, (farm) => farm.harvests, { onDelete: 'CASCADE' })
   farm: FarmEntity;
 
   @ManyToOne(() => CropEntity, (crop) => crop.harvests, { cascade: true })

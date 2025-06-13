@@ -16,7 +16,7 @@ export class Producer {
   private constructor(
     private readonly id: string,
     private readonly document: CPF | CNPJ,
-    private readonly name: string,
+    private name: string,
   ) {}
 
   static create(props: ProducerProps) {
@@ -67,6 +67,16 @@ export class Producer {
 
   getFarms(): ReadonlyArray<Farm> {
     return [...this.farms];
+  }
+
+  updateName(newName: string): void {
+    const normalized = newName.trim();
+
+    if (!normalized) {
+      throw new InvalidProducerParamException('Nome');
+    }
+
+    this.name = normalized;
   }
 
   validate(): void {

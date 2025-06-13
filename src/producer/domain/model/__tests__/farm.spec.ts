@@ -22,7 +22,7 @@ describe('Farm', () => {
     totalArea: 100,
     agriculturalArea: 60,
     vegetationArea: 30,
-    harvest: validHarvest,
+    harvests: [validHarvest],
   };
 
   it('should create a farm successfully with valid data', () => {
@@ -30,22 +30,38 @@ describe('Farm', () => {
     expect(farm).toBeInstanceOf(Farm);
   });
 
-  it('should allow adding a harvest to an existing farm', () => {
+  it('should not duplicate the same harvest', () => {
     const farm = Farm.create(validProps);
 
     farm.addHarvest(validHarvest);
-    expect(farm.getHarvest()).toBe(validHarvest);
+    expect(farm.getHarvests()).toHaveLength(1);
+    expect(farm.getHarvests()).toContain(validHarvest);
+  });
+
+  it('should add different harvests correctly', () => {
+    const farm = Farm.create(validProps);
+
+    const anotherHarvest = Harvest.create({
+      description: 'Safra 2025',
+      year: 2025,
+      crop: validCrop,
+    });
+
+    farm.addHarvest(anotherHarvest);
+
+    expect(farm.getHarvests()).toHaveLength(2);
+    expect(farm.getHarvests()).toEqual(
+      expect.arrayContaining([validHarvest, anotherHarvest]),
+    );
   });
 
   it('should create a farm successfully without harvest', () => {
-    const farm = Farm.create({ ...validProps, harvest: undefined });
+    const farm = Farm.create({ ...validProps, harvests: [] });
     expect(farm).toBeInstanceOf(Farm);
   });
 
-  it('should throw if trying to create a farm with an invalid harvest', () => {
-    const invalidHarvest = null as any;
-    const farm = Farm.create({ ...validProps, harvest: invalidHarvest });
-
+  it('should throw if trying to add an invalid harvest', () => {
+    const farm = Farm.create(validProps);
     expect(() => farm.addHarvest(null as any)).toThrow(
       InvalidFarmParamException,
     );
