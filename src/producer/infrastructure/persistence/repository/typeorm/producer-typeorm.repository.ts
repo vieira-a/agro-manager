@@ -5,6 +5,7 @@ import { Repository } from 'typeorm';
 import { Producer } from '../../../../../producer/domain/model';
 import { ProducerEntity } from '../../entity/producer.entity';
 import { IProducerRepository } from '../../../../../producer/application/repository';
+import { ProducerMapper } from '../../mapper/producer.mapper';
 
 @Injectable()
 export class ProducerTypeOrmRepository implements IProducerRepository {
@@ -14,6 +15,9 @@ export class ProducerTypeOrmRepository implements IProducerRepository {
   ) {}
 
   async save(producer: Producer): Promise<Producer> {
-    return producer;
+    const producerEntity = ProducerMapper.toEntity(producer);
+
+    const savedProducer = await this.repository.save(producerEntity);
+    return ProducerMapper.toDomain(savedProducer);
   }
 }
