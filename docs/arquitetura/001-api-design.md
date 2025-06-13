@@ -17,12 +17,13 @@ Apresentar os contratos de API propostos na aplicação **Agro Manager**
 Retorna todos os produtores cadastrados.
 
 **Response**
+
 ```json
 [
   {
     "id": "1ec941df-7a28-4c91-b17b-28071a4a0d7f",
     "name": "João Silva",
-    "document": "123.456.789-00",
+    "document": "12345678900",
     "farms": [
       {
         "id": "c0ae687c-f382-491d-a650-d1623a80ccc3",
@@ -32,10 +33,14 @@ Retorna todos os produtores cadastrados.
         "totalArea": 100.5,
         "agriculturalArea": 60.0,
         "vegetationArea": 40.5,
-        "crops": [
+        "harvests": [
           {
-            "season": "Safra 2023",
-            "culture": "Soja"
+            "id": "3f8c9c7f-8bcd-4e4c-a276-f11f3d9c07d1",
+            "description": "Safra de Verão",
+            "year": 2023,
+            "crop": {
+              "name": "Milho"
+            }
           }
         ]
       }
@@ -44,20 +49,9 @@ Retorna todos os produtores cadastrados.
 ]
 ```
 
-#### GET /producers
+### GET /producers/:id
 
-Retorna os dados detalhados de um produtor específico.
-
-**Response**
-
-```json
-{
-  "id": "1ec941df-7a28-4c91-b17b-28071a4a0d7f",
-  "name": "João Silva",
-  "document": "123.456.789-00",
-  "farms": [ ... ]
-}
-```
+Retorna os dados completos de um produtor específico.
 
 #### POST /producers
 
@@ -68,7 +62,7 @@ Cadastra um novo produtor com fazendas e culturas.
 ```json
 {
   "name": "João Silva",
-  "document": "123.456.789-00",
+  "document": "12345678900",
   "farms": [
     {
       "name": "Fazenda São João",
@@ -77,10 +71,13 @@ Cadastra um novo produtor com fazendas e culturas.
       "totalArea": 100.5,
       "agriculturalArea": 60.0,
       "vegetationArea": 40.5,
-      "crops": [
+      "harvests": [
         {
-          "season": "Safra 2023",
-          "culture": "Soja"
+          "description": "Safra de Verão",
+          "year": 2023,
+          "crop": {
+            "name": "Milho"
+          }
         }
       ]
     }
@@ -88,17 +85,23 @@ Cadastra um novo produtor com fazendas e culturas.
 }
 ```
 
+**Response**
+
+```json
+{
+  "id": "uuid-do-produtor"
+}
+```
+
 #### PUT /producers/:id
 
-Atualiza um produtor existente (incluindo suas fazendas e culturas).
+Atualiza dados gerais do produtor (apenas nome para esse contexto). Não altera fazendas nem safras.
 
 **Request**
 
 ```json
 {
-  "name": "João Silva Atualizado",
-  "document": "987.654.321-00",
-  "farms": [ ... ]
+  "name": "João da Silva Neto",
 }
 ```
 
@@ -106,71 +109,67 @@ Atualiza um produtor existente (incluindo suas fazendas e culturas).
 
 Remove um produtor e todos os dados associados (fazendas, culturas, safras).
 
+#### POST /producers/:producerId/farms
+
+Adiciona uma nova fazenda a um produtor existente.
+
+**Request**
+
+```json
+{
+  "name": "Fazenda Nova Esperança",
+  "state": "MT",
+  "city": "Cuiabá",
+  "totalArea": 200.0,
+  "agriculturalArea": 120.0,
+  "vegetationArea": 80.0
+}
+```
+
+#### POST /producers/:producerId/farms/:farmId/harvests
+
+Adiciona uma nova safra com cultura a uma fazenda de um produtor.
+
+**Request**
+
+```json
+{
+  "description": "Safra de Inverno",
+  "year": 2024,
+  "crop": {
+    "name": "Soja"
+  }
+}
+```
+
 #### GET /dashboard/summary
 
-Resumo geral para o dashboard.
+Retorna os dados agregados do sistema.
 
 **Response**
 
 ```json
 {
   "totalFarms": 10,
-  "totalHectares": 1530.75
+  "totalHectares": 1500.5,
+  "byState": {
+    "GO": 5,
+    "MT": 3,
+    "SP": 2
+  },
+  "byCulture": {
+    "Soja": 6,
+    "Milho": 4,
+    "Café": 2
+  },
+  "landUse": {
+    "agricultural": 900.0,
+    "vegetation": 600.5
+  }
 }
+
 ```
-
-#### GET /dashboard/farms-by-state
-
-Retorna a quantidade de fazendas por estado (para gráfico de pizza).
-
-**Response**
-
-```json
-[
-  { "state": "GO", "count": 4 },
-  { "state": "MG", "count": 2 },
-  { "state": "SP", "count": 4 }
-]
-```
-
-#### GET /dashboard/farms-by-crop
-
-Retorna a quantidade de culturas plantadas por tipo (para gráfico de pizza).
-
-**Response**
-
-```json
-[
-  { "culture": "Soja", "count": 6 },
-  { "culture": "Milho", "count": 3 },
-  { "culture": "Café", "count": 1 }
-]
-```
-
-#### GET /dashboard/land-use
-
-Retorna o uso do solo somado: áreas agricultáveis e de vegetação.
-
-**Response**
-
-```json
-{
-  "agricultural": 950.5,
-  "vegetation": 580.25
-}
-```
-
-#### GET /producers/document/:document
-
-Verifica se um produtor com o CPF/CNPJ fornecido já está cadastrado.
-
-**Response**
-
-```json
-{
-  "exists": true
-}
-```
+---
 
 ## Change log
 
