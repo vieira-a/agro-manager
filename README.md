@@ -49,3 +49,7 @@ Mostra a revisão da definição do `Producer` como raiz de um agragado e seus r
 - [ADR 006 Estratégia de mapeamento entre entidades de domínio e entidades de persistência](https://github.com/vieira-a/agro-manager/blob/main/docs/adr/006-persistence-mapper-strategy.md)
 
 Mostra a abordagem adotada para o mapeamento manual entre entidades de domínio e entidades de persistência, garantindo desacoplamento do domínio da infraestrutura, melhor testabilidade e controle sobre a transformação dos dados.
+
+### Como executar o projeto Agro Manager 
+
+- [Em ambiente local (desenvolvimento)](https://github.com/vieira-a/agro-manager/blob/main/docs/execute/001-how-to-run.md)
