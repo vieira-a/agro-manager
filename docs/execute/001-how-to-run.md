@@ -11,6 +11,8 @@
 - ts-node (instalado via dependências)
 - Variáveis de ambiente configuradas no arquivo .env.development.local
 
+---
+
 ### Configuração das variáveis de ambiente
 
 Crie o arquivo `.env.development.local` na raiz do projeto com as variáveis abaixo:
@@ -25,6 +27,8 @@ POSTGRES_DB_NAME=nome_do_banco
 ```
 
 Ajuste os valores conforme seu ambiente
+
+---
 
 ### Como rodar o projeto
 
@@ -50,7 +54,9 @@ npm run start:dev
 
 Esse comando usa o ts-node para rodar a aplicação com recarregamento automático.
 
-#### Executando testes unitários e de integração
+---
+
+### Executando testes unitários e de integração
 
 ```bash
 npm run test
@@ -118,6 +124,8 @@ Este comando executará uma suite de testes que abrange as principais camadas e 
 - [x] Deve lançar exceção se o nome do produtor estiver vazio.
 - [x] Deve lançar exceção se o nome da cultura (crop) estiver vazio durante a criação do produtor com fazenda e safra.
 
+---
+
 ### Estrutura importante para configurações
 
 - As entidades estão localizadas em: src/**/*.entity.ts
@@ -125,17 +133,17 @@ Este comando executará uma suite de testes que abrange as principais camadas e 
 - A configuração do TypeORM está em: src/database/typeorm.config.ts
 - A instância do DataSource para CLI está em: src/database/data-source.ts
 
-### Observações
-
-- As migrations e as entidades usam arquivos .ts no ambiente de desenvolvimento e arquivos compilados .js na produção.
-- Nunca rode a aplicação em produção com synchronize: true para evitar perda de dados.
-- Use os comandos do TypeORM CLI sempre apontando para o arquivo que exporta a instância do DataSource (data-source.ts).
-
 #### Gerando novas migrações 
 
 Utilize a sintaxe a seguir:
 
 - Ambiente de desenvolvimento: `npm run migration:generate:dev -- database/migrations/TituloMigracao`
 - Ambiente de produção: `npm run migration:generate:prod -- database/migrations/TituloMigracao`
+
+### Observações
+
+- As migrations e as entidades usam arquivos .ts no ambiente de desenvolvimento e arquivos compilados .js na produção.
+- Nunca rode a aplicação em produção com synchronize: true para evitar perda de dados.
+- Use os comandos do TypeORM CLI sempre apontando para o arquivo que exporta a instância do DataSource (data-source.ts).
 
 Se precisar de ajuda para configurar ou rodar algum comando, só avisar! 
