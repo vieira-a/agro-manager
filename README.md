@@ -52,4 +52,6 @@ Mostra a abordagem adotada para o mapeamento manual entre entidades de domínio 
 
 ### Como executar o projeto Agro Manager 
 
+Esta seção demonstrará como executar o projeto, bem como os testes unitários e de integração
+
 - [Em ambiente local (desenvolvimento)](https://github.com/vieira-a/agro-manager/blob/main/docs/execute/001-how-to-run.md)
