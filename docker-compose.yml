@@ -1,0 +1,47 @@
+version: "3"
+
+services:
+  postgres:
+    image: postgres:15
+    container_name: agro-manager-pg-db
+    restart: always
+    env_file:
+      - .env.development.local
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_DB: ${POSTGRES_DB_URL}
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    networks:
+      - agro_manager_network
+
+  pgadmin:
+    image: dpage/pgadmin4
+    container_name: agro-manager-pg-adm
+    restart: always
+    env_file:
+      - .env.development.local
+    environment:
+      PGADMIN_DEFAULT_EMAIL: ${PGADMIN_EMAIL}
+      PGADMIN_DEFAULT_PASSWORD: ${PGADMIN_PASSWORD}
+    ports:
+      - "8081:80"
+    volumes:
+      - pgadmin_data:/var/lib/pgadmin
+    networks:
+      - agro_manager_network
+    depends_on:
+      - postgres
+
+volumes:
+  postgres_data:
+    driver: local
+  pgadmin_data:
+    driver: local
+
+networks:
+  agro_manager_network:
+    driver: bridge
