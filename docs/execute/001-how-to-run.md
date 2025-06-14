@@ -6,16 +6,24 @@
 
 - Node.js >= 18.x (recomendo LTS)
 - npm
+- Git
 - PostgreSQL >= 13.x configurado e rodando localmente ou em container
+- Docker e Docker Compose
 - TypeScript (instalado via dependências)
 - ts-node (instalado via dependências)
 - Variáveis de ambiente configuradas no arquivo .env.development.local
 
 ---
 
+### Clone o repositório
+
+```bash
+git clone git@github.com:vieira-a/agro-manager.git
+```
+
 ### Configuração das variáveis de ambiente
 
-Crie o arquivo `.env.development.local` na raiz do projeto com as variáveis abaixo:
+ Renomeie o arquivo `env-example` que está na raiz do projeto, para `.env.development.local`, e preencha as seguintes variáveis de ambiente:
 
 ```json
 NODE_ENV=development
@@ -24,6 +32,8 @@ POSTGRES_DB_PORT=5432
 POSTGRES_USER=seu_usuario
 POSTGRES_PASSWORD=sua_senha
 POSTGRES_DB_NAME=nome_do_banco
+PGADMIN_EMAIL=email_valido
+PGADMIN_PASSWORD=senha
 ```
 
 Ajuste os valores conforme seu ambiente
@@ -37,6 +47,39 @@ Ajuste os valores conforme seu ambiente
 ```bash
 npm install
 ```
+
+#### Banco de dados
+
+Antes de rodar a aplicação, suba o banco PostgreSQL com o seguinte comando Docker:
+
+```bash
+docker-compose up -d
+```
+
+Este comando irá executar o arquivo `docker-compose.yml` que está na raiz do projeto. Este arquivo utiliza variáveis de ambiente para configurar a instância do banco de dados `Postgres` e o `PgAdmin`.
+
+_Caso já tenha esses recursos instalados, não precisa executar o docker, basta criar uma nova base de dados e informar no arquivo `.env.development.local`
+Ao subir o Docker, o banco será criado automaticamente com os dados fornecidos em `.env.development.local`._
+
+Se quiser gerenciar o banco visualmente, acesse o **pgAdmin**:
+
+- URL: http://localhost:8080 (ou a porta informada no arquivo `.env.development.local`)
+- Email: conforme `PGADMIN_EMAIL` no arquivo `.env.development.local`
+- Senha: conforme `PGADMIN_PASSWORD` no arquivo `.env.development.local`
+
+Dentro do pgAdmin, conecte-se ao servidor `postgres` e seu banco com o nome informado no arquivo `.env.development.local` estará disponível automaticamente, sem necessidade de criação manual.
+
+Caso ainda não apareça:
+
+1. Clique com o botão direito em "Servers" > Create > Server...
+2. Configure com:
+   - **Name:** agro-manager-local
+   - **Host:** postgres
+   - **Port:** 5432
+   - **Username:** conforme `.env.development.local`
+   - **Password:** conforme `.env.development.local`
+
+---
 
 #### Rodar migrações no ambiente de desenvolvimento
 
@@ -125,6 +168,22 @@ Este comando executará uma suite de testes que abrange as principais camadas e 
 - [x] Deve lançar exceção se o nome da cultura (crop) estiver vazio durante a criação do produtor com fazenda e safra.
 
 ---
+
+### URL base da aplicação
+
+Após iniciar a aplicação, a URL base estará disponível localmente em: [http://localhost:3000/api/v1](http://localhost:3000/api/v1)
+
+---
+
+### Documentação com Swagger (OpenAPI)
+
+Após iniciar a aplicação, a documentação estará disponível localmente em: [http://localhost:3000/api/v1/docs](http://localhost:3000/api/v1/docs)
+
+---
+
+### Arquivo de rotas (Postman)
+
+- [Producers.postman_collection.json](https://github.com/user-attachments/files/20734898/Producers.postman_collection.json)
 
 ### Estrutura importante para configurações
 
