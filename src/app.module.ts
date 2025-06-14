@@ -1,13 +1,19 @@
 import { Module } from '@nestjs/common';
 import { ProducerModule } from './producer/producer.module';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { AppConfigModule } from './shared/config/config.module';
-import { ConfigService } from '@nestjs/config';
+import { ConfigModule } from '@nestjs/config';
 import { LoggerModule } from 'nestjs-pino';
-import pino from 'pino';
+import { typeOrmConfig } from '../database/typeorm.config';
 
 @Module({
   imports: [
+    ConfigModule.forRoot({
+      isGlobal: true,
+      envFilePath: process.env.NODE_ENV
+        ? `.env.${process.env.NODE_ENV}.local`
+        : '.env.development.local',
+      ignoreEnvFile: process.env.NODE_ENV === 'production',
+    }),
     LoggerModule.forRoot({
       pinoHttp: {
         transport:
@@ -25,21 +31,7 @@ import pino from 'pino';
         autoLogging: true,
       },
     }),
-    TypeOrmModule.forRootAsync({
-      imports: [AppConfigModule],
-      inject: [ConfigService],
-      useFactory: (configService: ConfigService) => ({
-        type: 'postgres',
-        host: configService.get('POSTGRES_DB_HOST'),
-        port: configService.get<number>('POSTGRES_DB_PORT'),
-        username: configService.get('POSTGRES_USER'),
-        password: configService.get('POSTGRES_PASSWORD'),
-        database: configService.get('POSTGRES_DB_NAME'),
-        entities: [__dirname + '/**/*.entity{.ts,.js}'],
-        synchronize: true,
-        logging: true,
-      }),
-    }),
+    TypeOrmModule.forRoot(typeOrmConfig),
     ProducerModule,
   ],
 })
