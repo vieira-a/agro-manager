@@ -6,7 +6,7 @@ export class Password {
     }
   }
 
-  getValue(): string {
+  getHashedValue(): string {
     return this.hashedPassword;
   }
 }
