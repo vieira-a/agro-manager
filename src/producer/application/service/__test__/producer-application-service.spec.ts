@@ -1,4 +1,4 @@
-import { Crop, Farm, Harvest, Producer } from 'src/producer/domain/model';
+import { Producer } from '../../../../producer/domain/model';
 import {
   InvalidCropParamException,
   InvalidProducerParamException,
@@ -12,6 +12,8 @@ import {
 } from '../../repository';
 import { ProducerApplicationService } from '../producer-application.service';
 import { Test, TestingModule } from '@nestjs/testing';
+import { PasswordFactory } from '../../../../producer/domain/model/password.factory';
+import { Password } from '../../../../producer/domain/model/password';
 
 describe('ProducerApplicationService', () => {
   let service: ProducerApplicationService;
@@ -35,6 +37,10 @@ describe('ProducerApplicationService', () => {
     findUnique: jest.fn(),
   };
 
+  const mockPasswordFactory: Partial<PasswordFactory> = {
+    create: jest.fn().mockResolvedValue(new Password('hashed-password')),
+  };
+
   beforeEach(async () => {
     jest.clearAllMocks();
 
@@ -45,6 +51,7 @@ describe('ProducerApplicationService', () => {
         { provide: 'IFarmRepository', useValue: mockFarmRepository },
         { provide: 'IHarvestRepository', useValue: mockHarvestRepository },
         { provide: 'ICropRepository', useValue: mockCropRepository },
+        { provide: PasswordFactory, useValue: mockPasswordFactory },
       ],
     }).compile();
 
@@ -55,6 +62,7 @@ describe('ProducerApplicationService', () => {
     const input: CreateProducerDto = {
       name: 'João da Silva',
       document: '09779679057',
+      password: 'P@ssword10',
     };
 
     const producer = await service.create(input);
@@ -69,6 +77,7 @@ describe('ProducerApplicationService', () => {
     const input: CreateProducerDto = {
       name: 'João da Silva',
       document: '09779679057',
+      password: 'P@ssword10',
       farm: {
         name: 'Fazenda Monte Alto',
         city: 'Cruz das Almas',
@@ -94,6 +103,7 @@ describe('ProducerApplicationService', () => {
     const input: CreateProducerDto = {
       name: 'João da Silva',
       document: '09779679057',
+      password: 'P@ssword10',
       farm: {
         name: 'Fazenda Monte Alto',
         city: 'Cruz das Almas',
@@ -131,6 +141,7 @@ describe('ProducerApplicationService', () => {
     const input: CreateProducerDto = {
       document: '09779679057',
       name: '',
+      password: 'P@ssword10',
     };
 
     await expect(service.create(input)).rejects.toThrow(
@@ -142,6 +153,7 @@ describe('ProducerApplicationService', () => {
     const input: CreateProducerDto = {
       name: 'João da Silva',
       document: '09779679057',
+      password: 'P@ssword10',
       farm: {
         name: 'Fazenda Monte Alto',
         city: 'Cruz das Almas',
