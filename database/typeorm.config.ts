@@ -1,5 +1,6 @@
 import { DataSourceOptions } from 'typeorm';
 import { config } from 'dotenv';
+import * as path from 'path';
 
 const envFile = `.env.${process.env.NODE_ENV || 'development'}.local`;
 config({ path: envFile });
@@ -15,15 +16,15 @@ export const typeOrmConfig: DataSourceOptions = {
   database: process.env.POSTGRES_DB_NAME,
   entities: [
     isProd
-      ? __dirname + '/../dist/src/**/*.entity.js'
-      : __dirname + '/../src/**/*.entity.ts',
+      ? path.join(__dirname, '**', '*.entity.js')
+      : path.join(__dirname, '..', 'src', '**', '*.entity.ts'),
   ],
   migrations: [
     isProd
-      ? __dirname + 'dist/database/migrations/*.js'
-      : __dirname + '/migrations/*.ts',
+      ? path.join(__dirname, 'migrations', '*.js')
+      : path.join(__dirname, '..', 'migrations', '*.ts'),
   ],
   migrationsTableName: 'migrations',
   synchronize: false,
-  logging: true,
+  logging: !isProd,
 };
