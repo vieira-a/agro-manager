@@ -14,6 +14,7 @@ import {
   ICropRepository,
 } from '../repository';
 import { ProducerSummary } from '../dto/producer-summary';
+import { PasswordFactory } from '../../../producer/domain/model/password.factory';
 
 @Injectable()
 export class ProducerApplicationService {
@@ -26,14 +27,17 @@ export class ProducerApplicationService {
     private readonly harvestRepository: IHarvestRepository,
     @Inject('ICropRepository')
     private readonly cropRepository: ICropRepository,
+    private readonly passwordFactory: PasswordFactory,
   ) {}
 
   async create(input: CreateProducerDto): Promise<Producer> {
     const producerDocument = DocumentValidatorFactory.create(input.document);
+    const hashedPassword = await this.passwordFactory.create(input.password);
 
     const producer = Producer.create({
       document: producerDocument,
       name: input.name,
+      password: hashedPassword,
     });
 
     if (input.farm) {
