@@ -79,7 +79,7 @@ export class Producer {
   }
 
   getPassword(): string {
-    return this.password.getValue();
+    return this.password.getHashedValue();
   }
 
   getFarms(): ReadonlyArray<Farm> {
