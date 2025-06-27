@@ -14,12 +14,14 @@ import { ProducerController } from './web/rest/controller/producer.controller';
 import { EncryptPassword } from './domain/model/encrypt-password';
 import { PasswordFactory } from './domain/model/password.factory';
 import { JwtService } from '@nestjs/jwt';
+import { JwtStrategy } from '../shared/auth/strategy/jwt.strategy';
 
 @Module({
   imports: [AppTypeOrmModule],
   providers: [
     ProducerApplicationService,
     ProducerAuthService,
+    JwtStrategy,
     JwtService,
     PasswordFactory,
     { provide: 'IProducerRepository', useClass: ProducerTypeOrmRepository },
