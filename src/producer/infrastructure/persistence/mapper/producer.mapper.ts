@@ -6,6 +6,7 @@ import {
 } from '../../../../producer/domain/model';
 import { ProducerEntity } from '../entity/producer.entity';
 import { FarmMapper } from './farm.mapper';
+import { Password } from 'src/producer/domain/model/password';
 
 export class ProducerMapper {
   static toEntity(domain: Producer): ProducerEntity {
@@ -27,6 +28,7 @@ export class ProducerMapper {
       name: entity.name,
       document,
       farms,
+      password: new Password(entity.password),
     });
   }
 
