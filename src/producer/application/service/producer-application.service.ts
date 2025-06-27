@@ -15,6 +15,7 @@ import {
 } from '../repository';
 import { ProducerSummary } from '../dto/producer-summary';
 import { PasswordFactory } from '../../../producer/domain/model/password.factory';
+import { PasswordNotMatchException } from '../exception/password-not-match.exception';
 
 @Injectable()
 export class ProducerApplicationService {
@@ -31,6 +32,10 @@ export class ProducerApplicationService {
   ) {}
 
   async create(input: CreateProducerDto): Promise<Producer> {
+    if (input.password !== input.passwordConfirmation) {
+      throw new PasswordNotMatchException();
+    }
+
     const producerDocument = DocumentValidatorFactory.create(input.document);
     const hashedPassword = await this.passwordFactory.create(input.password);
 

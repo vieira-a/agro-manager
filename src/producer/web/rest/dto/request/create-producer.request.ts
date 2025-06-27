@@ -88,6 +88,11 @@ export class CreateProducerRequest {
   @IsNotEmpty()
   password: string;
 
+  @ApiProperty({ example: 'P@ssword10' })
+  @IsStrongPassword()
+  @IsNotEmpty()
+  passwordConfirmation: string;
+
   @ApiProperty({ example: 'João Silva' })
   @IsNotEmpty()
   @IsString()

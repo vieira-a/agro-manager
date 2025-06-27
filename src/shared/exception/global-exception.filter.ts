@@ -8,6 +8,7 @@ import {
 import { Request, Response } from 'express';
 import { DomainException } from './domain.exeption';
 import { Logger } from 'nestjs-pino';
+import { ApplicationException } from './application.exeption';
 
 @Catch()
 export class GlobalExceptionFilter implements ExceptionFilter {
@@ -25,7 +26,10 @@ export class GlobalExceptionFilter implements ExceptionFilter {
 
     let exceptionParams: Record<string, unknown> = {};
 
-    if (exception instanceof DomainException) {
+    if (
+      exception instanceof DomainException ||
+      exception instanceof ApplicationException
+    ) {
       status = exception.statusCode;
       exceptionDetails = {
         name: exception.name,
