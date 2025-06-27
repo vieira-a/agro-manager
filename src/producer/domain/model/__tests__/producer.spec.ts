@@ -33,6 +33,7 @@ describe('Producer', () => {
     const producer = Producer.create({
       document: validCPF,
       name: 'John Doe',
+      password: 'P@ssword10',
       farms: [validFarm],
     });
 
@@ -43,6 +44,7 @@ describe('Producer', () => {
     const producer = Producer.create({
       document: validCPF,
       name: 'João da Silva',
+      password: 'P@ssword10',
     });
 
     producer.addFarm(validFarm);
@@ -55,6 +57,7 @@ describe('Producer', () => {
     const producer = Producer.create({
       document: validCNPJ,
       name: 'Empresa Agro',
+      password: 'P@ssword10',
       farms: [validFarm],
     });
 
@@ -65,6 +68,7 @@ describe('Producer', () => {
     const producer = Producer.create({
       document: validCPF,
       name: 'João da Silva',
+      password: 'P@ssword10',
     });
 
     expect(() => producer.addFarm(null as any)).toThrow(
@@ -77,6 +81,7 @@ describe('Producer', () => {
       Producer.create({
         document: validCPF,
         name: '',
+        password: 'P@ssword10',
         farms: [validFarm],
       }),
     ).toThrow(InvalidProducerParamException);
@@ -87,6 +92,7 @@ describe('Producer', () => {
       Producer.create({
         document: null as any,
         name: 'João da Silva',
+        password: 'P@ssword10',
         farms: [validFarm],
       }),
     ).toThrow(InvalidProducerParamException);
@@ -97,6 +103,7 @@ describe('Producer', () => {
       Producer.create({
         document: undefined as any,
         name: 'João da Silva',
+        password: 'P@ssword10',
         farms: [validFarm],
       }),
     ).toThrow(InvalidProducerParamException);
