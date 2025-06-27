@@ -4,6 +4,7 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { ConfigModule } from '@nestjs/config';
 import { LoggerModule } from 'nestjs-pino';
 import { typeOrmConfig } from '../database/typeorm.config';
+import { JwtModule } from '@nestjs/jwt';
 
 @Module({
   imports: [
@@ -13,6 +14,10 @@ import { typeOrmConfig } from '../database/typeorm.config';
         ? `.env.${process.env.NODE_ENV}.local`
         : '.env.development.local',
       ignoreEnvFile: process.env.NODE_ENV === 'production',
+    }),
+    JwtModule.register({
+      secret: process.env.JWT_TOKEN_SECRET,
+      signOptions: { expiresIn: '15m' },
     }),
     LoggerModule.forRoot({
       pinoHttp: {
