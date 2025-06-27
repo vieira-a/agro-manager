@@ -1,4 +1,3 @@
-import { UnprocessableEntityException } from '@nestjs/common';
 import { CNPJ } from './cnpj';
 import { CNPJValidator } from '../../infrastructure/validators/cnpj.validator';
 import { CPF } from './cpf';
