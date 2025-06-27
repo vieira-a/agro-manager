@@ -15,4 +15,10 @@ describe('Password', () => {
       InvalidPasswordException,
     );
   });
+
+  it('should accept strong password', () => {
+    const strongPassword = 'P@ssword10';
+    const password = Password.create(strongPassword);
+    expect(password).toBeInstanceOf(Password);
+  });
 });
