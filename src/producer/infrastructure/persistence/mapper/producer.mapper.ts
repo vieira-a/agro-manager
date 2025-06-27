@@ -14,6 +14,7 @@ export class ProducerMapper {
     entity.id = domain.getId();
     entity.document = domain.getDocument();
     entity.name = domain.getName();
+    entity.password = domain.getPassword();
     entity.farms = domain.getFarms().map(FarmMapper.toEntity);
     return entity;
   }

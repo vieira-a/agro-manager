@@ -78,6 +78,10 @@ export class Producer {
     return this.name;
   }
 
+  getPassword(): string {
+    return this.password.getValue();
+  }
+
   getFarms(): ReadonlyArray<Farm> {
     return [...this.farms];
   }
