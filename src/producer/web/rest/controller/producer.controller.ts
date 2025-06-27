@@ -9,9 +9,12 @@ import {
   Param,
   Patch,
   Post,
+  Req,
+  Res,
+  UnauthorizedException,
 } from '@nestjs/common';
 import { ProducerApplicationService } from 'src/producer/application/service/producer-application.service';
-import { CreateProducerRequest } from '../dto/request/create-producer.request';
+import { CreateProducerRequest, LoginProducerRequest } from '../dto/request';
 import { ApiResponse } from '../dto/response/api.response';
 import {
   ApiBody,
@@ -24,11 +27,13 @@ import { ProducerMapper } from '../../../../producer/infrastructure/persistence/
 import { ApiProducerResponse } from '../dto/response/api-producer.response';
 import { DashBoardResponse } from '../dto/response/dashboard.response';
 import { Logger } from 'nestjs-pino';
-
+import { ProducerAuthService } from '../../../../producer/application/service/producer-auth.service';
+import { Request, Response } from 'express';
 @Controller('producers')
 export class ProducerController {
   constructor(
     private readonly producerService: ProducerApplicationService,
+    private readonly producerAuthService: ProducerAuthService,
     private readonly logger: Logger,
   ) {}
 
@@ -161,5 +166,59 @@ export class ProducerController {
       null,
       'Dados atualizados com sucesso',
     );
+  }
+
+  @Post('auth/login')
+  @HttpCode(200)
+  async login(@Body() request: LoginProducerRequest, @Res() res: Response) {
+    const { document, password } = request;
+
+    const tokens = await this.producerAuthService.login(document, password);
+
+    res
+      .cookie('access_token', tokens.accessToken, {
+        httpOnly: true,
+        secure: process.env.NODE_ENV === 'production',
+        sameSite: 'strict',
+        maxAge: 15 * 60 * 1000,
+      })
+      .cookie('refresh_token', tokens.refreshToken, {
+        httpOnly: true,
+        secure: process.env.NODE_ENV === 'production',
+        sameSite: 'strict',
+        maxAge: 7 * 24 * 60 * 60 * 1000,
+      })
+      .json({
+        message: 'Login efetuado com sucesso.',
+      });
+  }
+
+  @Post('auth/refresh')
+  @HttpCode(200)
+  async refresh(@Req() req: Request, @Res() res: Response) {
+    const refreshToken = req.cookies?.refresh_token;
+
+    if (!refreshToken) {
+      throw new UnauthorizedException('Refresh token não informado.');
+    }
+
+    const tokens = await this.producerAuthService.refreshToken(refreshToken);
+
+    res
+      .cookie('access_token', tokens.accessToken, {
+        httpOnly: true,
+        secure: process.env.NODE_ENV === 'production',
+        sameSite: 'strict',
+        maxAge: 15 * 60 * 1000,
+      })
+      .cookie('refresh_token', tokens.refreshToken, {
+        httpOnly: true,
+        secure: process.env.NODE_ENV === 'production',
+        sameSite: 'strict',
+        maxAge: 7 * 24 * 60 * 60 * 1000,
+      })
+      .json({
+        message: 'Token renovado com sucesso.',
+      });
   }
 }

@@ -5,16 +5,22 @@ import {
   HarvestTypeOrmRepository,
   CropTypeOrmRepository,
 } from './infrastructure/persistence/repository/typeorm';
-import { ProducerApplicationService } from './application/service/producer-application.service';
+import {
+  ProducerApplicationService,
+  ProducerAuthService,
+} from './application/service';
 import { AppTypeOrmModule } from '../shared/infrastructure/persistence/typeorm/typeorm.module';
 import { ProducerController } from './web/rest/controller/producer.controller';
 import { EncryptPassword } from './domain/model/encrypt-password';
 import { PasswordFactory } from './domain/model/password.factory';
+import { JwtService } from '@nestjs/jwt';
 
 @Module({
   imports: [AppTypeOrmModule],
   providers: [
     ProducerApplicationService,
+    ProducerAuthService,
+    JwtService,
     PasswordFactory,
     { provide: 'IProducerRepository', useClass: ProducerTypeOrmRepository },
     { provide: 'IFarmRepository', useClass: FarmTypeOrmRepository },
