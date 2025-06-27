@@ -1,11 +1,14 @@
-import { Injectable } from '@nestjs/common';
+import { Inject, Injectable } from '@nestjs/common';
 import { InvalidPasswordException } from '../exception/invalid-password.exception';
 import { Encrypter } from './encrypter.interface';
 import { Password } from './password';
 
 @Injectable()
 export class PasswordFactory {
-  constructor(private readonly ecrypter: Encrypter) {}
+  constructor(
+    @Inject('Encrypter')
+    private readonly ecrypter: Encrypter,
+  ) {}
 
   async create(plainText: string): Promise<Password> {
     this.validate(plainText);
