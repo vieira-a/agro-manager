@@ -3,7 +3,7 @@ import { InvalidPasswordException } from '../exception/invalid-password.exceptio
 export class Password {
   private readonly value: string;
 
-  constructor(value: string) {
+  private constructor(value: string) {
     this.value = value;
   }
 
