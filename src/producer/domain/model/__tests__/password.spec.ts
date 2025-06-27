@@ -8,4 +8,11 @@ describe('Password', () => {
       InvalidPasswordException,
     );
   });
+
+  it('should throw if password is weak', () => {
+    const weakPassword = '123456';
+    expect(() => Password.create(weakPassword)).toThrow(
+      InvalidPasswordException,
+    );
+  });
 });
