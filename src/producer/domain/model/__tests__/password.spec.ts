@@ -1,24 +1,37 @@
 import { InvalidPasswordException } from '../../exception/invalid-password.exception';
+import { Encrypter } from '../encrypter.interface';
 import { Password } from '../password';
+import { PasswordFactory } from '../password.factory';
 
 describe('Password', () => {
-  it('should throw if password is empty', () => {
+  let encrypterMock: Encrypter;
+  let factoryMock: PasswordFactory;
+
+  beforeEach(() => {
+    encrypterMock = {
+      encrypt: jest.fn().mockReturnValue('hashed-password'),
+    };
+    factoryMock = new PasswordFactory(encrypterMock);
+  });
+
+  it('should throw if password is empty', async () => {
     const emptyPassword = '';
-    expect(() => Password.create(emptyPassword)).toThrow(
+    await expect(factoryMock.create(emptyPassword)).rejects.toThrow(
       InvalidPasswordException,
     );
   });
 
-  it('should throw if password is weak', () => {
+  it('should throw if password is weak', async () => {
     const weakPassword = '123456';
-    expect(() => Password.create(weakPassword)).toThrow(
+    await expect(factoryMock.create(weakPassword)).rejects.toThrow(
       InvalidPasswordException,
     );
   });
 
-  it('should accept strong password', () => {
+  it('should accept strong password', async () => {
     const strongPassword = 'P@ssword10';
-    const password = Password.create(strongPassword);
-    expect(password).toBeInstanceOf(Password);
+    const password = await factoryMock.create(strongPassword);
+    expect(password.getValue()).toBe('hashed-password');
+    expect(encrypterMock.encrypt).toHaveBeenLastCalledWith(strongPassword);
   });
 });
