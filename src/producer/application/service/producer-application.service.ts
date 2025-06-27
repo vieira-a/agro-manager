@@ -120,6 +120,10 @@ export class ProducerApplicationService {
     return await this.producerRepository.findAll();
   }
 
+  async findByDocument(document: string): Promise<Producer | null> {
+    return await this.producerRepository.findByDocument(document);
+  }
+
   async findById(id: string): Promise<Producer | null> {
     return await this.producerRepository.findById(id);
   }
