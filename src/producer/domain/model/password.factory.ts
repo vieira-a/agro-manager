@@ -30,4 +30,8 @@ export class PasswordFactory {
       );
     }
   }
+
+  async matches(plainText: string, hashed: string): Promise<boolean> {
+    return this.ecrypter.matches(plainText, hashed);
+  }
 }
