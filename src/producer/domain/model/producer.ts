@@ -3,11 +3,12 @@ import { CPF } from './cpf';
 import { CNPJ } from './cnpj';
 import { InvalidProducerParamException } from '../exception';
 import { Farm } from './farm';
+import { Password } from './password';
 
 type ProducerProps = {
   document: CPF | CNPJ;
   name: string;
-  password: string;
+  password: Password;
   farms?: Farm[];
 };
 
@@ -18,7 +19,7 @@ export class Producer {
     private readonly id: string,
     private readonly document: CPF | CNPJ,
     private name: string,
-    private password: string,
+    private password: Password,
   ) {}
 
   static create(props: ProducerProps) {
