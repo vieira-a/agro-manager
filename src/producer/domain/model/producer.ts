@@ -7,6 +7,7 @@ import { Farm } from './farm';
 type ProducerProps = {
   document: CPF | CNPJ;
   name: string;
+  password: string;
   farms?: Farm[];
 };
 
@@ -17,12 +18,18 @@ export class Producer {
     private readonly id: string,
     private readonly document: CPF | CNPJ,
     private name: string,
+    private password: string,
   ) {}
 
   static create(props: ProducerProps) {
     const name = props.name.trim();
 
-    const producer = new Producer(randomUUID(), props.document, name);
+    const producer = new Producer(
+      randomUUID(),
+      props.document,
+      name,
+      props.password,
+    );
 
     if (props.farms && props.farms.length > 0) {
       props.farms.forEach((farm) => producer.addFarm(farm));
@@ -35,7 +42,12 @@ export class Producer {
   static restore(
     props: ProducerProps & { id: string; farms?: Farm[] },
   ): Producer {
-    const producer = new Producer(props.id, props.document, props.name);
+    const producer = new Producer(
+      props.id,
+      props.document,
+      props.name,
+      props.password,
+    );
 
     if (props.farms && props.farms.length > 0) {
       props.farms.forEach((farm) => producer.addFarm(farm));
