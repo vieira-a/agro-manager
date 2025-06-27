@@ -1,12 +1,11 @@
 import { ProducerResponse } from '../../../web/rest/dto/response/producer.response';
 import {
-  CPF,
   DocumentValidatorFactory,
   Producer,
 } from '../../../../producer/domain/model';
 import { ProducerEntity } from '../entity/producer.entity';
 import { FarmMapper } from './farm.mapper';
-import { Password } from 'src/producer/domain/model/password';
+import { Password } from '../../../../producer/domain/model/password';
 
 export class ProducerMapper {
   static toEntity(domain: Producer): ProducerEntity {
