@@ -10,6 +10,7 @@ describe('Password', () => {
   beforeEach(() => {
     encrypterMock = {
       encrypt: jest.fn().mockReturnValue('hashed-password'),
+      matches: jest.fn().mockReturnValue(true),
     };
     factoryMock = new PasswordFactory(encrypterMock);
   });
@@ -31,7 +32,7 @@ describe('Password', () => {
   it('should accept strong password', async () => {
     const strongPassword = 'P@ssword10';
     const password = await factoryMock.create(strongPassword);
-    expect(password.getValue()).toBe('hashed-password');
+    expect(password.getHashedValue()).toBe('hashed-password');
     expect(encrypterMock.encrypt).toHaveBeenLastCalledWith(strongPassword);
   });
 });
