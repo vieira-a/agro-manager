@@ -14,6 +14,7 @@ import { ProducerApplicationService } from '../producer-application.service';
 import { Test, TestingModule } from '@nestjs/testing';
 import { PasswordFactory } from '../../../../producer/domain/model/password.factory';
 import { Password } from '../../../../producer/domain/model/password';
+import { PasswordNotMatchException } from '../../exception/password-not-match.exception';
 
 describe('ProducerApplicationService', () => {
   let service: ProducerApplicationService;
@@ -63,6 +64,7 @@ describe('ProducerApplicationService', () => {
       name: 'João da Silva',
       document: '09779679057',
       password: 'P@ssword10',
+      passwordConfirmation: 'P@ssword10',
     };
 
     const producer = await service.create(input);
@@ -78,6 +80,7 @@ describe('ProducerApplicationService', () => {
       name: 'João da Silva',
       document: '09779679057',
       password: 'P@ssword10',
+      passwordConfirmation: 'P@ssword10',
       farm: {
         name: 'Fazenda Monte Alto',
         city: 'Cruz das Almas',
@@ -104,6 +107,7 @@ describe('ProducerApplicationService', () => {
       name: 'João da Silva',
       document: '09779679057',
       password: 'P@ssword10',
+      passwordConfirmation: 'P@ssword10',
       farm: {
         name: 'Fazenda Monte Alto',
         city: 'Cruz das Almas',
@@ -142,10 +146,24 @@ describe('ProducerApplicationService', () => {
       document: '09779679057',
       name: '',
       password: 'P@ssword10',
+      passwordConfirmation: 'P@ssword10',
     };
 
     await expect(service.create(input)).rejects.toThrow(
       InvalidProducerParamException,
+    );
+  });
+
+  it('should throw if password and passwordConfirmation not match', async () => {
+    const input: CreateProducerDto = {
+      document: '09779679057',
+      name: 'João da Silva',
+      password: 'P@ssword10',
+      passwordConfirmation: 'P@ssword11',
+    };
+
+    await expect(service.create(input)).rejects.toThrow(
+      PasswordNotMatchException,
     );
   });
 
@@ -154,6 +172,7 @@ describe('ProducerApplicationService', () => {
       name: 'João da Silva',
       document: '09779679057',
       password: 'P@ssword10',
+      passwordConfirmation: 'P@ssword10',
       farm: {
         name: 'Fazenda Monte Alto',
         city: 'Cruz das Almas',
