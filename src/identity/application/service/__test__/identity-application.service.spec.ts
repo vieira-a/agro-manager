@@ -4,6 +4,7 @@ import { JwtService } from '@nestjs/jwt';
 import { ConfigService } from '@nestjs/config';
 import { ProducerApplicationService } from '../../../../producer/application/service';
 import { PasswordFactory } from '../../../../producer/domain/model/password.factory';
+import { InvalidCredentialsException } from '../../exception/invalid-credentials.exception';
 
 describe('IdentityApplicationService', () => {
   let service: IdentityApplicationService;
@@ -53,6 +54,14 @@ describe('IdentityApplicationService', () => {
     );
 
     jest.clearAllMocks();
+  });
+
+  it('should throw if producer not found', async () => {
+    producerApplicationService.findByDocument.mockResolvedValue(null);
+
+    await expect(
+      service.loginProducer('00000000000', 'any-password'),
+    ).rejects.toThrow(InvalidCredentialsException);
   });
 
   it('should login producer with valid credentials', async () => {
