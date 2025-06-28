@@ -4,7 +4,10 @@ import { JwtService } from '@nestjs/jwt';
 import { ConfigService } from '@nestjs/config';
 import { ProducerApplicationService } from '../../../../producer/application/service';
 import { PasswordFactory } from '../../../../producer/domain/model/password.factory';
-import { InvalidCredentialsException } from '../../exception/invalid-credentials.exception';
+import {
+  InvalidCredentialsException,
+  InvalidTokenException,
+} from '../../exception';
 
 describe('IdentityApplicationService', () => {
   let service: IdentityApplicationService;
@@ -105,6 +108,20 @@ describe('IdentityApplicationService', () => {
   });
 
   describe('Refresh token', () => {
+    it('should throw if token is invalid', async () => {
+      jwtService.verify.mockImplementation(() => {
+        throw new Error('token inválido');
+      });
+
+      await expect(service.refreshToken('invalid-token')).rejects.toThrow(
+        InvalidTokenException,
+      );
+
+      expect(jwtService.verify).toHaveBeenCalledWith('invalid-token', {
+        secret: 'refresh-secret',
+      });
+    });
+
     it('should generate new tokens with new valid refresh token', async () => {
       const tokenPayload = {
         sub: 'producer-id',
