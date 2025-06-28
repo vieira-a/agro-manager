@@ -9,11 +9,16 @@ import {
   Param,
   Patch,
   Post,
+  Req,
+  Res,
+  UnauthorizedException,
+  UseGuards,
 } from '@nestjs/common';
 import { ProducerApplicationService } from 'src/producer/application/service/producer-application.service';
-import { CreateProducerRequest } from '../dto/request/create-producer.request';
+import { CreateProducerRequest } from '../dto/request';
 import { ApiResponse } from '../dto/response/api.response';
 import {
+  ApiBearerAuth,
   ApiBody,
   ApiCreatedResponse,
   ApiOkResponse,
@@ -24,7 +29,8 @@ import { ProducerMapper } from '../../../../producer/infrastructure/persistence/
 import { ApiProducerResponse } from '../dto/response/api-producer.response';
 import { DashBoardResponse } from '../dto/response/dashboard.response';
 import { Logger } from 'nestjs-pino';
-
+import { Request, Response } from 'express';
+import { ProducerJwtAuthGuard } from '../guard/producer-jwt-auth.guard';
 @Controller('producers')
 export class ProducerController {
   constructor(
@@ -91,6 +97,8 @@ export class ProducerController {
     );
   }
 
+  @UseGuards(ProducerJwtAuthGuard)
+  @ApiBearerAuth('access-token')
   @Get('dashboard')
   @ApiOkResponse({
     description: 'Dados carregados com sucesso',
@@ -140,6 +148,8 @@ export class ProducerController {
     );
   }
 
+  @UseGuards(ProducerJwtAuthGuard)
+  @ApiBearerAuth('access-token')
   @Patch(':id')
   @ApiParam({ name: 'id', type: String, description: 'ID do produtor' })
   @HttpCode(HttpStatus.OK)

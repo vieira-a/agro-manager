@@ -5,4 +5,5 @@ export interface IProducerRepository {
   remove(id: string): Promise<boolean>;
   findAll(): Promise<Producer[]>;
   findById(id: string): Promise<Producer | null>;
+  findByDocument(document: string): Promise<Producer | null>;
 }

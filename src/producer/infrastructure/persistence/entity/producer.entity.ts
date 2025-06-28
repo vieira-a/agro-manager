@@ -12,6 +12,9 @@ export class ProducerEntity {
   @Column()
   document: string;
 
+  @Column()
+  password: string;
+
   @OneToMany(() => FarmEntity, (farm) => farm.producer, { cascade: true })
   farms: FarmEntity[];
 }

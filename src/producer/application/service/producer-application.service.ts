@@ -14,6 +14,8 @@ import {
   ICropRepository,
 } from '../repository';
 import { ProducerSummary } from '../dto/producer-summary';
+import { PasswordFactory } from '../../../producer/domain/model/password.factory';
+import { PasswordNotMatchException } from '../exception/password-not-match.exception';
 
 @Injectable()
 export class ProducerApplicationService {
@@ -26,14 +28,21 @@ export class ProducerApplicationService {
     private readonly harvestRepository: IHarvestRepository,
     @Inject('ICropRepository')
     private readonly cropRepository: ICropRepository,
+    private readonly passwordFactory: PasswordFactory,
   ) {}
 
   async create(input: CreateProducerDto): Promise<Producer> {
+    if (input.password !== input.passwordConfirmation) {
+      throw new PasswordNotMatchException();
+    }
+
     const producerDocument = DocumentValidatorFactory.create(input.document);
+    const hashedPassword = await this.passwordFactory.create(input.password);
 
     const producer = Producer.create({
       document: producerDocument,
       name: input.name,
+      password: hashedPassword,
     });
 
     if (input.farm) {
@@ -109,6 +118,10 @@ export class ProducerApplicationService {
 
   async findAll(): Promise<Producer[]> {
     return await this.producerRepository.findAll();
+  }
+
+  async findByDocument(document: string): Promise<Producer | null> {
+    return await this.producerRepository.findByDocument(document);
   }
 
   async findById(id: string): Promise<Producer | null> {

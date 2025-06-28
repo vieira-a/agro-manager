@@ -108,4 +108,4 @@ Os dados de Location seriam tratados como contexto compartilhado (Shared Kernel)
 
 | Responsável     | Criado em  | Versão | Atualizado em |
 | --------------- | ---------- | ------ | ------------- |
-| Anderson Vieira | 2025-10-06 | 001    | 2025-10-06    |
+| Anderson Vieira | 10-06-2025 | 001    | 10-06-2025    |

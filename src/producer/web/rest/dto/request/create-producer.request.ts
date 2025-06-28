@@ -6,6 +6,7 @@ import {
   ValidateNested,
   IsInt,
   Min,
+  IsStrongPassword,
 } from 'class-validator';
 import { Type } from 'class-transformer';
 import { ApiProperty } from '@nestjs/swagger';
@@ -81,6 +82,16 @@ export class CreateProducerRequest {
   @IsNotEmpty()
   @IsString()
   document: string;
+
+  @ApiProperty({ example: 'P@ssword10' })
+  @IsStrongPassword()
+  @IsNotEmpty()
+  password: string;
+
+  @ApiProperty({ example: 'P@ssword10' })
+  @IsStrongPassword()
+  @IsNotEmpty()
+  passwordConfirmation: string;
 
   @ApiProperty({ example: 'João Silva' })
   @IsNotEmpty()

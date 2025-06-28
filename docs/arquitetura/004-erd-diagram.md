@@ -42,6 +42,10 @@ Representa a safra ou colheita realizada em uma fazenda em um determinado ano.
 - year: ano em que a colheita foi realizada
 - farmId: referência à fazenda onde ocorreu a colheita
 
+**Nota:** 
+
+A criação da Harvest é opcional no momento da criação da Farm. Uma fazenda pode existir sem uma safra inicial.
+
 ### 4. Crop
 
 Representa as culturas agrícolas cultivadas dentro de uma fazenda ou durante uma colheita.
@@ -57,7 +61,6 @@ Representa as culturas agrícolas cultivadas dentro de uma fazenda ou durante um
 ```mermaid
 erDiagram
     PRODUCER ||--o{ FARM : owns
-    FARM ||--o{ CROP : contains
     FARM ||--o{ HARVEST : includes
     HARVEST ||--o{ CROP : produces
 
@@ -96,4 +99,4 @@ erDiagram
 
 | Responsável     | Criado em  | Versão | Atualizado em |
 | --------------- | ---------- | ------ | ------------- |
-| Anderson Vieira | 2025-10-06 | 001    | 2025-10-06    |
+| Anderson Vieira | 10-06-2025 | 002    | 10-06-2025    |

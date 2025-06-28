@@ -4,36 +4,50 @@ import { Producer } from '../producer';
 import { Crop } from '../crop';
 import { Harvest } from '../harvest';
 import { InvalidProducerParamException } from '../../exception';
+import { Password } from '../password';
+import { PasswordFactory } from '../password.factory';
+import { EncryptPassword } from '../encrypt-password';
 
 describe('Producer', () => {
   const validCPF = DocumentValidatorFactory.create('66452197096');
   const validCNPJ = DocumentValidatorFactory.create('11444777000161');
 
-  const crop = Crop.create({
-    name: 'Milho',
-  });
+  let validPassword: Password;
+  let crop: Crop;
+  let harvest: Harvest;
+  let farm: Farm;
 
-  const harvests = Harvest.create({
-    description: 'Safra 2024',
-    year: 2024,
-    crop: crop,
-  });
+  beforeAll(async () => {
+    const passwordFactory = new PasswordFactory(new EncryptPassword());
+    validPassword = await passwordFactory.create('P@ssword10');
 
-  const validFarm = Farm.create({
-    name: 'Fazenda Teste',
-    city: 'Cidade Teste',
-    state: 'Estado Teste',
-    totalArea: 100,
-    agriculturalArea: 50,
-    vegetationArea: 30,
-    harvests: [harvests],
+    crop = Crop.create({
+      name: 'Milho',
+    });
+
+    harvest = Harvest.create({
+      description: 'Safra 2024',
+      year: 2024,
+      crop: crop,
+    });
+
+    farm = Farm.create({
+      name: 'Fazenda Teste',
+      city: 'Cidade Teste',
+      state: 'Estado Teste',
+      totalArea: 100,
+      agriculturalArea: 50,
+      vegetationArea: 30,
+      harvests: [harvest],
+    });
   });
 
   it('should create a valid Producer with valid CPF and all nested entities', () => {
     const producer = Producer.create({
       document: validCPF,
       name: 'John Doe',
-      farms: [validFarm],
+      password: validPassword,
+      farms: [farm],
     });
 
     expect(producer).toBeInstanceOf(Producer);
@@ -43,19 +57,21 @@ describe('Producer', () => {
     const producer = Producer.create({
       document: validCPF,
       name: 'João da Silva',
+      password: validPassword,
     });
 
-    producer.addFarm(validFarm);
+    producer.addFarm(farm);
 
     expect(producer.getFarms()).toHaveLength(1);
-    expect(producer.getFarms()[0]).toBe(validFarm);
+    expect(producer.getFarms()[0]).toBe(farm);
   });
 
   it('should create a Producer with valid CNPJ document and Farm', () => {
     const producer = Producer.create({
       document: validCNPJ,
       name: 'Empresa Agro',
-      farms: [validFarm],
+      password: validPassword,
+      farms: [farm],
     });
 
     expect(producer).toBeInstanceOf(Producer);
@@ -65,6 +81,7 @@ describe('Producer', () => {
     const producer = Producer.create({
       document: validCPF,
       name: 'João da Silva',
+      password: validPassword,
     });
 
     expect(() => producer.addFarm(null as any)).toThrow(
@@ -77,7 +94,8 @@ describe('Producer', () => {
       Producer.create({
         document: validCPF,
         name: '',
-        farms: [validFarm],
+        password: validPassword,
+        farms: [farm],
       }),
     ).toThrow(InvalidProducerParamException);
   });
@@ -87,7 +105,8 @@ describe('Producer', () => {
       Producer.create({
         document: null as any,
         name: 'João da Silva',
-        farms: [validFarm],
+        password: validPassword,
+        farms: [farm],
       }),
     ).toThrow(InvalidProducerParamException);
   });
@@ -97,7 +116,8 @@ describe('Producer', () => {
       Producer.create({
         document: undefined as any,
         name: 'João da Silva',
-        farms: [validFarm],
+        password: validPassword,
+        farms: [farm],
       }),
     ).toThrow(InvalidProducerParamException);
   });
