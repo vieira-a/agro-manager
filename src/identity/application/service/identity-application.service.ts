@@ -5,12 +5,12 @@ import {
   UnauthorizedException,
 } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
-import { ProducerApplicationService } from './producer-application.service';
+import { ProducerApplicationService } from '../../../producer/application/service';
 import { PasswordFactory } from '../../../producer/domain/model/password.factory';
 import { ConfigService } from '@nestjs/config';
 
 @Injectable()
-export class ProducerAuthService {
+export class IdentityApplicationService {
   private accessTokenSecret: string | undefined;
   private refreshTokenSecret: string | undefined;
 

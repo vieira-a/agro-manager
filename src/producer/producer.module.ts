@@ -5,10 +5,7 @@ import {
   HarvestTypeOrmRepository,
   CropTypeOrmRepository,
 } from './infrastructure/persistence/repository/typeorm';
-import {
-  ProducerApplicationService,
-  ProducerAuthService,
-} from './application/service';
+import { ProducerApplicationService } from './application/service';
 import { AppTypeOrmModule } from '../shared/infrastructure/persistence/typeorm/typeorm.module';
 import { ProducerController } from './web/rest/controller/producer.controller';
 import { EncryptPassword } from './domain/model/encrypt-password';
@@ -20,7 +17,6 @@ import { JwtStrategy } from '../shared/auth/strategy/jwt.strategy';
   imports: [AppTypeOrmModule],
   providers: [
     ProducerApplicationService,
-    ProducerAuthService,
     JwtStrategy,
     JwtService,
     PasswordFactory,
@@ -31,6 +27,6 @@ import { JwtStrategy } from '../shared/auth/strategy/jwt.strategy';
     { provide: 'Encrypter', useClass: EncryptPassword },
   ],
   controllers: [ProducerController],
-  exports: [ProducerApplicationService],
+  exports: [ProducerApplicationService, PasswordFactory, 'Encrypter'],
 })
 export class ProducerModule {}

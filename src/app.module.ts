@@ -5,6 +5,7 @@ import { ConfigModule } from '@nestjs/config';
 import { LoggerModule } from 'nestjs-pino';
 import { typeOrmConfig } from '../database/typeorm.config';
 import { JwtModule } from '@nestjs/jwt';
+import { IdentityModule } from './identity/identity.module';
 
 @Module({
   imports: [
@@ -37,6 +38,7 @@ import { JwtModule } from '@nestjs/jwt';
       },
     }),
     TypeOrmModule.forRoot(typeOrmConfig),
+    IdentityModule,
     ProducerModule,
   ],
 })
