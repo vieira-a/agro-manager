@@ -8,6 +8,7 @@ import { JwtService } from '@nestjs/jwt';
 import { ProducerApplicationService } from '../../../producer/application/service';
 import { PasswordFactory } from '../../../producer/domain/model/password.factory';
 import { ConfigService } from '@nestjs/config';
+import { InvalidCredentialsException } from '../exception/invalid-credentials.exception';
 
 @Injectable()
 export class IdentityApplicationService {
@@ -30,7 +31,7 @@ export class IdentityApplicationService {
     const producer =
       await this.producerApplicationService.findByDocument(document);
 
-    if (!producer) throw new NotFoundException();
+    if (!producer) throw new InvalidCredentialsException('Produtor não existe');
 
     const isPasswordValid = await this.passwordFactory.matches(
       plainPassword,
