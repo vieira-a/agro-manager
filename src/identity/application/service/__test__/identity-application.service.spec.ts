@@ -108,9 +108,21 @@ describe('IdentityApplicationService', () => {
   });
 
   describe('Refresh token', () => {
+    it('should throw if token refresh type is incorrect', async () => {
+      jwtService.verify.mockReturnValue({
+        sub: 'producer-id',
+        document: '09779679057',
+        type: 'access',
+      });
+
+      await expect(service.refreshToken('wrong-type-token')).rejects.toThrow(
+        InvalidTokenException,
+      );
+    });
+
     it('should throw if token is invalid', async () => {
       jwtService.verify.mockImplementation(() => {
-        throw new Error('token inválido');
+        throw new InvalidTokenException('Token inválido para refresh');
       });
 
       await expect(service.refreshToken('invalid-token')).rejects.toThrow(
