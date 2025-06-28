@@ -56,49 +56,51 @@ describe('IdentityApplicationService', () => {
     jest.clearAllMocks();
   });
 
-  it('should throwe if document is not provided', async () => {
-    producerApplicationService.findByDocument.mockResolvedValue(null);
-    await expect(service.loginProducer('', 'P@ssword10')).rejects.toThrow(
-      InvalidCredentialsException,
-    );
-  });
-
-  it('should throw if password is incorrect', async () => {
-    producerApplicationService.findByDocument.mockResolvedValue(mockProducer);
-    passwordFactory.matches.mockResolvedValue(false);
-
-    await expect(
-      service.loginProducer('09779679057', 'incorrectPassword'),
-    ).rejects.toThrow(InvalidCredentialsException);
-  });
-
-  it('should throw if producer not found', async () => {
-    producerApplicationService.findByDocument.mockResolvedValue(null);
-
-    await expect(
-      service.loginProducer('00000000000', 'any-password'),
-    ).rejects.toThrow(InvalidCredentialsException);
-  });
-
-  it('should login producer with valid credentials', async () => {
-    producerApplicationService.findByDocument.mockResolvedValue(mockProducer);
-    passwordFactory.matches.mockResolvedValue(true);
-    jwtService.sign
-      .mockReturnValueOnce('access-token')
-      .mockReturnValueOnce('refresh-token');
-
-    const result = await service.loginProducer('09779679057', 'P@ssword10');
-
-    expect(result).toEqual({
-      accessToken: 'access-token',
-      refreshToken: 'refresh-token',
+  describe('Producer login', () => {
+    it('should throwe if document is not provided', async () => {
+      producerApplicationService.findByDocument.mockResolvedValue(null);
+      await expect(service.loginProducer('', 'P@ssword10')).rejects.toThrow(
+        InvalidCredentialsException,
+      );
     });
-    expect(producerApplicationService.findByDocument).toHaveBeenCalledWith(
-      '09779679057',
-    );
-    expect(passwordFactory.matches).toHaveBeenCalledWith(
-      'P@ssword10',
-      'hashed-password',
-    );
+
+    it('should throw if password is incorrect', async () => {
+      producerApplicationService.findByDocument.mockResolvedValue(mockProducer);
+      passwordFactory.matches.mockResolvedValue(false);
+
+      await expect(
+        service.loginProducer('09779679057', 'incorrectPassword'),
+      ).rejects.toThrow(InvalidCredentialsException);
+    });
+
+    it('should throw if producer not found', async () => {
+      producerApplicationService.findByDocument.mockResolvedValue(null);
+
+      await expect(
+        service.loginProducer('00000000000', 'any-password'),
+      ).rejects.toThrow(InvalidCredentialsException);
+    });
+
+    it('should login producer with valid credentials', async () => {
+      producerApplicationService.findByDocument.mockResolvedValue(mockProducer);
+      passwordFactory.matches.mockResolvedValue(true);
+      jwtService.sign
+        .mockReturnValueOnce('access-token')
+        .mockReturnValueOnce('refresh-token');
+
+      const result = await service.loginProducer('09779679057', 'P@ssword10');
+
+      expect(result).toEqual({
+        accessToken: 'access-token',
+        refreshToken: 'refresh-token',
+      });
+      expect(producerApplicationService.findByDocument).toHaveBeenCalledWith(
+        '09779679057',
+      );
+      expect(passwordFactory.matches).toHaveBeenCalledWith(
+        'P@ssword10',
+        'hashed-password',
+      );
+    });
   });
 });
