@@ -31,14 +31,15 @@ export class IdentityApplicationService {
     const producer =
       await this.producerApplicationService.findByDocument(document);
 
-    if (!producer) throw new InvalidCredentialsException('Produtor não existe');
+    if (!producer)
+      throw new InvalidCredentialsException('Produtor não existe.');
 
     const isPasswordValid = await this.passwordFactory.matches(
       plainPassword,
       producer.getPassword(),
     );
     if (!isPasswordValid)
-      throw new UnauthorizedException('Credenciais inválidas');
+      throw new InvalidCredentialsException('Senha incorreta.');
 
     const accessTokenPayload = {
       sub: producer.getId(),
