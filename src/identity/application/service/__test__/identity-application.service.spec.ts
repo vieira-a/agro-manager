@@ -56,6 +56,13 @@ describe('IdentityApplicationService', () => {
     jest.clearAllMocks();
   });
 
+  it('should throwe if document is not provided', async () => {
+    producerApplicationService.findByDocument.mockResolvedValue(null);
+    await expect(service.loginProducer('', 'P@ssword10')).rejects.toThrow(
+      InvalidCredentialsException,
+    );
+  });
+
   it('should throw if password is incorrect', async () => {
     producerApplicationService.findByDocument.mockResolvedValue(mockProducer);
     passwordFactory.matches.mockResolvedValue(false);
