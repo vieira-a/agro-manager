@@ -141,7 +141,7 @@ describe('ProducerApplicationService', () => {
     expect(mockCropRepository.save).toHaveBeenCalled();
   });
 
-  it('should throw when name is empty', async () => {
+  it('should throw InvalidProducerParamException when name is empty', async () => {
     const input: CreateProducerDto = {
       document: '09779679057',
       name: '',
@@ -154,7 +154,7 @@ describe('ProducerApplicationService', () => {
     );
   });
 
-  it('should throw if password and passwordConfirmation not match', async () => {
+  it('should throw PasswordNotMatchException if password and passwordConfirmation not match', async () => {
     const input: CreateProducerDto = {
       document: '09779679057',
       name: 'João da Silva',
@@ -167,7 +167,7 @@ describe('ProducerApplicationService', () => {
     );
   });
 
-  it('should throw when crop name is empty', async () => {
+  it('should throw InvalidCropParamException when crop name is empty', async () => {
     const input: CreateProducerDto = {
       name: 'João da Silva',
       document: '09779679057',
