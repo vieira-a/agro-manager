@@ -103,4 +103,50 @@ describe('IdentityApplicationService', () => {
       );
     });
   });
+
+  describe('Refresh token', () => {
+    it('should generate new tokens with new valid refresh token', async () => {
+      const tokenPayload = {
+        sub: 'producer-id',
+        document: '09779679057',
+        type: 'refresh',
+      };
+
+      jwtService.verify.mockReturnValue(tokenPayload);
+      jwtService.sign
+        .mockReturnValueOnce('new-access-token')
+        .mockReturnValueOnce('new-refresh-token');
+
+      const result = await service.refreshToken('valid-refresh-token');
+
+      expect(result).toEqual({
+        accessToken: 'new-access-token',
+        refreshToken: 'new-refresh-token',
+      });
+
+      expect(jwtService.verify).toHaveBeenCalledWith('valid-refresh-token', {
+        secret: 'refresh-secret',
+      });
+
+      expect(jwtService.sign).toHaveBeenNthCalledWith(
+        1,
+        {
+          sub: 'producer-id',
+          document: '09779679057',
+          type: 'access',
+        },
+        { secret: 'access-secret', expiresIn: '15m' },
+      );
+
+      expect(jwtService.sign).toHaveBeenNthCalledWith(
+        2,
+        {
+          sub: 'producer-id',
+          document: '09779679057',
+          type: 'refresh',
+        },
+        { secret: 'refresh-secret', expiresIn: '7d' },
+      );
+    });
+  });
 });
