@@ -71,7 +71,7 @@ export class IdentityApplicationService {
       });
 
       if (payload.type !== 'refresh') {
-        throw new ForbiddenException('Token inválido para refresh');
+        throw new InvalidTokenException('Token inválido para refresh');
       }
 
       const newAccessTokenPayload = {
@@ -101,7 +101,7 @@ export class IdentityApplicationService {
         refreshToken: newRefreshToken,
       };
     } catch (error) {
-      throw new InvalidTokenException('Token inválido.');
+      throw error;
     }
   }
 }
