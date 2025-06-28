@@ -1,6 +1,6 @@
 import { Module } from '@nestjs/common';
 import { IdentityApplicationService } from './application/service/identity-application.service';
-import { JwtStrategy } from '../shared/auth/strategy/jwt.strategy';
+import { JwtStrategy } from './auth-strategy/jwt.strategy';
 import { JwtService } from '@nestjs/jwt';
 import { ProducerModule } from '../producer/producer.module';
 import { AuthenticationController } from './web/rest/controller/authentication.controller';
