@@ -1,14 +1,12 @@
-import {
-  ForbiddenException,
-  Injectable,
-  NotFoundException,
-  UnauthorizedException,
-} from '@nestjs/common';
+import { ForbiddenException, Injectable } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { ProducerApplicationService } from '../../../producer/application/service';
 import { PasswordFactory } from '../../../producer/domain/model/password.factory';
 import { ConfigService } from '@nestjs/config';
-import { InvalidCredentialsException } from '../exception/invalid-credentials.exception';
+import {
+  InvalidCredentialsException,
+  InvalidTokenException,
+} from '../exception';
 
 @Injectable()
 export class IdentityApplicationService {
@@ -103,7 +101,7 @@ export class IdentityApplicationService {
         refreshToken: newRefreshToken,
       };
     } catch (error) {
-      throw new ForbiddenException('Credenciais inválidas');
+      throw new InvalidTokenException('Token inválido.');
     }
   }
 }
