@@ -17,10 +17,13 @@ export class AuthenticationController {
 
   @Post('login/producer')
   @HttpCode(200)
-  async login(@Body() request: LoginProducerRequest, @Res() res: Response) {
+  async loginProducer(
+    @Body() request: LoginProducerRequest,
+    @Res() res: Response,
+  ) {
     const { document, password } = request;
 
-    const tokens = await this.identityService.login(document, password);
+    const tokens = await this.identityService.loginProducer(document, password);
 
     res
       .cookie('access_token', tokens.accessToken, {
@@ -42,7 +45,7 @@ export class AuthenticationController {
 
   @Post('refresh')
   @HttpCode(200)
-  async refresh(@Req() req: Request, @Res() res: Response) {
+  async refreshToken(@Req() req: Request, @Res() res: Response) {
     const refreshToken = req.cookies?.refresh_token;
 
     if (!refreshToken) {

@@ -26,7 +26,7 @@ export class IdentityApplicationService {
     );
   }
 
-  async login(document: string, plainPassword: string) {
+  async loginProducer(document: string, plainPassword: string) {
     const producer =
       await this.producerApplicationService.findByDocument(document);
 
