@@ -60,14 +60,14 @@ describe('IdentityApplicationService', () => {
   });
 
   describe('Producer login', () => {
-    it('should throwe if document is not provided', async () => {
+    it('should throw InvalidCredentialsException if document is not provided', async () => {
       producerApplicationService.findByDocument.mockResolvedValue(null);
       await expect(service.loginProducer('', 'P@ssword10')).rejects.toThrow(
         InvalidCredentialsException,
       );
     });
 
-    it('should throw if password is incorrect', async () => {
+    it('should throw InvalidCredentialsException if password is incorrect', async () => {
       producerApplicationService.findByDocument.mockResolvedValue(mockProducer);
       passwordFactory.matches.mockResolvedValue(false);
 
@@ -76,7 +76,7 @@ describe('IdentityApplicationService', () => {
       ).rejects.toThrow(InvalidCredentialsException);
     });
 
-    it('should throw if producer not found', async () => {
+    it('should throw InvalidCredentialsException if producer not found', async () => {
       producerApplicationService.findByDocument.mockResolvedValue(null);
 
       await expect(
@@ -108,7 +108,7 @@ describe('IdentityApplicationService', () => {
   });
 
   describe('Refresh token', () => {
-    it('should throw if token refresh type is incorrect', async () => {
+    it('should throw InvalidTokenException if token refresh type is incorrect', async () => {
       jwtService.verify.mockReturnValue({
         sub: 'producer-id',
         document: '09779679057',
@@ -120,7 +120,7 @@ describe('IdentityApplicationService', () => {
       );
     });
 
-    it('should throw if token is invalid', async () => {
+    it('should throw InvalidTokenException if token is invalid', async () => {
       jwtService.verify.mockImplementation(() => {
         throw new InvalidTokenException('Token inválido para refresh');
       });
