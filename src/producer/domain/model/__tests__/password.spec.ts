@@ -34,4 +34,13 @@ describe('Password', () => {
     expect(password.getHashedValue()).toBe('hashed-password');
     expect(encrypterMock.encrypt).toHaveBeenLastCalledWith(strongPassword);
   });
+
+  it('should throw if password is null or undefined', async () => {
+    await expect(factoryMock.create(null as any)).rejects.toThrow(
+      InvalidPasswordException,
+    );
+    await expect(factoryMock.create(undefined as any)).rejects.toThrow(
+      InvalidPasswordException,
+    );
+  });
 });
