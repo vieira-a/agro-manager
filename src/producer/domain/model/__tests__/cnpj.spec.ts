@@ -61,6 +61,18 @@ describe('CNPJ', () => {
         );
       }
     });
+
+    it('should throw when CNPJ has more than 14 digits', () => {
+      const validator: DocumentValidator = {
+        validate: jest.fn(() => false),
+      };
+
+      const longCNPJ = '123456789012345';
+
+      expect(() => new CNPJ(longCNPJ, validator)).toThrow(
+        InvalidDocumentException,
+      );
+    });
   });
 
   describe('Format behavior', () => {
