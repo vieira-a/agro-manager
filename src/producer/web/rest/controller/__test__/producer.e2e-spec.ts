@@ -186,6 +186,15 @@ describe('ProducerController (e2e)', () => {
 
       expect(res.body.message).toContain('Unauthorized');
     });
+
+    it('should return 401 if access_token cookie is missing', async () => {
+      const res = await request(app.getHttpServer())
+        .patch(`/api/v1/producers/${producerId}`)
+        .send({ name: 'New name' })
+        .expect(401);
+
+      expect(res.body.message).toContain('Unauthorized');
+    });
   });
 
   describe('DELETE /producers/:id', () => {
