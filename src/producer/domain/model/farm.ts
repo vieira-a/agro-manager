@@ -4,6 +4,7 @@ import {
   InvalidFarmParamException,
   InvalidFarmAreaException,
   InvalidAgriculturalAreaException,
+  InvalidVegetationAreaException,
 } from '../exception/';
 
 type FarmProps = {
@@ -128,6 +129,9 @@ export class Farm {
 
     if (this.agriculturalArea <= 0)
       throw new InvalidAgriculturalAreaException(this.vegetationArea);
+
+    if (this.vegetationArea <= 0)
+      throw new InvalidVegetationAreaException(this.vegetationArea);
 
     const totalSubAreas = this.agriculturalArea + this.vegetationArea;
 
