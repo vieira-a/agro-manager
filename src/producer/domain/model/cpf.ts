@@ -8,6 +8,10 @@ export class CPF {
     value: string,
     private readonly validator: DocumentValidator,
   ) {
+    if (!value) {
+      throw new InvalidDocumentException(`CPF: ${value}`);
+    }
+
     const normalized = value.replace(/\D/g, '');
 
     if (!validator.validate(normalized)) {
