@@ -72,6 +72,21 @@ describe('Producer', () => {
       ).toThrow(InvalidProducerParamException);
     });
 
+    it('should throw InvalidProducerParamException if name is only whitespace or invisible characters', () => {
+      const invalidNames = ['   ', '\t', '\n', ' \t\n '];
+
+      invalidNames.forEach((name) => {
+        expect(() =>
+          Producer.create({
+            document: validCPF,
+            name,
+            password: validPassword,
+            farms: [farm],
+          }),
+        ).toThrow(InvalidProducerParamException);
+      });
+    });
+
     it('should throw if document is null', () => {
       expect(() =>
         Producer.create({
