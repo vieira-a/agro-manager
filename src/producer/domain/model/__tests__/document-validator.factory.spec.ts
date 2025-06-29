@@ -41,4 +41,10 @@ describe('DocumentValidatorFactory', () => {
     const result = DocumentValidatorFactory.create(document);
     expect(result).toBeInstanceOf(CPF);
   });
+
+  it('should create CNPJ for formatted string with special characters', () => {
+    const document = '11.444.777/0001-61';
+    const result = DocumentValidatorFactory.create(document);
+    expect(result).toBeInstanceOf(CNPJ);
+  });
 });
