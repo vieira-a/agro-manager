@@ -12,6 +12,7 @@ const config: Config = {
   coveragePathIgnorePatterns: [
     '/node_modules/',
     'main.ts',
+    'index.ts',
     '.*\\.module\\.ts$',
     '.*\\.dto\\.ts$',
     '.*\\.entity\\.ts$',
@@ -20,6 +21,7 @@ const config: Config = {
     '.*\\.strategy\\.ts$',
     '.*\\.request\\.ts$',
     '.*\\.response\\.ts$',
+    '.*\\.exception\\.ts$',
     '.*\\.e2e-spec\\.ts$',
   ],
   testEnvironment: 'node',
