@@ -11,32 +11,65 @@ describe('CPF', () => {
     format: jest.fn((value) => `formatted-${value}`),
   };
 
-  it('should normalize the CPF value on construction', () => {
-    const cpf = new CPF(validCPF, mockValidator);
-    expect(cpf.toString()).toBe(normalizedCPF);
-    expect(mockValidator.validate).toHaveBeenCalledWith(normalizedCPF);
+  describe('Construction and normalization', () => {
+    it('should normalize the CPF value on construction', () => {
+      const cpf = new CPF(validCPF, mockValidator);
+      expect(cpf.toString()).toBe(normalizedCPF);
+      expect(mockValidator.validate).toHaveBeenCalledWith(normalizedCPF);
+    });
+
+    it('should throw InvalidDocumentException for invalid CPF', () => {
+      const invalidValidator: DocumentValidator = {
+        validate: jest.fn(() => false),
+      };
+
+      expect(() => new CPF(validCPF, invalidValidator)).toThrow(
+        InvalidDocumentException,
+      );
+    });
+
+    it('should handle CPF input with only letters as invalid', () => {
+      const invalidInput = 'abcdefghijk';
+      const validator: DocumentValidator = {
+        validate: jest.fn(() => false),
+      };
+
+      expect(() => new CPF(invalidInput, validator)).toThrow(
+        InvalidDocumentException,
+      );
+    });
+
+    it('should handle CPF input with symbols and spaces', () => {
+      const messyInput = ' 123.456-789 09 ';
+      const validator: DocumentValidator = {
+        validate: jest.fn(() => true),
+      };
+
+      const cpf = new CPF(messyInput, validator);
+      expect(cpf.toString()).toBe(normalizedCPF);
+    });
   });
 
-  it('should format the CPF if format method is available', () => {
-    const cpf = new CPF(validCPF, mockValidator);
-    expect(cpf.format()).toBe(`formatted-${normalizedCPF}`);
+  describe('Format behavior', () => {
+    it('should format the CPF if format method is available', () => {
+      const cpf = new CPF(validCPF, mockValidator);
+      expect(cpf.format()).toBe(`formatted-${normalizedCPF}`);
+    });
+
+    it('should return raw value in format if format method is not provided', () => {
+      const validatorWithoutFormat: DocumentValidator = {
+        validate: jest.fn(() => true),
+      };
+
+      const cpf = new CPF(validCPF, validatorWithoutFormat);
+      expect(cpf.format()).toBe(normalizedCPF);
+    });
   });
 
-  it('should return raw value in format if format method is not provided', () => {
-    const validatorWithoutFormat: DocumentValidator = {
-      validate: jest.fn(() => true),
-    };
-    const cpf = new CPF(validCPF, validatorWithoutFormat);
-    expect(cpf.format()).toBe(normalizedCPF);
-  });
-
-  it('should throw InvalidDocumentException for invalid CPF', () => {
-    const invalidValidator: DocumentValidator = {
-      validate: jest.fn(() => false),
-    };
-
-    expect(() => new CPF(validCPF, invalidValidator)).toThrow(
-      InvalidDocumentException,
-    );
+  describe('Serialization', () => {
+    it('should return raw value when serialized with toJSON', () => {
+      const cpf = new CPF(validCPF, mockValidator);
+      expect(cpf.toJSON()).toBe(normalizedCPF);
+    });
   });
 });
