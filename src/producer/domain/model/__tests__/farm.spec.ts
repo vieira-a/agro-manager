@@ -2,6 +2,7 @@ import { Farm } from '../farm';
 import {
   InvalidFarmParamException,
   InvalidFarmAreaException,
+  InvalidAgriculturalAreaException,
 } from '../../exception';
 import { Harvest } from '../harvest';
 import { Crop } from '../crop';
@@ -89,5 +90,13 @@ describe('Farm', () => {
     expect(() => Farm.create({ ...validProps, totalArea: 80 })).toThrow(
       InvalidFarmAreaException,
     );
+  });
+
+  describe('Area validations', () => {
+    it('should throw if agriculturalArea is negative', () => {
+      expect(() =>
+        Farm.create({ ...validProps, agriculturalArea: -1 }),
+      ).toThrow(InvalidAgriculturalAreaException);
+    });
   });
 });
