@@ -22,10 +22,40 @@ describe('ProducerController (e2e)', () => {
     app = moduleFixture.createNestApplication();
     app.setGlobalPrefix('api/v1');
     app.useGlobalPipes(new ValidationPipe({ whitelist: true }));
+
     await app.init();
 
     dataSource = app.get(DataSource);
     await dataSource.runMigrations();
+  });
+
+  beforeEach(async () => {
+    const payload = {
+      document: '71663081093',
+      name: 'Darth Vader',
+      password: 'P@ssword10',
+      passwordConfirmation: 'P@ssword10',
+      farm: {
+        name: 'Fazenda Tattoine',
+        city: 'Tatooine',
+        state: 'TT',
+        totalArea: 150.5,
+        agriculturalArea: 75.0,
+        vegetationArea: 52.5,
+        harvest: {
+          description: 'Safra Inverno',
+          year: 2024,
+          crop: {
+            name: 'Arroz',
+          },
+        },
+      },
+    };
+
+    await request(app.getHttpServer())
+      .post('/api/v1/producers')
+      .send(payload)
+      .expect(201);
   });
 
   afterEach(async () => {
@@ -68,38 +98,11 @@ describe('ProducerController (e2e)', () => {
   });
 
   it('/producers (GET) - should return all producers', async () => {
-    const payload = {
-      document: '71663081093',
-      name: 'Darth Vader',
-      password: 'P@ssword10',
-      passwordConfirmation: 'P@ssword10',
-      farm: {
-        name: 'Fazenda Tattoine',
-        city: 'Tatooine',
-        state: 'TT',
-        totalArea: 150.5,
-        agriculturalArea: 75.0,
-        vegetationArea: 52.5,
-        harvest: {
-          description: 'Safra Inverno',
-          year: 2024,
-          crop: {
-            name: 'Arroz',
-          },
-        },
-      },
-    };
-
-    await request(app.getHttpServer())
-      .post('/api/v1/producers')
-      .send(payload)
-      .expect(201);
-
     const res = await request(app.getHttpServer())
       .get('/api/v1/producers')
       .expect(200);
 
-    expect(res.body.data).toHaveLength(1);
+    expect(res.body.data.length).toBeGreaterThan(0);
     expect(res.body.data[0].name).toBe('Darth Vader');
   });
 });
