@@ -47,6 +47,20 @@ describe('CNPJ', () => {
         InvalidDocumentException,
       );
     });
+
+    it('should throw when CNPJ is empty, null or undefined', () => {
+      const invalidInputs = [undefined, null, '', '   '];
+
+      for (const input of invalidInputs) {
+        const validator: DocumentValidator = {
+          validate: jest.fn(() => false),
+        };
+
+        expect(() => new CNPJ(input as any, validator)).toThrow(
+          InvalidDocumentException,
+        );
+      }
+    });
   });
 
   describe('Format behavior', () => {
