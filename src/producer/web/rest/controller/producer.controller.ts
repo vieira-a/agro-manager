@@ -11,7 +11,7 @@ import {
   Post,
   UseGuards,
 } from '@nestjs/common';
-import { ProducerApplicationService } from 'src/producer/application/service/producer-application.service';
+import { ProducerApplicationService } from '../../../../producer/application/service/producer-application.service';
 import { CreateProducerRequest } from '../dto/request';
 import { ApiResponse } from '../dto/response/api.response';
 import {
