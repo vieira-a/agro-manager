@@ -17,4 +17,9 @@ describe('Crop', () => {
       InvalidCropParamException,
     );
   });
+
+  it('should allow names with special characters', () => {
+    const crop = Crop.create({ name: 'Soja @2024!' });
+    expect(crop.getName()).toBe('Soja @2024!');
+  });
 });
