@@ -23,22 +23,16 @@ describe('Harvest', () => {
     );
   });
 
-  it('should throw if year is not provided', () => {
-    expect(() =>
-      Harvest.create({ ...validProps, year: undefined as any }),
-    ).toThrow(InvalidHarvestParamException);
-  });
-
-  it('should throw if crops array is empty', () => {
-    expect(() =>
-      Harvest.create({ ...validProps, crop: undefined as any }),
-    ).toThrow(InvalidHarvestParamException);
-  });
-
   it('should throw if description is only whitespace', () => {
     expect(() => Harvest.create({ ...validProps, description: '   ' })).toThrow(
       InvalidHarvestParamException,
     );
+  });
+
+  it('should throw if year is not provided', () => {
+    expect(() =>
+      Harvest.create({ ...validProps, year: undefined as any }),
+    ).toThrow(InvalidHarvestParamException);
   });
 
   it('should throw if year is zero or negative', () => {
@@ -50,9 +44,9 @@ describe('Harvest', () => {
     );
   });
 
-  it('should throw if description is only whitespace', () => {
+  it('should throw if crop is not provided', () => {
     expect(() =>
-      Harvest.create({ ...validProps, description: '    ' }),
+      Harvest.create({ ...validProps, crop: undefined as any }),
     ).toThrow(InvalidHarvestParamException);
   });
 });
