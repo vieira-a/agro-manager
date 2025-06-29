@@ -28,6 +28,7 @@ export class CreateHarvestRequest {
   @IsNotEmpty()
   @IsInt()
   @Min(1900)
+  @Type(() => Number)
   year: number;
 
   @ApiProperty({ type: CreateCropRequest })
@@ -56,18 +57,21 @@ export class CreateFarmRequest {
   @IsNotEmpty()
   @IsNumber()
   @Min(0)
+  @Type(() => Number)
   totalArea: number;
 
   @ApiProperty({ example: 60 })
   @IsNotEmpty()
   @IsNumber()
   @Min(0)
+  @Type(() => Number)
   agriculturalArea: number;
 
   @ApiProperty({ example: 40.5 })
   @IsNotEmpty()
   @IsNumber()
   @Min(0)
+  @Type(() => Number)
   vegetationArea: number;
 
   @ApiProperty({ type: CreateHarvestRequest })
