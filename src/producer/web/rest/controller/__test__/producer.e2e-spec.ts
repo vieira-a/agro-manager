@@ -7,6 +7,7 @@ import { DataSource } from 'typeorm';
 import { cleanDatabase } from '../../../../../../test/utils/clean-database';
 import * as cookieParser from 'cookie-parser';
 import { CreateProducerRequest } from '../../dto/request';
+import * as jwt from 'jsonwebtoken';
 
 describe('ProducerController (e2e)', () => {
   let app: INestApplication;
@@ -204,6 +205,29 @@ describe('ProducerController (e2e)', () => {
         .expect(401);
 
       expect(res.body.message).toContain('Unauthorized');
+    });
+
+    it('should return 403 if token payload type is invalid', async () => {
+      const invalidPayload = {
+        sub: producerId,
+        document: '71663081093',
+        type: 'refresh',
+      };
+
+      const secret = process.env.JWT_TOKEN_SECRET!;
+      const invalidToken = jwt.sign(invalidPayload, secret, {
+        expiresIn: '15m',
+      });
+
+      const cookieHeader = `access_token=${invalidToken}`;
+
+      const res = await request(app.getHttpServer())
+        .patch(`/api/v1/producers/${producerId}`)
+        .set('Cookie', cookieHeader)
+        .send({ name: 'Anakin Skywalker' })
+        .expect(403);
+
+      expect(res.body.message).toContain('Token inválido para acesso.');
     });
   });
 
