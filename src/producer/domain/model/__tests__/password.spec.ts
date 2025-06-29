@@ -1,5 +1,6 @@
 import { InvalidPasswordException } from '../../exception/invalid-password.exception';
 import { Encrypter } from '../encrypter.interface';
+import { Password } from '../password';
 import { PasswordFactory } from '../password.factory';
 
 describe('Password', () => {
@@ -70,5 +71,22 @@ describe('Password', () => {
     await expect(factoryMock.create(pwd)).rejects.toThrow(
       InvalidPasswordException,
     );
+  });
+
+  describe('Password VO', () => {
+    it('should throw if created with empty or null hash', () => {
+      expect(() => new Password('')).toThrow(InvalidPasswordException);
+      expect(() => new Password('   ')).toThrow(InvalidPasswordException);
+      expect(() => new Password(null as any)).toThrow(InvalidPasswordException);
+      expect(() => new Password(undefined as any)).toThrow(
+        InvalidPasswordException,
+      );
+    });
+
+    it('should return the hashed value correctly', () => {
+      const hash = 'some-hash-value';
+      const password = new Password(hash);
+      expect(password.getHashedValue()).toBe(hash);
+    });
   });
 });
