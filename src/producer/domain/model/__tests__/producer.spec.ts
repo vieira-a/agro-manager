@@ -21,14 +21,12 @@ describe('Producer', () => {
     const passwordFactory = new PasswordFactory(new EncryptPassword());
     validPassword = await passwordFactory.create('P@ssword10');
 
-    crop = Crop.create({
-      name: 'Milho',
-    });
+    crop = Crop.create({ name: 'Milho' });
 
     harvest = Harvest.create({
       description: 'Safra 2024',
       year: 2024,
-      crop: crop,
+      crop,
     });
 
     farm = Farm.create({
@@ -42,83 +40,85 @@ describe('Producer', () => {
     });
   });
 
-  it('should create a valid Producer with valid CPF and all nested entities', () => {
-    const producer = Producer.create({
-      document: validCPF,
-      name: 'John Doe',
-      password: validPassword,
-      farms: [farm],
-    });
-
-    expect(producer).toBeInstanceOf(Producer);
-  });
-
-  it('should allow adding a farm to an existing producer', () => {
-    const producer = Producer.create({
-      document: validCPF,
-      name: 'João da Silva',
-      password: validPassword,
-    });
-
-    producer.addFarm(farm);
-
-    expect(producer.getFarms()).toHaveLength(1);
-    expect(producer.getFarms()[0]).toBe(farm);
-  });
-
-  it('should create a Producer with valid CNPJ document and Farm', () => {
-    const producer = Producer.create({
-      document: validCNPJ,
-      name: 'Empresa Agro',
-      password: validPassword,
-      farms: [farm],
-    });
-
-    expect(producer).toBeInstanceOf(Producer);
-  });
-
-  it('should throw if trying to add an invalid farm', () => {
-    const producer = Producer.create({
-      document: validCPF,
-      name: 'João da Silva',
-      password: validPassword,
-    });
-
-    expect(() => producer.addFarm(null as any)).toThrow(
-      InvalidProducerParamException,
-    );
-  });
-
-  it('should throw if name is empty', () => {
-    expect(() =>
-      Producer.create({
+  describe('Creation and validation', () => {
+    it('should create a valid Producer with valid CPF and all nested entities', () => {
+      const producer = Producer.create({
         document: validCPF,
-        name: '',
+        name: 'John Doe',
         password: validPassword,
         farms: [farm],
-      }),
-    ).toThrow(InvalidProducerParamException);
+      });
+      expect(producer).toBeInstanceOf(Producer);
+    });
+
+    it('should create a Producer with valid CNPJ document and Farm', () => {
+      const producer = Producer.create({
+        document: validCNPJ,
+        name: 'Empresa Agro',
+        password: validPassword,
+        farms: [farm],
+      });
+      expect(producer).toBeInstanceOf(Producer);
+    });
+
+    it('should throw if name is empty', () => {
+      expect(() =>
+        Producer.create({
+          document: validCPF,
+          name: '',
+          password: validPassword,
+          farms: [farm],
+        }),
+      ).toThrow(InvalidProducerParamException);
+    });
+
+    it('should throw if document is null', () => {
+      expect(() =>
+        Producer.create({
+          document: null as any,
+          name: 'João da Silva',
+          password: validPassword,
+          farms: [farm],
+        }),
+      ).toThrow(InvalidProducerParamException);
+    });
+
+    it('should throw if document is undefined', () => {
+      expect(() =>
+        Producer.create({
+          document: undefined as any,
+          name: 'João da Silva',
+          password: validPassword,
+          farms: [farm],
+        }),
+      ).toThrow(InvalidProducerParamException);
+    });
   });
 
-  it('should throw if document is null', () => {
-    expect(() =>
-      Producer.create({
-        document: null as any,
+  describe('Farm management', () => {
+    it('should allow adding a farm to an existing producer', () => {
+      const producer = Producer.create({
+        document: validCPF,
         name: 'João da Silva',
         password: validPassword,
-        farms: [farm],
-      }),
-    ).toThrow(InvalidProducerParamException);
-  });
+      });
 
-  it('should throw if document is undefined', () => {
-    expect(() =>
-      Producer.create({
-        document: undefined as any,
+      producer.addFarm(farm);
+
+      expect(producer.getFarms()).toHaveLength(1);
+      expect(producer.getFarms()[0]).toBe(farm);
+    });
+
+    it('should throw if trying to add an invalid farm', () => {
+      const producer = Producer.create({
+        document: validCPF,
         name: 'João da Silva',
         password: validPassword,
-        farms: [farm],
-      }),
-    ).toThrow(InvalidProducerParamException);
+      });
+
+      expect(() => producer.addFarm(null as any)).toThrow(
+        InvalidProducerParamException,
+      );
+    });
   });
 });
