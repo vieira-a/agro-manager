@@ -10,6 +10,7 @@ describe('ProducerController (e2e)', () => {
   let app: INestApplication;
   let container;
   let dataSource: DataSource;
+  let producerId: string;
 
   beforeAll(async () => {
     const started = await startPostgresContainer();
@@ -52,10 +53,12 @@ describe('ProducerController (e2e)', () => {
       },
     };
 
-    await request(app.getHttpServer())
+    const res = await request(app.getHttpServer())
       .post('/api/v1/producers')
       .send(payload)
       .expect(201);
+
+    producerId = res.body.data.id;
   });
 
   afterEach(async () => {
@@ -104,5 +107,14 @@ describe('ProducerController (e2e)', () => {
 
     expect(res.body.data.length).toBeGreaterThan(0);
     expect(res.body.data[0].name).toBe('Darth Vader');
+  });
+
+  it('/producers/:id (GET) - should return producer by id', async () => {
+    const res = await request(app.getHttpServer())
+      .get(`/api/v1/producers/${producerId}`)
+      .expect(200);
+
+    expect(res.body.data.id).toBe(producerId);
+    expect(res.body.data.name).toBe('Darth Vader');
   });
 });
