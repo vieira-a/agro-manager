@@ -52,4 +52,18 @@ describe('PasswordFactory', () => {
       }
     });
   });
+
+  describe('matches', () => {
+    it('should return true for matching password and hash', async () => {
+      const result = await passwordFactory.matches(
+        'Valid@123',
+        'hashed-Valid@123',
+      );
+      expect(mockEncrypter.matches).toHaveBeenCalledWith(
+        'Valid@123',
+        'hashed-Valid@123',
+      );
+      expect(result).toBe(true);
+    });
+  });
 });
