@@ -135,4 +135,14 @@ describe('ProducerController (e2e)', () => {
 
     expect(patchRes.body.message).toBe('Dados atualizados com sucesso');
   });
+
+  it('/producers/:id (DELETE) - should delete a producer with valid id', async () => {
+    await request(app.getHttpServer())
+      .delete(`/api/v1/producers/${producerId}`)
+      .expect(204);
+
+    await request(app.getHttpServer())
+      .get(`/api/v1/producers/${producerId}`)
+      .expect(404);
+  });
 });
