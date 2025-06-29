@@ -34,4 +34,10 @@ describe('Harvest', () => {
       Harvest.create({ ...validProps, crop: undefined as any }),
     ).toThrow(InvalidHarvestParamException);
   });
+
+  it('should throw if description is only whitespace', () => {
+    expect(() => Harvest.create({ ...validProps, description: '   ' })).toThrow(
+      InvalidHarvestParamException,
+    );
+  });
 });
