@@ -229,6 +229,24 @@ describe('ProducerController (e2e)', () => {
 
       expect(res.body.message).toContain('Token inválido para acesso.');
     });
+
+    it('should return 400 if trying to update with invalid name', async () => {
+      const agent = request.agent(app.getHttpServer());
+
+      await agent
+        .post('/api/v1/auth/login/producers')
+        .send({ document: '71663081093', password: 'P@ssword10' })
+        .expect(200);
+
+      const patchRes = await agent
+        .patch(`/api/v1/producers/${producerId}`)
+        .send({ name: '' })
+        .expect(422);
+
+      expect(patchRes.body.message).toContain(
+        'Parâmetro do Produtor inválido ou não informado: Nome',
+      );
+    });
   });
 
   describe('DELETE /producers/:id', () => {
