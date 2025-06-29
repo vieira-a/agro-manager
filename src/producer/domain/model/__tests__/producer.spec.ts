@@ -93,6 +93,21 @@ describe('Producer', () => {
         }),
       ).toThrow(InvalidProducerParamException);
     });
+
+    it('should throw InvalidProducerParamException if password is null or undefined', () => {
+      const invalidPasswords = [null, undefined];
+
+      for (const pwd of invalidPasswords) {
+        expect(() =>
+          Producer.create({
+            document: validCPF,
+            name: 'João da Silva',
+            password: pwd as any,
+            farms: [farm],
+          }),
+        ).toThrow(InvalidProducerParamException);
+      }
+    });
   });
 
   describe('Farm management', () => {
