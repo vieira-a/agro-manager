@@ -22,7 +22,7 @@ export class Producer {
     private password: Password,
   ) {}
 
-  static create(props: ProducerProps) {
+  static create(props: ProducerProps): Producer {
     const name = props.name.trim();
 
     const producer = new Producer(
@@ -37,6 +37,7 @@ export class Producer {
     }
 
     producer.validate();
+
     return producer;
   }
 
