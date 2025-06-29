@@ -65,5 +65,13 @@ describe('PasswordFactory', () => {
       );
       expect(result).toBe(true);
     });
+
+    it('should return false for non-matching password and hash', async () => {
+      const result = await passwordFactory.matches(
+        'WrongPassword',
+        'hashed-Valid@123',
+      );
+      expect(result).toBe(false);
+    });
   });
 });
