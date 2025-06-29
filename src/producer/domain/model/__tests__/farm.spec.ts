@@ -117,5 +117,11 @@ describe('Farm', () => {
         InvalidVegetationAreaException,
       );
     });
+
+    it('should throw if vegetationArea is zero', () => {
+      expect(() => Farm.create({ ...validProps, vegetationArea: 0 })).toThrow(
+        InvalidVegetationAreaException,
+      );
+    });
   });
 });
