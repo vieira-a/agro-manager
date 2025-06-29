@@ -2,6 +2,7 @@ import { Producer } from '../../../../producer/domain/model';
 import {
   InvalidCropParamException,
   InvalidDocumentException,
+  InvalidFarmAreaException,
   InvalidFarmParamException,
   InvalidProducerParamException,
 } from '../../../../producer/domain/exception';
@@ -268,5 +269,29 @@ describe('ProducerApplicationService', () => {
     await expect(service.create(input)).rejects.toThrow(
       InvalidFarmParamException,
     );
+  });
+
+  it('should throw InvalidFarmParamException when farm totalArea is less than or equal to zero', async () => {
+    mockFarmRepository.findUnique = jest.fn().mockResolvedValue(null);
+
+    const invalidAreas = [0, -10];
+
+    for (const area of invalidAreas) {
+      const input: CreateProducerDto = {
+        ...validProducer,
+        farm: {
+          name: 'Fazenda Monte Alto',
+          city: 'Cruz das Almas',
+          state: 'BA',
+          totalArea: area,
+          agriculturalArea: 50,
+          vegetationArea: 40,
+        },
+      };
+
+      await expect(service.create(input)).rejects.toThrow(
+        InvalidFarmAreaException,
+      );
+    }
   });
 });
