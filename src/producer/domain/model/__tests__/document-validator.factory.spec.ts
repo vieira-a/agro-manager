@@ -47,4 +47,11 @@ describe('DocumentValidatorFactory', () => {
     const result = DocumentValidatorFactory.create(document);
     expect(result).toBeInstanceOf(CNPJ);
   });
+
+  it('should throw when document has more than 14 digits', () => {
+    const longDoc = '123456789012345';
+    expect(() => DocumentValidatorFactory.create(longDoc)).toThrow(
+      InvalidDocumentException,
+    );
+  });
 });
