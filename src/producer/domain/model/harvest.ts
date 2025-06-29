@@ -62,7 +62,7 @@ export class Harvest {
       throw new InvalidHarvestParamException('Descrição');
     }
 
-    if (!this.year) {
+    if (!this.year || this.year <= 0) {
       throw new InvalidHarvestParamException('Ano');
     }
 

@@ -15,7 +15,7 @@ import { IdentityApplicationService } from '../../../application/service/identit
 export class AuthenticationController {
   constructor(private readonly identityService: IdentityApplicationService) {}
 
-  @Post('login/producer')
+  @Post('login/producers')
   @HttpCode(200)
   async loginProducer(
     @Body() request: LoginProducerRequest,

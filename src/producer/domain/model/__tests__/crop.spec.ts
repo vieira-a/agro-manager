@@ -11,4 +11,20 @@ describe('Crop', () => {
   it('should throw if name is empty', () => {
     expect(() => Crop.create({ name: '' })).toThrow(InvalidCropParamException);
   });
+
+  it('should throw if name contains only spaces', () => {
+    expect(() => Crop.create({ name: '    ' })).toThrow(
+      InvalidCropParamException,
+    );
+  });
+
+  it('should allow names with special characters', () => {
+    const crop = Crop.create({ name: 'Soja @2024!' });
+    expect(crop.getName()).toBe('Soja @2024!');
+  });
+
+  it('should always return trimmed name', () => {
+    const crop = Crop.create({ name: '  Soja  ' });
+    expect(crop.getName()).toBe('Soja');
+  });
 });

@@ -9,12 +9,9 @@ import {
   Param,
   Patch,
   Post,
-  Req,
-  Res,
-  UnauthorizedException,
   UseGuards,
 } from '@nestjs/common';
-import { ProducerApplicationService } from 'src/producer/application/service/producer-application.service';
+import { ProducerApplicationService } from '../../../../producer/application/service/producer-application.service';
 import { CreateProducerRequest } from '../dto/request';
 import { ApiResponse } from '../dto/response/api.response';
 import {
@@ -29,7 +26,6 @@ import { ProducerMapper } from '../../../../producer/infrastructure/persistence/
 import { ApiProducerResponse } from '../dto/response/api-producer.response';
 import { DashBoardResponse } from '../dto/response/dashboard.response';
 import { Logger } from 'nestjs-pino';
-import { Request, Response } from 'express';
 import { ProducerJwtAuthGuard } from '../guard/producer-jwt-auth.guard';
 @Controller('producers')
 export class ProducerController {

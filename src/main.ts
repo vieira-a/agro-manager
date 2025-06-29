@@ -4,6 +4,7 @@ import { GlobalExceptionFilter } from './shared/exception/global-exception.filte
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import { Logger } from 'nestjs-pino';
 import * as cookieParser from 'cookie-parser';
+import { ValidationPipe } from '@nestjs/common';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule, {
@@ -28,6 +29,18 @@ async function bootstrap() {
 
   app.useGlobalFilters(new GlobalExceptionFilter(logger));
   app.setGlobalPrefix('api/v1');
+
+  app.useGlobalPipes(
+    new ValidationPipe({
+      whitelist: true,
+      forbidNonWhitelisted: true,
+      transform: true,
+      transformOptions: {
+        enableImplicitConversion: true,
+      },
+      errorHttpStatusCode: 400,
+    }),
+  );
 
   app.useLogger(logger);
   app.use(cookieParser());

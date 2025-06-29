@@ -9,6 +9,10 @@ export class DocumentValidatorFactory {
   private static cnpjValidator = new CNPJValidator();
 
   static create(document: string): CPF | CNPJ {
+    if (!document) {
+      throw new InvalidDocumentException(document);
+    }
+
     const normalized = document.replace(/\D/g, '');
 
     if (normalized.length === 11) {

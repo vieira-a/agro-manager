@@ -1,11 +1,17 @@
-import { DataSourceOptions } from 'typeorm';
 import { config } from 'dotenv';
+import { existsSync } from 'fs';
 import * as path from 'path';
+import { DataSourceOptions } from 'typeorm';
 
-const envFile = `.env.${process.env.NODE_ENV || 'development'}.local`;
-config({ path: envFile });
+const envPath = `.env.${process.env.NODE_ENV}`;
+const localEnvPath = `${envPath}.local`;
+
+config({ path: existsSync(localEnvPath) ? localEnvPath : envPath });
 
 const isProd = process.env.NODE_ENV === 'production';
+const isTest = process.env.NODE_ENV === 'test';
+
+const migrationsPath = path.resolve(__dirname, 'migrations');
 
 export const typeOrmConfig: DataSourceOptions = {
   type: 'postgres',
@@ -21,10 +27,11 @@ export const typeOrmConfig: DataSourceOptions = {
   ],
   migrations: [
     isProd
-      ? path.join(__dirname, 'migrations', '*.js')
-      : path.join(__dirname, '..', 'migrations', '*.ts'),
+      ? path.join(migrationsPath, '*.js')
+      : path.join(migrationsPath, '*.ts'),
   ],
   migrationsTableName: 'migrations',
-  synchronize: false,
+  synchronize: isTest,
+  dropSchema: false,
   logging: !isProd,
 };

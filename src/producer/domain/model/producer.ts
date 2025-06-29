@@ -22,7 +22,7 @@ export class Producer {
     private password: Password,
   ) {}
 
-  static create(props: ProducerProps) {
+  static create(props: ProducerProps): Producer {
     const name = props.name.trim();
 
     const producer = new Producer(
@@ -37,6 +37,7 @@ export class Producer {
     }
 
     producer.validate();
+
     return producer;
   }
 
@@ -87,6 +88,10 @@ export class Producer {
   }
 
   updateName(newName: string): void {
+    if (typeof newName !== 'string') {
+      throw new InvalidProducerParamException('Nome');
+    }
+
     const normalized = newName.trim();
 
     if (!normalized) {
@@ -103,6 +108,10 @@ export class Producer {
 
     if (!this.document) {
       throw new InvalidProducerParamException('CPF ou CNPJ');
+    }
+
+    if (!this.password) {
+      throw new InvalidProducerParamException('Senha');
     }
   }
 }
