@@ -133,6 +133,12 @@ describe('ProducerController (e2e)', () => {
     expect(res.body.data.name).toBe('Darth Vader');
   });
 
+  it('/producers/:id (GET) - should return 404 if producer id not found', async () => {
+    await request(app.getHttpServer())
+      .get('/api/v1/producers/00000000-0000-0000-0000-000000000000')
+      .expect(404);
+  });
+
   it('/producers/:id (PATCH) - should update producer name with auth guard', async () => {
     const agent = request.agent(app.getHttpServer());
 
