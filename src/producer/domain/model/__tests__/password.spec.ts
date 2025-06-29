@@ -1,6 +1,5 @@
 import { InvalidPasswordException } from '../../exception/invalid-password.exception';
 import { Encrypter } from '../encrypter.interface';
-import { Password } from '../password';
 import { PasswordFactory } from '../password.factory';
 
 describe('Password', () => {
