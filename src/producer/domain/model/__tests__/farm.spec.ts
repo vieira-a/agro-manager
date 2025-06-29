@@ -130,4 +130,16 @@ describe('Farm', () => {
       );
     });
   });
+
+  describe('String field validations for name, city, and state', () => {
+    const invalidStrings = ['   ', '\t', '\n', ' \t\n '];
+
+    invalidStrings.forEach((invalidValue) => {
+      it(`should throw if name is only whitespace or invisible chars: '${invalidValue}'`, () => {
+        expect(() =>
+          Farm.create({ ...validProps, name: invalidValue }),
+        ).toThrow(InvalidFarmParamException);
+      });
+    });
+  });
 });
