@@ -1,33 +1,40 @@
-import { Test, TestingModule } from '@nestjs/testing';
+import { Test } from '@nestjs/testing';
 import { INestApplication, ValidationPipe } from '@nestjs/common';
 import * as request from 'supertest';
 import { AppModule } from '../../../../../app.module';
-import { resetDatabase } from '../../../../../../database/helper/reset-database';
+import { startPostgresContainer } from '../../../../../../test/utils/postgres-container';
+import { DataSource } from 'typeorm';
+import { cleanDatabase } from '../../../../../../test/utils/clean-database';
 
 describe('ProducerController (e2e)', () => {
   let app: INestApplication;
+  let container;
+  let dataSource: DataSource;
 
   beforeAll(async () => {
-    const moduleFixture: TestingModule = await Test.createTestingModule({
-      imports: [AppModule],
+    const started = await startPostgresContainer();
+    container = started.container;
+
+    const moduleFixture = await Test.createTestingModule({
+      imports: [AppModule.forRoot(started.config)],
     }).compile();
 
     app = moduleFixture.createNestApplication();
     app.setGlobalPrefix('api/v1');
     app.useGlobalPipes(new ValidationPipe({ whitelist: true }));
     await app.init();
-  });
 
-  beforeEach(async () => {
-    await resetDatabase(app);
+    dataSource = app.get(DataSource);
+    await dataSource.runMigrations();
   });
 
   afterEach(async () => {
-    await resetDatabase(app);
+    await cleanDatabase(dataSource);
   });
 
   afterAll(async () => {
     await app.close();
+    await container.stop();
   });
 
   it('/producers (POST) - should create a producer with correct values', async () => {
@@ -53,9 +60,10 @@ describe('ProducerController (e2e)', () => {
       },
     };
 
-    return request(app.getHttpServer())
+    const res = await request(app.getHttpServer())
       .post('/api/v1/producers')
       .send(payload)
       .expect(201);
+    expect(res.body.data.name).toBe('Darth Vader');
   });
 });
