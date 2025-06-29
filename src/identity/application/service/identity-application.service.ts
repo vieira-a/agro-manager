@@ -101,6 +101,13 @@ export class IdentityApplicationService {
         refreshToken: newRefreshToken,
       };
     } catch (error) {
+      if (
+        error.name === 'TokenExpiredError' ||
+        error.name === 'JsonWebTokenError' ||
+        error.name === 'NotBeforeError'
+      ) {
+        throw new InvalidTokenException('Token inválido ou expirado.');
+      }
       throw error;
     }
   }
