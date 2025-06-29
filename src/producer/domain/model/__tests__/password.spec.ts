@@ -3,84 +3,64 @@ import { Encrypter } from '../encrypter.interface';
 import { Password } from '../password';
 import { PasswordFactory } from '../password.factory';
 
-describe('Password', () => {
+describe('PasswordFactory', () => {
   let encrypterMock: Encrypter;
-  let factoryMock: PasswordFactory;
+  let factory: PasswordFactory;
 
   beforeEach(() => {
     encrypterMock = {
-      encrypt: jest.fn().mockReturnValue('hashed-password'),
-      matches: jest.fn().mockReturnValue(true),
+      encrypt: jest.fn().mockResolvedValue('hashed-password'),
+      matches: jest.fn().mockResolvedValue(true),
     };
-    factoryMock = new PasswordFactory(encrypterMock);
+    factory = new PasswordFactory(encrypterMock);
   });
 
-  it('should throw if password is empty', async () => {
-    const emptyPassword = '';
-    await expect(factoryMock.create(emptyPassword)).rejects.toThrow(
-      InvalidPasswordException,
-    );
-  });
+  describe('create', () => {
+    it('should throw if password is null, undefined or empty', async () => {
+      const invalidPasswords = [null, undefined, '', '   '];
 
-  it('should throw if password is weak', async () => {
-    const weakPassword = '123456';
-    await expect(factoryMock.create(weakPassword)).rejects.toThrow(
-      InvalidPasswordException,
-    );
-  });
+      for (const pwd of invalidPasswords) {
+        await expect(factory.create(pwd as any)).rejects.toThrow(
+          InvalidPasswordException,
+        );
+      }
+    });
 
-  it('should accept strong password', async () => {
-    const strongPassword = 'P@ssword10';
-    const password = await factoryMock.create(strongPassword);
-    expect(password.getHashedValue()).toBe('hashed-password');
-    expect(encrypterMock.encrypt).toHaveBeenLastCalledWith(strongPassword);
-  });
+    it('should throw if password is weak', async () => {
+      const weakPasswords = [
+        '123456',
+        'password',
+        'PASSWORD1',
+        'Password!',
+        'Password1',
+        'p@ssword10',
+        'P@SSWORD10',
+      ];
 
-  it('should throw if password is null or undefined', async () => {
-    await expect(factoryMock.create(null as any)).rejects.toThrow(
-      InvalidPasswordException,
-    );
-    await expect(factoryMock.create(undefined as any)).rejects.toThrow(
-      InvalidPasswordException,
-    );
-  });
+      for (const pwd of weakPasswords) {
+        await expect(factory.create(pwd)).rejects.toThrow(
+          InvalidPasswordException,
+        );
+      }
+    });
 
-  it('should throw for password without uppercase letters', async () => {
-    const pwd = 'p@ssword10';
-    await expect(factoryMock.create(pwd)).rejects.toThrow(
-      InvalidPasswordException,
-    );
-  });
-
-  it('should throw for password without lowercase letters', async () => {
-    const pwd = 'P@SSWORD10';
-    await expect(factoryMock.create(pwd)).rejects.toThrow(
-      InvalidPasswordException,
-    );
-  });
-
-  it('should throw for password without numbers', async () => {
-    const pwd = 'Password@!';
-    await expect(factoryMock.create(pwd)).rejects.toThrow(
-      InvalidPasswordException,
-    );
-  });
-
-  it('should throw for password without special characters', async () => {
-    const pwd = 'Password10';
-    await expect(factoryMock.create(pwd)).rejects.toThrow(
-      InvalidPasswordException,
-    );
+    it('should accept strong password', async () => {
+      const strongPassword = 'P@ssword10';
+      const password = await factory.create(strongPassword);
+      expect(password.getHashedValue()).toBe('hashed-password');
+      expect(encrypterMock.encrypt).toHaveBeenCalledWith(strongPassword);
+    });
   });
 
   describe('Password VO', () => {
-    it('should throw if created with empty or null hash', () => {
-      expect(() => new Password('')).toThrow(InvalidPasswordException);
-      expect(() => new Password('   ')).toThrow(InvalidPasswordException);
-      expect(() => new Password(null as any)).toThrow(InvalidPasswordException);
-      expect(() => new Password(undefined as any)).toThrow(
-        InvalidPasswordException,
-      );
+    it('should throw if created with empty or invalid hash', () => {
+      const invalidHashes = ['', '   ', null, undefined];
+
+      for (const hash of invalidHashes) {
+        expect(() => new Password(hash as any)).toThrow(
+          InvalidPasswordException,
+        );
+      }
     });
 
     it('should return the hashed value correctly', () => {
