@@ -61,6 +61,15 @@ describe('CPF', () => {
         );
       }
     });
+
+    it('should throw InvalidDocumentException for CPF with more than 11 digits', () => {
+      const input = '123456789012';
+      const validator: DocumentValidator = {
+        validate: jest.fn(() => false),
+      };
+
+      expect(() => new CPF(input, validator)).toThrow(InvalidDocumentException);
+    });
   });
 
   describe('Format behavior', () => {
