@@ -102,6 +102,24 @@ describe('ProducerController (e2e)', () => {
     expect(res.body.data.name).toBe('Darth Vader');
   });
 
+  it('/producers (POST) - should throw to create a producer without required fields', async () => {
+    const payload = {};
+
+    const res = await request(app.getHttpServer())
+      .post('/api/v1/producers')
+      .send(payload)
+      .expect(400);
+
+    expect(res.body.message).toEqual(
+      expect.arrayContaining([
+        expect.stringContaining('document'),
+        expect.stringContaining('password'),
+        expect.stringContaining('passwordConfirmation'),
+        expect.stringContaining('name'),
+      ]),
+    );
+  });
+
   it('/producers (GET) - should return all producers', async () => {
     const res = await request(app.getHttpServer())
       .get('/api/v1/producers')
