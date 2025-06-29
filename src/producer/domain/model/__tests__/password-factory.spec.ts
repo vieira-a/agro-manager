@@ -24,5 +24,15 @@ describe('PasswordFactory', () => {
       expect(password).toBeInstanceOf(Password);
       expect(password.getHashedValue()).toBe('hashed-Valid@123');
     });
+
+    it('should throw InvalidPasswordException for null or empty password', async () => {
+      const invalids = [null, undefined, '', '   '];
+
+      for (const val of invalids) {
+        await expect(passwordFactory.create(val as any)).rejects.toThrow(
+          InvalidPasswordException,
+        );
+      }
+    });
   });
 });
