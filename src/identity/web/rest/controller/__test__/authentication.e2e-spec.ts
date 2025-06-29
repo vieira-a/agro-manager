@@ -146,5 +146,14 @@ describe('AuthenticationController (e2e)', () => {
 
       expect(res.body.message).toBe('Refresh token não informado.');
     });
+
+    it('should throw InvalidTokenException if refresh_token cookie is invalid', async () => {
+      const res = await request(app.getHttpServer())
+        .post('/api/v1/auth/refresh')
+        .set('Cookie', ['refresh_token=invalidtoken'])
+        .expect(403);
+
+      expect(res.body.message).toBe('Token inválido ou expirado.');
+    });
   });
 });
