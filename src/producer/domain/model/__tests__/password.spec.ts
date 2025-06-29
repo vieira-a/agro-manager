@@ -57,4 +57,11 @@ describe('Password', () => {
       InvalidPasswordException,
     );
   });
+
+  it('should throw for password without numbers', async () => {
+    const pwd = 'Password@!';
+    await expect(factoryMock.create(pwd)).rejects.toThrow(
+      InvalidPasswordException,
+    );
+  });
 });
