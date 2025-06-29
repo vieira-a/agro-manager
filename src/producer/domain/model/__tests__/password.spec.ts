@@ -64,4 +64,11 @@ describe('Password', () => {
       InvalidPasswordException,
     );
   });
+
+  it('should throw for password without special characters', async () => {
+    const pwd = 'Password10';
+    await expect(factoryMock.create(pwd)).rejects.toThrow(
+      InvalidPasswordException,
+    );
+  });
 });
