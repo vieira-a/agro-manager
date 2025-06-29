@@ -11,32 +11,54 @@ describe('CNPJ', () => {
     format: jest.fn((value) => `formatted-${value}`),
   };
 
-  it('should normalize the CNPJ value on construction', () => {
-    const cnpj = new CNPJ(validCNPJ, mockValidator);
-    expect(cnpj.toString()).toBe(normalizedCNPJ);
-    expect(mockValidator.validate).toHaveBeenCalledWith(normalizedCNPJ);
+  describe('Construction and normalization', () => {
+    it('should normalize the CNPJ value on construction', () => {
+      const cnpj = new CNPJ(validCNPJ, mockValidator);
+      expect(cnpj.toString()).toBe(normalizedCNPJ);
+      expect(mockValidator.validate).toHaveBeenCalledWith(normalizedCNPJ);
+    });
+
+    it('should throw InvalidDocumentException for invalid CNPJ', () => {
+      const invalidValidator: DocumentValidator = {
+        validate: jest.fn(() => false),
+      };
+
+      expect(() => new CNPJ(validCNPJ, invalidValidator)).toThrow(
+        InvalidDocumentException,
+      );
+    });
+
+    it('should handle CNPJ input with symbols and spaces', () => {
+      const messyInput = ' 12.345.678/0001-95 ';
+      const validator: DocumentValidator = {
+        validate: jest.fn(() => true),
+      };
+
+      const cnpj = new CNPJ(messyInput, validator);
+      expect(cnpj.toString()).toBe(normalizedCNPJ);
+    });
   });
 
-  it('should format the CNPJ if format method is available', () => {
-    const cnpj = new CNPJ(validCNPJ, mockValidator);
-    expect(cnpj.format()).toBe(`formatted-${normalizedCNPJ}`);
+  describe('Format behavior', () => {
+    it('should format the CNPJ if format method is available', () => {
+      const cnpj = new CNPJ(validCNPJ, mockValidator);
+      expect(cnpj.format()).toBe(`formatted-${normalizedCNPJ}`);
+    });
+
+    it('should return raw value in format if format method is not provided', () => {
+      const validatorWithoutFormat: DocumentValidator = {
+        validate: jest.fn(() => true),
+      };
+
+      const cnpj = new CNPJ(validCNPJ, validatorWithoutFormat);
+      expect(cnpj.format()).toBe(normalizedCNPJ);
+    });
   });
 
-  it('should return raw value in format if format method is not provided', () => {
-    const validatorWithoutFormat: DocumentValidator = {
-      validate: jest.fn(() => true),
-    };
-    const cnpj = new CNPJ(validCNPJ, validatorWithoutFormat);
-    expect(cnpj.format()).toBe(normalizedCNPJ);
-  });
-
-  it('should throw InvalidDocumentException for invalid CNPJ', () => {
-    const invalidValidator: DocumentValidator = {
-      validate: jest.fn(() => false),
-    };
-
-    expect(() => new CNPJ(validCNPJ, invalidValidator)).toThrow(
-      InvalidDocumentException,
-    );
+  describe('Serialization', () => {
+    it('should return raw value when serialized with toJSON', () => {
+      const cnpj = new CNPJ(validCNPJ, mockValidator);
+      expect(cnpj.toJSON()).toBe(normalizedCNPJ);
+    });
   });
 });
