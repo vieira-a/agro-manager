@@ -89,5 +89,19 @@ describe('AuthenticationController (e2e)', () => {
       expect(res.headers['set-cookie']).toBeDefined();
       expect(res.body.message).toBe('Login efetuado com sucesso.');
     });
+
+    it('should return 401 for wrong password', async () => {
+      const payload = {
+        document: validPayload.document,
+        password: 'WrongPassword11!',
+      };
+
+      const res = await request(app.getHttpServer())
+        .post('/api/v1/auth/login/producers')
+        .send(payload)
+        .expect(401);
+
+      expect(res.body.message).toBe('Senha incorreta.');
+    });
   });
 });
