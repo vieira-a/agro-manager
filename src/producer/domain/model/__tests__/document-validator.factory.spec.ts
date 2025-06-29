@@ -25,4 +25,14 @@ describe('DocumentValidatorFactory', () => {
       InvalidDocumentException,
     );
   });
+
+  it('should throw when document is null, undefined or empty', () => {
+    const invalidInputs = [undefined, null, '', '   '];
+
+    for (const input of invalidInputs) {
+      expect(() => DocumentValidatorFactory.create(input as any)).toThrow(
+        InvalidDocumentException,
+      );
+    }
+  });
 });
