@@ -133,5 +133,20 @@ describe('Producer', () => {
       producer.updateName('New Name');
       expect(producer.getName()).toBe('New Name');
     });
+
+    it('should throw when updating name with empty or whitespace only', () => {
+      const producer = Producer.create({
+        document: validCPF,
+        name: 'Old Name',
+        password: validPassword,
+      });
+
+      expect(() => producer.updateName('')).toThrow(
+        InvalidProducerParamException,
+      );
+      expect(() => producer.updateName('    ')).toThrow(
+        InvalidProducerParamException,
+      );
+    });
   });
 });
