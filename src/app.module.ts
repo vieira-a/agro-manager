@@ -1,48 +1,50 @@
-import { Module } from '@nestjs/common';
-import { ProducerModule } from './producer/producer.module';
-import { TypeOrmModule } from '@nestjs/typeorm';
+import { Module, DynamicModule } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
-import { LoggerModule } from 'nestjs-pino';
-import { typeOrmConfig } from '../database/typeorm.config';
 import { JwtModule } from '@nestjs/jwt';
+import { LoggerModule } from 'nestjs-pino';
+import { TypeOrmModule } from '@nestjs/typeorm';
 import { IdentityModule } from './identity/identity.module';
+import { ProducerModule } from './producer/producer.module';
+import { typeOrmConfig } from '../database/typeorm.config';
+import { DataSourceOptions } from 'typeorm';
 
-@Module({
-  imports: [
-    ConfigModule.forRoot({
-      isGlobal: true,
-      envFilePath: [
-        `.env.${process.env.NODE_ENV}.local`,
-        `.env.${process.env.NODE_ENV}`,
-        '.env',
+@Module({})
+export class AppModule {
+  static forRoot(overrideDbConfig?: DataSourceOptions): DynamicModule {
+    return {
+      module: AppModule,
+      imports: [
+        ConfigModule.forRoot({
+          isGlobal: true,
+          envFilePath: [
+            `.env.${process.env.NODE_ENV}.local`,
+            `.env.${process.env.NODE_ENV}`,
+            '.env',
+          ],
+        }),
+        JwtModule.register({
+          secret: process.env.JWT_TOKEN_SECRET,
+          signOptions: { expiresIn: '15m' },
+        }),
+        LoggerModule.forRoot({
+          pinoHttp: {
+            transport:
+              process.env.NODE_ENV !== 'production'
+                ? {
+                    target: 'pino-pretty',
+                    options: {
+                      colorize: true,
+                      translateTime: 'SYS:standard',
+                      ignore: 'pid,hostname',
+                    },
+                  }
+                : undefined,
+          },
+        }),
+        TypeOrmModule.forRoot(overrideDbConfig || typeOrmConfig),
+        IdentityModule,
+        ProducerModule,
       ],
-
-      ignoreEnvFile: process.env.NODE_ENV === 'production',
-    }),
-    JwtModule.register({
-      secret: process.env.JWT_TOKEN_SECRET,
-      signOptions: { expiresIn: '15m' },
-    }),
-    LoggerModule.forRoot({
-      pinoHttp: {
-        transport:
-          process.env.NODE_ENV !== 'production'
-            ? {
-                target: 'pino-pretty',
-                options: {
-                  colorize: true,
-                  translateTime: 'SYS:standard',
-                  ignore: 'pid,hostname',
-                },
-              }
-            : undefined,
-        level: process.env.NODE_ENV === 'production' ? 'info' : 'debug',
-        autoLogging: true,
-      },
-    }),
-    TypeOrmModule.forRoot(typeOrmConfig),
-    IdentityModule,
-    ProducerModule,
-  ],
-})
-export class AppModule {}
+    };
+  }
+}
