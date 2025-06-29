@@ -123,5 +123,11 @@ describe('Farm', () => {
         InvalidVegetationAreaException,
       );
     });
+
+    it('should throw if vegetationArea is greater than totalArea', () => {
+      expect(() => Farm.create({ ...validProps, vegetationArea: 110 })).toThrow(
+        InvalidFarmAreaException,
+      );
+    });
   });
 });
