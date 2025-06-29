@@ -40,4 +40,13 @@ describe('Harvest', () => {
       InvalidHarvestParamException,
     );
   });
+
+  it('should throw if year is zero or negative', () => {
+    expect(() => Harvest.create({ ...validProps, year: 0 })).toThrow(
+      InvalidHarvestParamException,
+    );
+    expect(() => Harvest.create({ ...validProps, year: -2023 })).toThrow(
+      InvalidHarvestParamException,
+    );
+  });
 });
