@@ -121,4 +121,17 @@ describe('Producer', () => {
       );
     });
   });
+
+  describe('Update name', () => {
+    it('should update name when valid', () => {
+      const producer = Producer.create({
+        document: validCPF,
+        name: 'Old Name',
+        password: validPassword,
+      });
+
+      producer.updateName('New Name');
+      expect(producer.getName()).toBe('New Name');
+    });
+  });
 });
