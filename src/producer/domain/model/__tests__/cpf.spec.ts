@@ -48,6 +48,19 @@ describe('CPF', () => {
       const cpf = new CPF(messyInput, validator);
       expect(cpf.toString()).toBe(normalizedCPF);
     });
+
+    it('should throw InvalidDocumentException when CPF is null, undefined or empty', () => {
+      const invalidInputs = [null, undefined, ''];
+      const invalidValidator: DocumentValidator = {
+        validate: jest.fn(() => false),
+      };
+
+      for (const input of invalidInputs) {
+        expect(() => new CPF(input as any, invalidValidator)).toThrow(
+          InvalidDocumentException,
+        );
+      }
+    });
   });
 
   describe('Format behavior', () => {
