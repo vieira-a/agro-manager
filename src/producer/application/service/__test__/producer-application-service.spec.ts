@@ -16,6 +16,7 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { PasswordFactory } from '../../../../producer/domain/model/password.factory';
 import { Password } from '../../../../producer/domain/model/password';
 import { PasswordNotMatchException } from '../../exception/password-not-match.exception';
+import { InvalidPasswordException } from '../../../../producer/domain/exception/invalid-password.exception';
 
 describe('ProducerApplicationService', () => {
   let service: ProducerApplicationService;
@@ -40,7 +41,12 @@ describe('ProducerApplicationService', () => {
   };
 
   const mockPasswordFactory: Partial<PasswordFactory> = {
-    create: jest.fn().mockResolvedValue(new Password('hashed-password')),
+    create: jest.fn(async (password: string) => {
+      if (!password || password.length < 8) {
+        throw new InvalidPasswordException('Senha inválida');
+      }
+      return new Password('hashed-password');
+    }),
   };
 
   beforeEach(async () => {
@@ -228,5 +234,18 @@ describe('ProducerApplicationService', () => {
         InvalidDocumentException,
       );
     }
+  });
+
+  it('should throw InvalidPasswordException when password length is less than 8 characters', async () => {
+    const input: CreateProducerDto = {
+      name: 'João da Silva',
+      document: '09779679057',
+      password: 'P@ss1',
+      passwordConfirmation: 'P@ss1',
+    };
+
+    await expect(service.create(input)).rejects.toThrow(
+      InvalidPasswordException,
+    );
   });
 });
