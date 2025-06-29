@@ -104,4 +104,39 @@ describe('AuthenticationController (e2e)', () => {
       expect(res.body.message).toBe('Senha incorreta.');
     });
   });
+
+  describe('POST /auth/refresh', () => {
+    let refreshToken: string | undefined;
+
+    beforeEach(async () => {
+      const loginRes = await request(app.getHttpServer())
+        .post('/api/v1/auth/login/producers')
+        .send({
+          document: validPayload.document,
+          password: validPayload.password,
+        })
+        .expect(200);
+
+      const cookies = loginRes.headers['set-cookie'];
+      const cookiesArray: string[] = Array.isArray(cookies)
+        ? cookies
+        : typeof cookies === 'string'
+          ? [cookies]
+          : [];
+      const refreshCookie = cookiesArray.find((cookie: string) =>
+        cookie.startsWith('refresh_token='),
+      );
+      refreshToken = refreshCookie?.split(';')[0].split('=')[1];
+    });
+
+    it('should refresh tokens successfully', async () => {
+      const res = await request(app.getHttpServer())
+        .post('/api/v1/auth/refresh')
+        .set('Cookie', [`refresh_token=${refreshToken}`])
+        .expect(200);
+
+      expect(res.headers['set-cookie']).toBeDefined();
+      expect(res.body.message).toBe('Token renovado com sucesso.');
+    });
+  });
 });
