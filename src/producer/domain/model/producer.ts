@@ -88,6 +88,10 @@ export class Producer {
   }
 
   updateName(newName: string): void {
+    if (typeof newName !== 'string') {
+      throw new InvalidProducerParamException('Nome');
+    }
+
     const normalized = newName.trim();
 
     if (!normalized) {
