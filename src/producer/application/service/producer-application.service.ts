@@ -16,6 +16,7 @@ import {
 import { ProducerSummary } from '../dto/producer-summary';
 import { PasswordFactory } from '../../../producer/domain/model/password.factory';
 import { PasswordNotMatchException } from '../exception/password-not-match.exception';
+import { InvalidHarvestParamException } from '../../../producer/domain/exception';
 
 @Injectable()
 export class ProducerApplicationService {
@@ -90,6 +91,10 @@ export class ProducerApplicationService {
             year: harvestProps.year,
             crop,
           });
+
+          if (!Number.isInteger(harvestProps.year) || harvestProps.year <= 0) {
+            throw new InvalidHarvestParamException('Ano');
+          }
 
           await this.harvestRepository.save(harvest);
         }
