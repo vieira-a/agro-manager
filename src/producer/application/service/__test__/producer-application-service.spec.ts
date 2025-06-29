@@ -198,4 +198,17 @@ describe('ProducerApplicationService', () => {
     expect(mockCropRepository.save).not.toHaveBeenCalled();
     expect(mockProducerRepository.save).not.toHaveBeenCalled();
   });
+
+  it('should throw InvalidProducerParamException when name is only whitespace', async () => {
+    const input: CreateProducerDto = {
+      name: '   ',
+      document: '09779679057',
+      password: 'P@ssword10',
+      passwordConfirmation: 'P@ssword10',
+    };
+
+    await expect(service.create(input)).rejects.toThrow(
+      InvalidProducerParamException,
+    );
+  });
 });
