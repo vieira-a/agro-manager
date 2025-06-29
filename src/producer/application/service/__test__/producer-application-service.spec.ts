@@ -2,6 +2,7 @@ import { Producer } from '../../../../producer/domain/model';
 import {
   InvalidCropParamException,
   InvalidDocumentException,
+  InvalidFarmParamException,
   InvalidProducerParamException,
 } from '../../../../producer/domain/exception';
 import { CreateProducerDto } from '../../dto/create-producer.dto';
@@ -47,6 +48,28 @@ describe('ProducerApplicationService', () => {
       }
       return new Password('hashed-password');
     }),
+  };
+
+  const validProducer: CreateProducerDto = {
+    name: 'João da Silva',
+    document: '09779679057',
+    password: 'P@ssword10',
+    passwordConfirmation: 'P@ssword10',
+    farm: {
+      name: 'Fazenda Monte Alto',
+      city: 'Cruz das Almas',
+      state: 'BA',
+      totalArea: 100,
+      agriculturalArea: 60,
+      vegetationArea: 40,
+      harvest: {
+        description: 'Safra Inverno',
+        year: 2024,
+        crop: {
+          name: 'Arroz',
+        },
+      },
+    },
   };
 
   beforeEach(async () => {
@@ -110,29 +133,7 @@ describe('ProducerApplicationService', () => {
     mockHarvestRepository.findUnique = jest.fn().mockResolvedValue(null);
     mockCropRepository.findUnique = jest.fn().mockResolvedValue(null);
 
-    const input: CreateProducerDto = {
-      name: 'João da Silva',
-      document: '09779679057',
-      password: 'P@ssword10',
-      passwordConfirmation: 'P@ssword10',
-      farm: {
-        name: 'Fazenda Monte Alto',
-        city: 'Cruz das Almas',
-        state: 'BA',
-        totalArea: 100,
-        agriculturalArea: 60,
-        vegetationArea: 40,
-        harvest: {
-          description: 'Safra de Milho 2025',
-          year: 2025,
-          crop: {
-            name: 'Milho',
-          },
-        },
-      },
-    };
-
-    const producer = await service.create(input);
+    const producer = await service.create(validProducer);
 
     const farm = producer.getFarms()[0];
     const harvest = farm.getHarvests();
@@ -246,6 +247,26 @@ describe('ProducerApplicationService', () => {
 
     await expect(service.create(input)).rejects.toThrow(
       InvalidPasswordException,
+    );
+  });
+
+  it('should throw InvalidFarmParamException when farm city is empty', async () => {
+    mockFarmRepository.findUnique = jest.fn().mockResolvedValue(null);
+
+    const input: CreateProducerDto = {
+      ...validProducer,
+      farm: {
+        name: 'Fazenda Monte Alto',
+        city: '',
+        state: 'BA',
+        totalArea: 100,
+        agriculturalArea: 60,
+        vegetationArea: 40,
+      },
+    };
+
+    await expect(service.create(input)).rejects.toThrow(
+      InvalidFarmParamException,
     );
   });
 });
