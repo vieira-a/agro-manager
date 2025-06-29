@@ -48,15 +48,14 @@ describe('ProducerController (e2e)', () => {
     app = moduleFixture.createNestApplication();
     app.setGlobalPrefix('api/v1');
     app.useGlobalPipes(new ValidationPipe({ whitelist: true }));
-
     app.use(cookieParser());
+
     await app.init();
 
     dataSource = app.get(DataSource);
     await dataSource.runMigrations();
-  });
 
-  beforeEach(async () => {
+    // Criar o produtor só uma vez
     const res = await request(app.getHttpServer())
       .post('/api/v1/producers')
       .send(validPayload)
@@ -65,11 +64,9 @@ describe('ProducerController (e2e)', () => {
     producerId = res.body.data.id;
   });
 
-  afterEach(async () => {
-    await cleanDatabase(dataSource);
-  });
-
   afterAll(async () => {
+    // Limpeza final do banco após todos os testes
+    await cleanDatabase(dataSource);
     await app.close();
     await container.stop();
   });
@@ -80,6 +77,7 @@ describe('ProducerController (e2e)', () => {
         .post('/api/v1/producers')
         .send(validPayload)
         .expect(201);
+
       expect(res.body.data.name).toBe('Darth Vader');
     });
 
