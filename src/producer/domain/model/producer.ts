@@ -105,5 +105,9 @@ export class Producer {
     if (!this.document) {
       throw new InvalidProducerParamException('CPF ou CNPJ');
     }
+
+    if (!this.password) {
+      throw new InvalidProducerParamException('Senha');
+    }
   }
 }
