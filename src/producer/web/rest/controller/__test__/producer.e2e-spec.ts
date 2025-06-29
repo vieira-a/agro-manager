@@ -176,6 +176,16 @@ describe('ProducerController (e2e)', () => {
 
       expect(patchRes.body.message).toBe('Dados atualizados com sucesso');
     });
+
+    it('should return 401 if access_token cookie is empty', async () => {
+      const res = await request(app.getHttpServer())
+        .patch(`/api/v1/producers/${producerId}`)
+        .set('Cookie', 'access_token=')
+        .send({ name: 'Anakin Skywalker' })
+        .expect(401);
+
+      expect(res.body.message).toContain('Unauthorized');
+    });
   });
 
   describe('DELETE /producers/:id', () => {
