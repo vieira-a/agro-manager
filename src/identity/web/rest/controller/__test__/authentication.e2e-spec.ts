@@ -13,6 +13,8 @@ describe('AuthenticationController (e2e)', () => {
   let container;
   let dataSource: DataSource;
   let producerId: string;
+  let refreshToken: string | undefined;
+
   const validPayload: CreateProducerRequest = {
     document: '71663081093',
     name: 'Darth Vader',
@@ -46,29 +48,42 @@ describe('AuthenticationController (e2e)', () => {
     app = moduleFixture.createNestApplication();
     app.useGlobalPipes(new ValidationPipe({ whitelist: true }));
     app.use(cookieParser());
-
     app.setGlobalPrefix('api/v1');
-
     await app.init();
 
     dataSource = app.get(DataSource);
     await dataSource.runMigrations();
-  });
 
-  beforeEach(async () => {
+    // Criar produtor só uma vez para testes
     const res = await request(app.getHttpServer())
       .post('/api/v1/producers')
       .send(validPayload)
       .expect(201);
-
     producerId = res.body.data.id;
-  });
 
-  afterEach(async () => {
-    await cleanDatabase(dataSource);
+    // Obter refreshToken para testes de refresh token
+    const loginRes = await request(app.getHttpServer())
+      .post('/api/v1/auth/login/producers')
+      .send({
+        document: validPayload.document,
+        password: validPayload.password,
+      })
+      .expect(200);
+
+    const cookies = loginRes.headers['set-cookie'];
+    const cookiesArray: string[] = Array.isArray(cookies)
+      ? cookies
+      : typeof cookies === 'string'
+        ? [cookies]
+        : [];
+    const refreshCookie = cookiesArray.find((cookie) =>
+      cookie.startsWith('refresh_token='),
+    );
+    refreshToken = refreshCookie?.split(';')[0].split('=')[1];
   });
 
   afterAll(async () => {
+    await cleanDatabase(dataSource);
     await app.close();
     await container.stop();
   });
@@ -76,10 +91,7 @@ describe('AuthenticationController (e2e)', () => {
   describe('POST /auth/login/producers', () => {
     it('should producer login successfully', async () => {
       const { document } = validPayload;
-      const payload = {
-        document,
-        password: 'P@ssword10',
-      };
+      const payload = { document, password: 'P@ssword10' };
 
       const res = await request(app.getHttpServer())
         .post('/api/v1/auth/login/producers')
@@ -106,29 +118,6 @@ describe('AuthenticationController (e2e)', () => {
   });
 
   describe('POST /auth/refresh', () => {
-    let refreshToken: string | undefined;
-
-    beforeEach(async () => {
-      const loginRes = await request(app.getHttpServer())
-        .post('/api/v1/auth/login/producers')
-        .send({
-          document: validPayload.document,
-          password: validPayload.password,
-        })
-        .expect(200);
-
-      const cookies = loginRes.headers['set-cookie'];
-      const cookiesArray: string[] = Array.isArray(cookies)
-        ? cookies
-        : typeof cookies === 'string'
-          ? [cookies]
-          : [];
-      const refreshCookie = cookiesArray.find((cookie: string) =>
-        cookie.startsWith('refresh_token='),
-      );
-      refreshToken = refreshCookie?.split(';')[0].split('=')[1];
-    });
-
     it('should refresh tokens successfully', async () => {
       const res = await request(app.getHttpServer())
         .post('/api/v1/auth/refresh')
@@ -147,7 +136,7 @@ describe('AuthenticationController (e2e)', () => {
       expect(res.body.message).toBe('Refresh token não informado.');
     });
 
-    it('should throw InvalidTokenException if refresh_token cookie is invalid', async () => {
+    it('should return 403 if refresh_token cookie is invalid', async () => {
       const res = await request(app.getHttpServer())
         .post('/api/v1/auth/refresh')
         .set('Cookie', ['refresh_token=invalidtoken'])
