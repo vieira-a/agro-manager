@@ -149,4 +149,18 @@ describe('Producer', () => {
       );
     });
   });
+
+  describe('Restore producer', () => {
+    it('should restore a producer with farms', () => {
+      const producer = Producer.restore({
+        id: 'some-id',
+        document: validCPF,
+        name: 'Restored Producer',
+        password: validPassword,
+        farms: [farm],
+      });
+
+      expect(producer.getFarms()).toHaveLength(1);
+    });
+  });
 });
