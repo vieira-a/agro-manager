@@ -11,9 +11,12 @@ import { IdentityModule } from './identity/identity.module';
   imports: [
     ConfigModule.forRoot({
       isGlobal: true,
-      envFilePath: process.env.NODE_ENV
-        ? `.env.${process.env.NODE_ENV}.local`
-        : '.env.development.local',
+      envFilePath: [
+        `.env.${process.env.NODE_ENV}.local`,
+        `.env.${process.env.NODE_ENV}`,
+        '.env',
+      ],
+
       ignoreEnvFile: process.env.NODE_ENV === 'production',
     }),
     JwtModule.register({
