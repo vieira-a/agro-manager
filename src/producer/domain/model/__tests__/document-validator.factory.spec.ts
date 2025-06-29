@@ -35,4 +35,10 @@ describe('DocumentValidatorFactory', () => {
       );
     }
   });
+
+  it('should create CPF for formatted string with special characters', () => {
+    const document = '664.521.970-96';
+    const result = DocumentValidatorFactory.create(document);
+    expect(result).toBeInstanceOf(CPF);
+  });
 });
