@@ -73,95 +73,103 @@ describe('ProducerController (e2e)', () => {
     await container.stop();
   });
 
-  it('/producers (POST) - should create a producer with correct values', async () => {
-    const res = await request(app.getHttpServer())
-      .post('/api/v1/producers')
-      .send(validPayload)
-      .expect(201);
-    expect(res.body.data.name).toBe('Darth Vader');
+  describe('POST /producers', () => {
+    it('should create a producer with correct values', async () => {
+      const res = await request(app.getHttpServer())
+        .post('/api/v1/producers')
+        .send(validPayload)
+        .expect(201);
+      expect(res.body.data.name).toBe('Darth Vader');
+    });
+
+    it('should throw to create a producer without required fields', async () => {
+      const payload = {};
+
+      const res = await request(app.getHttpServer())
+        .post('/api/v1/producers')
+        .send(payload)
+        .expect(400);
+
+      expect(res.body.message).toEqual(
+        expect.arrayContaining([
+          expect.stringContaining('document'),
+          expect.stringContaining('password'),
+          expect.stringContaining('passwordConfirmation'),
+          expect.stringContaining('name'),
+        ]),
+      );
+    });
+
+    it('should throw if password and passwordConfirmation not match', async () => {
+      const payload = {
+        ...validPayload,
+        passwordConfirmation: 'P@ssword11',
+      };
+
+      const res = await request(app.getHttpServer())
+        .post('/api/v1/producers')
+        .send(payload)
+        .expect(422);
+
+      expect(res.body.message).toContain(
+        'Senha e confirmação de senha são diferentes',
+      );
+    });
   });
 
-  it('/producers (POST) - should throw to create a producer without required fields', async () => {
-    const payload = {};
+  describe('GET /producers', () => {
+    it('should return all producers', async () => {
+      const res = await request(app.getHttpServer())
+        .get('/api/v1/producers')
+        .expect(200);
 
-    const res = await request(app.getHttpServer())
-      .post('/api/v1/producers')
-      .send(payload)
-      .expect(400);
+      expect(res.body.data.length).toBeGreaterThan(0);
+      expect(res.body.data[0].name).toBe('Darth Vader');
+    });
 
-    expect(res.body.message).toEqual(
-      expect.arrayContaining([
-        expect.stringContaining('document'),
-        expect.stringContaining('password'),
-        expect.stringContaining('passwordConfirmation'),
-        expect.stringContaining('name'),
-      ]),
-    );
+    it('should return producer by id', async () => {
+      const res = await request(app.getHttpServer())
+        .get(`/api/v1/producers/${producerId}`)
+        .expect(200);
+
+      expect(res.body.data.id).toBe(producerId);
+      expect(res.body.data.name).toBe('Darth Vader');
+    });
+
+    it('should return 404 if producer id not found', async () => {
+      await request(app.getHttpServer())
+        .get('/api/v1/producers/00000000-0000-0000-0000-000000000000')
+        .expect(404);
+    });
   });
 
-  it('/producers (POST) - should throw if password and passwordConfirmation not match', async () => {
-    const payload = {
-      ...validPayload,
-      passwordConfirmation: 'P@ssword11',
-    };
+  describe('PATCH /producers/:id', () => {
+    it('should update producer name with auth guard', async () => {
+      const agent = request.agent(app.getHttpServer());
 
-    const res = await request(app.getHttpServer())
-      .post('/api/v1/producers')
-      .send(payload)
-      .expect(422);
+      await agent
+        .post('/api/v1/auth/login/producers')
+        .send({ document: '71663081093', password: 'P@ssword10' })
+        .expect(200);
 
-    expect(res.body.message).toContain(
-      'Senha e confirmação de senha são diferentes',
-    );
+      const patchRes = await agent
+        .patch(`/api/v1/producers/${producerId}`)
+        .send({ name: 'Anakin Skywalker' })
+        .expect(200);
+
+      expect(patchRes.body.message).toBe('Dados atualizados com sucesso');
+    });
   });
 
-  it('/producers (GET) - should return all producers', async () => {
-    const res = await request(app.getHttpServer())
-      .get('/api/v1/producers')
-      .expect(200);
+  describe('DELETE /producers/:id', () => {
+    it('should delete a producer with valid id', async () => {
+      await request(app.getHttpServer())
+        .delete(`/api/v1/producers/${producerId}`)
+        .expect(204);
 
-    expect(res.body.data.length).toBeGreaterThan(0);
-    expect(res.body.data[0].name).toBe('Darth Vader');
-  });
-
-  it('/producers/:id (GET) - should return producer by id', async () => {
-    const res = await request(app.getHttpServer())
-      .get(`/api/v1/producers/${producerId}`)
-      .expect(200);
-
-    expect(res.body.data.id).toBe(producerId);
-    expect(res.body.data.name).toBe('Darth Vader');
-  });
-
-  it('/producers/:id (GET) - should return 404 if producer id not found', async () => {
-    await request(app.getHttpServer())
-      .get('/api/v1/producers/00000000-0000-0000-0000-000000000000')
-      .expect(404);
-  });
-
-  it('/producers/:id (PATCH) - should update producer name with auth guard', async () => {
-    const agent = request.agent(app.getHttpServer());
-
-    await agent
-      .post('/api/v1/auth/login/producers')
-      .send({ document: '71663081093', password: 'P@ssword10' })
-      .expect(200);
-
-    const patchRes = await agent
-      .patch(`/api/v1/producers/${producerId}`)
-      .send({ name: 'Anakin Skywalker' })
-      .expect(200);
-
-    expect(patchRes.body.message).toBe('Dados atualizados com sucesso');
-  });
-
-  it('/producers/:id (DELETE) - should delete a producer with valid id', async () => {
-    await request(app.getHttpServer())
-      .delete(`/api/v1/producers/${producerId}`)
-      .expect(204);
-
-    await request(app.getHttpServer())
-      .get(`/api/v1/producers/${producerId}`)
-      .expect(404);
+      await request(app.getHttpServer())
+        .get(`/api/v1/producers/${producerId}`)
+        .expect(404);
+    });
   });
 });
