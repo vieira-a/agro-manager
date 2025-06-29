@@ -108,6 +108,18 @@ describe('Producer', () => {
         ).toThrow(InvalidProducerParamException);
       }
     });
+
+    it('should throw InvalidProducerParamException when creating producer with invalid farms', () => {
+      const invalidFarm = null;
+      expect(() =>
+        Producer.create({
+          document: validCPF,
+          name: 'João da Silva',
+          password: validPassword,
+          farms: [invalidFarm as any],
+        }),
+      ).toThrow(InvalidProducerParamException);
+    });
   });
 
   describe('Farm management', () => {
