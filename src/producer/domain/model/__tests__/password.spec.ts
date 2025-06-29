@@ -50,4 +50,11 @@ describe('Password', () => {
       InvalidPasswordException,
     );
   });
+
+  it('should throw for password without lowercase letters', async () => {
+    const pwd = 'P@SSWORD10';
+    await expect(factoryMock.create(pwd)).rejects.toThrow(
+      InvalidPasswordException,
+    );
+  });
 });
