@@ -126,7 +126,7 @@ export class Farm {
     if (!this.city) throw new InvalidFarmParamException('Cidade');
     if (!this.state) throw new InvalidFarmParamException('Estado');
 
-    if (this.agriculturalArea < 1)
+    if (this.agriculturalArea <= 0)
       throw new InvalidAgriculturalAreaException(this.vegetationArea);
 
     const totalSubAreas = this.agriculturalArea + this.vegetationArea;

@@ -98,5 +98,11 @@ describe('Farm', () => {
         Farm.create({ ...validProps, agriculturalArea: -1 }),
       ).toThrow(InvalidAgriculturalAreaException);
     });
+
+    it('should throw if agriculturalArea is zero', () => {
+      expect(() => Farm.create({ ...validProps, agriculturalArea: 0 })).toThrow(
+        InvalidAgriculturalAreaException,
+      );
+    });
   });
 });
