@@ -115,6 +115,23 @@ describe('ProducerController (e2e)', () => {
         'Senha e confirmação de senha são diferentes',
       );
     });
+
+    it('should throw if password is weak', async () => {
+      const payload = {
+        ...validPayload,
+        password: '123456',
+        passwordConfirmation: '123456',
+      };
+
+      const res = await request(app.getHttpServer())
+        .post('/api/v1/producers')
+        .send(payload)
+        .expect(400);
+
+      expect(res.body.message).toContain(
+        'A senha deve ter no mínimo 8 caracteres, com letras maiúsculas, minúsculas e caracteres especiais',
+      );
+    });
   });
 
   describe('GET /producers', () => {
