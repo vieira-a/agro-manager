@@ -11,4 +11,10 @@ describe('Crop', () => {
   it('should throw if name is empty', () => {
     expect(() => Crop.create({ name: '' })).toThrow(InvalidCropParamException);
   });
+
+  it('should throw if name contains only spaces', () => {
+    expect(() => Crop.create({ name: '    ' })).toThrow(
+      InvalidCropParamException,
+    );
+  });
 });
