@@ -135,9 +135,15 @@ describe('Farm', () => {
     const invalidStrings = ['   ', '\t', '\n', ' \t\n '];
 
     invalidStrings.forEach((invalidValue) => {
-      it(`should throw if name is only whitespace or invisible chars: '${invalidValue}'`, () => {
+      it('should throw if name is only whitespace or invisible chars', () => {
         expect(() =>
           Farm.create({ ...validProps, name: invalidValue }),
+        ).toThrow(InvalidFarmParamException);
+      });
+
+      it('should throw if city is only whitespace or invisible chars', () => {
+        expect(() =>
+          Farm.create({ ...validProps, city: invalidValue }),
         ).toThrow(InvalidFarmParamException);
       });
     });
