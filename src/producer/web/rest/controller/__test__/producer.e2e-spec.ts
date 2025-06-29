@@ -259,5 +259,13 @@ describe('ProducerController (e2e)', () => {
         .get(`/api/v1/producers/${producerId}`)
         .expect(404);
     });
+
+    it('should return 404 when deleting a non-existent producer', async () => {
+      const nonExistentId = '00000000-0000-0000-0000-000000000000';
+
+      await request(app.getHttpServer())
+        .delete(`/api/v1/producers/${nonExistentId}`)
+        .expect(404);
+    });
   });
 });
