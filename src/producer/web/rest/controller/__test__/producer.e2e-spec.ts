@@ -6,12 +6,35 @@ import { startPostgresContainer } from '../../../../../../test/utils/postgres-co
 import { DataSource } from 'typeorm';
 import { cleanDatabase } from '../../../../../../test/utils/clean-database';
 import * as cookieParser from 'cookie-parser';
+import { CreateProducerRequest } from '../../dto/request';
 
 describe('ProducerController (e2e)', () => {
   let app: INestApplication;
   let container;
   let dataSource: DataSource;
   let producerId: string;
+
+  const validPayload: CreateProducerRequest = {
+    document: '71663081093',
+    name: 'Darth Vader',
+    password: 'P@ssword10',
+    passwordConfirmation: 'P@ssword10',
+    farm: {
+      name: 'Fazenda Tattoine',
+      city: 'Tatooine',
+      state: 'TT',
+      totalArea: 150.5,
+      agriculturalArea: 75.0,
+      vegetationArea: 52.5,
+      harvest: {
+        description: 'Safra Inverno',
+        year: 2024,
+        crop: {
+          name: 'Arroz',
+        },
+      },
+    },
+  };
 
   beforeAll(async () => {
     const started = await startPostgresContainer();
@@ -33,31 +56,9 @@ describe('ProducerController (e2e)', () => {
   });
 
   beforeEach(async () => {
-    const payload = {
-      document: '71663081093',
-      name: 'Darth Vader',
-      password: 'P@ssword10',
-      passwordConfirmation: 'P@ssword10',
-      farm: {
-        name: 'Fazenda Tattoine',
-        city: 'Tatooine',
-        state: 'TT',
-        totalArea: 150.5,
-        agriculturalArea: 75.0,
-        vegetationArea: 52.5,
-        harvest: {
-          description: 'Safra Inverno',
-          year: 2024,
-          crop: {
-            name: 'Arroz',
-          },
-        },
-      },
-    };
-
     const res = await request(app.getHttpServer())
       .post('/api/v1/producers')
-      .send(payload)
+      .send(validPayload)
       .expect(201);
 
     producerId = res.body.data.id;
@@ -73,31 +74,9 @@ describe('ProducerController (e2e)', () => {
   });
 
   it('/producers (POST) - should create a producer with correct values', async () => {
-    const payload = {
-      document: '71663081093',
-      name: 'Darth Vader',
-      password: 'P@ssword10',
-      passwordConfirmation: 'P@ssword10',
-      farm: {
-        name: 'Fazenda Tattoine',
-        city: 'Tatooine',
-        state: 'TT',
-        totalArea: 150.5,
-        agriculturalArea: 75.0,
-        vegetationArea: 52.5,
-        harvest: {
-          description: 'Safra Inverno',
-          year: 2024,
-          crop: {
-            name: 'Arroz',
-          },
-        },
-      },
-    };
-
     const res = await request(app.getHttpServer())
       .post('/api/v1/producers')
-      .send(payload)
+      .send(validPayload)
       .expect(201);
     expect(res.body.data.name).toBe('Darth Vader');
   });
@@ -117,6 +96,22 @@ describe('ProducerController (e2e)', () => {
         expect.stringContaining('passwordConfirmation'),
         expect.stringContaining('name'),
       ]),
+    );
+  });
+
+  it('/producers (POST) - should throw if password and passwordConfirmation not match', async () => {
+    const payload = {
+      ...validPayload,
+      passwordConfirmation: 'P@ssword11',
+    };
+
+    const res = await request(app.getHttpServer())
+      .post('/api/v1/producers')
+      .send(payload)
+      .expect(422);
+
+    expect(res.body.message).toContain(
+      'Senha e confirmação de senha são diferentes',
     );
   });
 
