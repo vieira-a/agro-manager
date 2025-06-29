@@ -120,6 +120,24 @@ describe('Producer', () => {
         InvalidProducerParamException,
       );
     });
+
+    it('should throw when adding a farm that fails validation', () => {
+      const producer = Producer.create({
+        document: validCPF,
+        name: 'João da Silva',
+        password: validPassword,
+      });
+
+      const invalidFarm = {
+        validate: jest.fn(() => {
+          throw new InvalidProducerParamException('Farm inválida');
+        }),
+      } as unknown as Farm;
+
+      expect(() => producer.addFarm(invalidFarm)).toThrow(
+        InvalidProducerParamException,
+      );
+    });
   });
 
   describe('Update name', () => {
