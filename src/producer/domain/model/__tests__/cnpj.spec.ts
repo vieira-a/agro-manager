@@ -37,6 +37,16 @@ describe('CNPJ', () => {
       const cnpj = new CNPJ(messyInput, validator);
       expect(cnpj.toString()).toBe(normalizedCNPJ);
     });
+
+    it('should throw when CNPJ has only letters', () => {
+      const validator: DocumentValidator = {
+        validate: jest.fn(() => false),
+      };
+
+      expect(() => new CNPJ('abcdefghijklm', validator)).toThrow(
+        InvalidDocumentException,
+      );
+    });
   });
 
   describe('Format behavior', () => {
