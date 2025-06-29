@@ -208,6 +208,22 @@ describe('Producer', () => {
         InvalidProducerParamException,
       );
     });
+
+    it('should throw when updating name with null or undefined', () => {
+      const producer = Producer.create({
+        document: validCPF,
+        name: 'Old Name',
+        password: validPassword,
+      });
+
+      const invalidNames = [null, undefined];
+
+      invalidNames.forEach((name) => {
+        expect(() => producer.updateName(name as any)).toThrow(
+          InvalidProducerParamException,
+        );
+      });
+    });
   });
 
   describe('Restore producer', () => {
