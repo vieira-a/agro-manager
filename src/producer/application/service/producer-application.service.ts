@@ -13,7 +13,7 @@ import {
   IHarvestRepository,
   ICropRepository,
 } from '../repository';
-import { ProducerSummary } from '../dto/producer-summary';
+import { ProducerSummary } from '../dto/producer-summary.dto';
 import { PasswordFactory } from '../../../producer/domain/model/password.factory';
 import { PasswordNotMatchException } from '../exception/password-not-match.exception';
 import { InvalidHarvestParamException } from '../../../producer/domain/exception';
