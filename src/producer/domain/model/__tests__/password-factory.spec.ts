@@ -1,0 +1,28 @@
+import { PasswordFactory } from '../password.factory';
+import { InvalidPasswordException } from '../../exception/invalid-password.exception';
+import { Password } from '../password';
+
+describe('PasswordFactory', () => {
+  let passwordFactory: PasswordFactory;
+  let mockEncrypter: any;
+
+  beforeEach(() => {
+    mockEncrypter = {
+      encrypt: jest.fn(async (plain) => `hashed-${plain}`),
+      matches: jest.fn(
+        async (plain, hash) => plain === hash.replace('hashed-', ''),
+      ),
+    };
+    passwordFactory = new PasswordFactory(mockEncrypter);
+  });
+
+  describe('create', () => {
+    it('should create Password with hashed value for valid password', async () => {
+      const password = await passwordFactory.create('Valid@123');
+
+      expect(mockEncrypter.encrypt).toHaveBeenCalledWith('Valid@123');
+      expect(password).toBeInstanceOf(Password);
+      expect(password.getHashedValue()).toBe('hashed-Valid@123');
+    });
+  });
+});
