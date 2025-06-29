@@ -138,5 +138,13 @@ describe('AuthenticationController (e2e)', () => {
       expect(res.headers['set-cookie']).toBeDefined();
       expect(res.body.message).toBe('Token renovado com sucesso.');
     });
+
+    it('should return 401 if refresh_token cookie is missing', async () => {
+      const res = await request(app.getHttpServer())
+        .post('/api/v1/auth/refresh')
+        .expect(401);
+
+      expect(res.body.message).toBe('Refresh token não informado.');
+    });
   });
 });
