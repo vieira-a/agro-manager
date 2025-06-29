@@ -34,5 +34,22 @@ describe('PasswordFactory', () => {
         );
       }
     });
+
+    it('should throw InvalidPasswordException for weak passwords', async () => {
+      const weakPasswords = [
+        'short1!',
+        'NoNumber!',
+        'nonumberorspecial',
+        'NOLOWERCASE1!',
+        'nouppercase1!',
+        'NoSpecial123',
+      ];
+
+      for (const val of weakPasswords) {
+        await expect(passwordFactory.create(val)).rejects.toThrow(
+          InvalidPasswordException,
+        );
+      }
+    });
   });
 });
