@@ -162,5 +162,16 @@ describe('Producer', () => {
 
       expect(producer.getFarms()).toHaveLength(1);
     });
+
+    it('should restore a producer without farms', () => {
+      const producer = Producer.restore({
+        id: 'some-id',
+        document: validCPF,
+        name: 'Restored Producer',
+        password: validPassword,
+      });
+
+      expect(producer.getFarms()).toHaveLength(0);
+    });
   });
 });
