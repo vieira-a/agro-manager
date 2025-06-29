@@ -1,6 +1,7 @@
 import { Producer } from '../../../../producer/domain/model';
 import {
   InvalidCropParamException,
+  InvalidDocumentException,
   InvalidProducerParamException,
 } from '../../../../producer/domain/exception';
 import { CreateProducerDto } from '../../dto/create-producer.dto';
@@ -210,5 +211,22 @@ describe('ProducerApplicationService', () => {
     await expect(service.create(input)).rejects.toThrow(
       InvalidProducerParamException,
     );
+  });
+
+  it('should throw InvalidDocumentException when document is empty or invalid format', async () => {
+    const invalidDocuments = ['', '123ABC456', null, undefined];
+
+    for (const doc of invalidDocuments) {
+      const input: CreateProducerDto = {
+        name: 'João da Silva',
+        document: doc as any,
+        password: 'P@ssword10',
+        passwordConfirmation: 'P@ssword10',
+      };
+
+      await expect(service.create(input)).rejects.toThrow(
+        InvalidDocumentException,
+      );
+    }
   });
 });
