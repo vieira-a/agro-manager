@@ -5,6 +5,7 @@ import { AppModule } from '../../../../../app.module';
 import { startPostgresContainer } from '../../../../../../test/utils/postgres-container';
 import { DataSource } from 'typeorm';
 import { cleanDatabase } from '../../../../../../test/utils/clean-database';
+import * as cookieParser from 'cookie-parser';
 
 describe('ProducerController (e2e)', () => {
   let app: INestApplication;
@@ -24,6 +25,7 @@ describe('ProducerController (e2e)', () => {
     app.setGlobalPrefix('api/v1');
     app.useGlobalPipes(new ValidationPipe({ whitelist: true }));
 
+    app.use(cookieParser());
     await app.init();
 
     dataSource = app.get(DataSource);
@@ -116,5 +118,21 @@ describe('ProducerController (e2e)', () => {
 
     expect(res.body.data.id).toBe(producerId);
     expect(res.body.data.name).toBe('Darth Vader');
+  });
+
+  it('/producers/:id (PATCH) - should update producer name with auth guard', async () => {
+    const agent = request.agent(app.getHttpServer());
+
+    await agent
+      .post('/api/v1/auth/login/producers')
+      .send({ document: '71663081093', password: 'P@ssword10' })
+      .expect(200);
+
+    const patchRes = await agent
+      .patch(`/api/v1/producers/${producerId}`)
+      .send({ name: 'Anakin Skywalker' })
+      .expect(200);
+
+    expect(patchRes.body.message).toBe('Dados atualizados com sucesso');
   });
 });
