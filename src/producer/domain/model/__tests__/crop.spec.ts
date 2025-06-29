@@ -22,4 +22,9 @@ describe('Crop', () => {
     const crop = Crop.create({ name: 'Soja @2024!' });
     expect(crop.getName()).toBe('Soja @2024!');
   });
+
+  it('should always return trimmed name', () => {
+    const crop = Crop.create({ name: '  Soja  ' });
+    expect(crop.getName()).toBe('Soja');
+  });
 });
