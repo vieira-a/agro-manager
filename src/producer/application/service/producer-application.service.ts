@@ -113,6 +113,11 @@ export class ProducerApplicationService {
   }
 
   async delete(id: string): Promise<boolean> {
+    const producer = await this.findById(id);
+
+    if (!producer) {
+      throw new NotFoundException(`Produtor com id ${id} não encontrado`);
+    }
     return await this.producerRepository.remove(id);
   }
 
