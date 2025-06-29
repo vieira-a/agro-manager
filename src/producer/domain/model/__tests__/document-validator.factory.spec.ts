@@ -54,4 +54,10 @@ describe('DocumentValidatorFactory', () => {
       InvalidDocumentException,
     );
   });
+
+  it('should throw when document has only letters', () => {
+    expect(() => DocumentValidatorFactory.create('abcdefghi')).toThrow(
+      InvalidDocumentException,
+    );
+  });
 });
