@@ -10,11 +10,12 @@ import {
 } from '@nestjs/common';
 import { LoginProducerRequest } from '../dto/request/login-producer.request';
 import { IdentityApplicationService } from '../../../application/service/identity-application.service';
-
+import { Throttle } from '@nestjs/throttler';
 @Controller('auth')
 export class AuthenticationController {
   constructor(private readonly identityService: IdentityApplicationService) {}
 
+  @Throttle({ default: { limit: 10, ttl: 60000 } })
   @Post('login/producers')
   @HttpCode(200)
   async loginProducer(
@@ -43,6 +44,7 @@ export class AuthenticationController {
       });
   }
 
+  @Throttle({ default: { limit: 10, ttl: 60000 } })
   @Post('refresh')
   @HttpCode(200)
   async refreshToken(@Req() req: Request, @Res() res: Response) {

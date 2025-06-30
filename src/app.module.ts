@@ -10,6 +10,7 @@ import { DataSourceOptions } from 'typeorm';
 import { APP_FILTER } from '@nestjs/core';
 import { GlobalExceptionFilter } from './shared/exception/global-exception.filter';
 import { HealthModule } from './shared/health/health.module';
+import { SecurityModule } from './shared/security/security.module';
 
 @Module({})
 export class AppModule {
@@ -17,6 +18,7 @@ export class AppModule {
     return {
       module: AppModule,
       imports: [
+        SecurityModule,
         ConfigModule.forRoot({
           isGlobal: true,
           envFilePath: [
