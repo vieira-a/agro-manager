@@ -10,6 +10,8 @@ async function bootstrap() {
     bufferLogs: true,
   });
 
+  app.setGlobalPrefix('api/v1');
+
   const config = new DocumentBuilder()
     .setTitle('Agro Manager')
     .setDescription('Sistema para gereciamento de propriedades rurais')
@@ -24,10 +26,6 @@ async function bootstrap() {
     },
   });
 
-  const logger = app.get(Logger);
-
-  app.setGlobalPrefix('api/v1');
-
   app.useGlobalPipes(
     new ValidationPipe({
       whitelist: true,
@@ -40,7 +38,7 @@ async function bootstrap() {
     }),
   );
 
-  app.useLogger(logger);
+  app.useLogger(app.get(Logger));
   app.use(cookieParser());
 
   await app.listen(process.env.PORT ?? 3000);
