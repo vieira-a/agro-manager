@@ -87,7 +87,7 @@ describe('ProducerController (e2e)', () => {
         .send(payload)
         .expect(400);
 
-      expect(res.body.message).toEqual(
+      expect(res.body.exception.message).toEqual(
         expect.arrayContaining([
           expect.stringContaining('document'),
           expect.stringContaining('password'),
@@ -108,7 +108,7 @@ describe('ProducerController (e2e)', () => {
         .send(payload)
         .expect(422);
 
-      expect(res.body.message).toContain(
+      expect(res.body.exception.message).toContain(
         'Senha e confirmação de senha são diferentes',
       );
     });
@@ -125,7 +125,7 @@ describe('ProducerController (e2e)', () => {
         .send(payload)
         .expect(400);
 
-      expect(res.body.message).toContain(
+      expect(res.body.exception.message).toContain(
         'A senha deve ter no mínimo 8 caracteres, com letras maiúsculas, minúsculas e caracteres especiais',
       );
     });
@@ -181,7 +181,7 @@ describe('ProducerController (e2e)', () => {
         .send({ name: 'Anakin Skywalker' })
         .expect(401);
 
-      expect(res.body.message).toContain('Unauthorized');
+      expect(res.body.exception.message).toContain('Unauthorized');
     });
 
     it('should return 401 if access_token cookie is missing', async () => {
@@ -190,7 +190,7 @@ describe('ProducerController (e2e)', () => {
         .send({ name: 'New name' })
         .expect(401);
 
-      expect(res.body.message).toContain('Unauthorized');
+      expect(res.body.exception.message).toContain('Unauthorized');
     });
 
     it('should return 401 if access_token is invalid', async () => {
@@ -200,7 +200,7 @@ describe('ProducerController (e2e)', () => {
         .send({ name: 'Nome Inválido' })
         .expect(401);
 
-      expect(res.body.message).toContain('Unauthorized');
+      expect(res.body.exception.message).toContain('Unauthorized');
     });
 
     it('should return 403 if token payload type is invalid', async () => {
@@ -223,7 +223,9 @@ describe('ProducerController (e2e)', () => {
         .send({ name: 'Anakin Skywalker' })
         .expect(403);
 
-      expect(res.body.message).toContain('Token inválido para acesso.');
+      expect(res.body.exception.message).toContain(
+        'Token inválido para acesso.',
+      );
     });
 
     it('should return 400 if trying to update with invalid name', async () => {
@@ -239,7 +241,7 @@ describe('ProducerController (e2e)', () => {
         .send({ name: '' })
         .expect(422);
 
-      expect(patchRes.body.message).toContain(
+      expect(patchRes.body.exception.message).toContain(
         'Parâmetro do Produtor inválido ou não informado: Nome',
       );
     });
