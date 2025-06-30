@@ -27,6 +27,8 @@ import { ApiProducerResponse } from '../dto/response/api-producer.response';
 import { DashBoardResponse } from '../dto/response/dashboard.response';
 import { Logger } from 'nestjs-pino';
 import { ProducerJwtAuthGuard } from '../guard/producer-jwt-auth.guard';
+import { ProducerRoles } from '../../../../identity/decorator/producer-role.decorator';
+import { ProducerRole } from '../../../../producer/domain/enum/producer-role.enum';
 @Controller('producers')
 export class ProducerController {
   constructor(
@@ -58,6 +60,7 @@ export class ProducerController {
     );
   }
 
+  @ProducerRoles(ProducerRole.PRODUCER_ADMIN)
   @Delete(':id')
   @ApiParam({ name: 'id', type: String, description: 'ID do produtor' })
   @HttpCode(HttpStatus.NO_CONTENT)
