@@ -4,10 +4,12 @@ import { CNPJ } from './cnpj';
 import { InvalidProducerParamException } from '../exception';
 import { Farm } from './farm';
 import { Password } from './password';
+import { ProducerRole } from '../enum/producer-role.enum';
 
 type ProducerProps = {
   document: CPF | CNPJ;
   name: string;
+  role: ProducerRole;
   password: Password;
   farms?: Farm[];
 };
@@ -19,6 +21,7 @@ export class Producer {
     private readonly id: string,
     private readonly document: CPF | CNPJ,
     private name: string,
+    private role: ProducerRole,
     private password: Password,
   ) {}
 
@@ -29,6 +32,7 @@ export class Producer {
       randomUUID(),
       props.document,
       name,
+      props.role,
       props.password,
     );
 
@@ -48,6 +52,7 @@ export class Producer {
       props.id,
       props.document,
       props.name,
+      props.role,
       props.password,
     );
 

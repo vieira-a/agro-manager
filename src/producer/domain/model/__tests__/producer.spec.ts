@@ -7,81 +7,83 @@ import { InvalidProducerParamException } from '../../exception';
 import { Password } from '../password';
 import { PasswordFactory } from '../password.factory';
 import { EncryptPassword } from '../encrypt-password';
+import { ProducerRole } from '../../enum/producer-role.enum';
 
 describe('Producer', () => {
   const validCPF = DocumentValidatorFactory.create('66452197096');
   const validCNPJ = DocumentValidatorFactory.create('11444777000161');
 
+  let validDefaultPFProducerProps;
+  let validDefaultPJProducerProps;
   let validPassword: Password;
-  let crop: Crop;
-  let harvest: Harvest;
-  let farm: Farm;
+  let validCrop: Crop;
+  let validHarvest: Harvest;
+  let validFarm: Farm;
 
   beforeAll(async () => {
     const passwordFactory = new PasswordFactory(new EncryptPassword());
     validPassword = await passwordFactory.create('P@ssword10');
 
-    crop = Crop.create({ name: 'Milho' });
+    validCrop = Crop.create({ name: 'Milho' });
 
-    harvest = Harvest.create({
+    validHarvest = Harvest.create({
       description: 'Safra 2024',
       year: 2024,
-      crop,
+      crop: validCrop,
     });
 
-    farm = Farm.create({
+    validFarm = Farm.create({
       name: 'Fazenda Teste',
       city: 'Cidade Teste',
       state: 'Estado Teste',
       totalArea: 100,
       agriculturalArea: 50,
       vegetationArea: 30,
-      harvests: [harvest],
+      harvests: [validHarvest],
     });
+
+    validDefaultPFProducerProps = {
+      document: validCPF,
+      name: 'John Doe',
+      role: ProducerRole.PRODUCER_USER,
+      password: validPassword,
+      farms: [validFarm],
+    };
+
+    validDefaultPJProducerProps = {
+      document: validCNPJ,
+      name: 'John Doe',
+      role: ProducerRole.PRODUCER_USER,
+      password: validPassword,
+      farms: [validFarm],
+    };
   });
 
   describe('Creation and validation', () => {
     it('should create a valid Producer with valid CPF and all nested entities', () => {
-      const producer = Producer.create({
-        document: validCPF,
-        name: 'John Doe',
-        password: validPassword,
-        farms: [farm],
-      });
+      const producer = Producer.create(validDefaultPFProducerProps);
       expect(producer).toBeInstanceOf(Producer);
     });
 
     it('should create a Producer with valid CNPJ document and Farm', () => {
-      const producer = Producer.create({
-        document: validCNPJ,
-        name: 'Empresa Agro',
-        password: validPassword,
-        farms: [farm],
-      });
+      const producer = Producer.create(validDefaultPJProducerProps);
       expect(producer).toBeInstanceOf(Producer);
     });
 
     it('should throw if name is empty', () => {
       expect(() =>
-        Producer.create({
-          document: validCPF,
-          name: '',
-          password: validPassword,
-          farms: [farm],
-        }),
+        Producer.create({ ...validDefaultPFProducerProps, name: '' }),
       ).toThrow(InvalidProducerParamException);
     });
 
     it('should throw InvalidProducerParamException if name is only whitespace or invisible characters', () => {
       const invalidNames = ['   ', '\t', '\n', ' \t\n '];
 
-      invalidNames.forEach((name) => {
+      invalidNames.forEach((invalidName) => {
         expect(() =>
           Producer.create({
-            document: validCPF,
-            name,
-            password: validPassword,
-            farms: [farm],
+            ...validDefaultPFProducerProps,
+            name: invalidName,
           }),
         ).toThrow(InvalidProducerParamException);
       });
@@ -89,22 +91,15 @@ describe('Producer', () => {
 
     it('should throw if document is null', () => {
       expect(() =>
-        Producer.create({
-          document: null as any,
-          name: 'João da Silva',
-          password: validPassword,
-          farms: [farm],
-        }),
+        Producer.create({ ...validDefaultPFProducerProps, document: null }),
       ).toThrow(InvalidProducerParamException);
     });
 
     it('should throw if document is undefined', () => {
       expect(() =>
         Producer.create({
+          ...validDefaultPFProducerProps,
           document: undefined as any,
-          name: 'João da Silva',
-          password: validPassword,
-          farms: [farm],
         }),
       ).toThrow(InvalidProducerParamException);
     });
@@ -115,10 +110,8 @@ describe('Producer', () => {
       for (const pwd of invalidPasswords) {
         expect(() =>
           Producer.create({
-            document: validCPF,
-            name: 'João da Silva',
+            ...validDefaultPFProducerProps,
             password: pwd as any,
-            farms: [farm],
           }),
         ).toThrow(InvalidProducerParamException);
       }
@@ -128,9 +121,7 @@ describe('Producer', () => {
       const invalidFarm = null;
       expect(() =>
         Producer.create({
-          document: validCPF,
-          name: 'João da Silva',
-          password: validPassword,
+          ...validDefaultPFProducerProps,
           farms: [invalidFarm as any],
         }),
       ).toThrow(InvalidProducerParamException);
@@ -140,23 +131,18 @@ describe('Producer', () => {
   describe('Farm management', () => {
     it('should allow adding a farm to an existing producer', () => {
       const producer = Producer.create({
-        document: validCPF,
-        name: 'João da Silva',
-        password: validPassword,
+        ...validDefaultPFProducerProps,
+        farms: null,
       });
 
-      producer.addFarm(farm);
+      producer.addFarm(validFarm);
 
       expect(producer.getFarms()).toHaveLength(1);
-      expect(producer.getFarms()[0]).toBe(farm);
+      expect(producer.getFarms()[0]).toBe(validFarm);
     });
 
     it('should throw if trying to add an invalid farm', () => {
-      const producer = Producer.create({
-        document: validCPF,
-        name: 'João da Silva',
-        password: validPassword,
-      });
+      const producer = Producer.create({ ...validDefaultPFProducerProps });
 
       expect(() => producer.addFarm(null as any)).toThrow(
         InvalidProducerParamException,
@@ -164,11 +150,7 @@ describe('Producer', () => {
     });
 
     it('should throw when adding a farm that fails validation', () => {
-      const producer = Producer.create({
-        document: validCPF,
-        name: 'João da Silva',
-        password: validPassword,
-      });
+      const producer = Producer.create({ ...validDefaultPFProducerProps });
 
       const invalidFarm = {
         validate: jest.fn(() => {
@@ -185,9 +167,8 @@ describe('Producer', () => {
   describe('Update name', () => {
     it('should update name when valid', () => {
       const producer = Producer.create({
-        document: validCPF,
+        ...validDefaultPFProducerProps,
         name: 'Old Name',
-        password: validPassword,
       });
 
       producer.updateName('New Name');
@@ -196,9 +177,8 @@ describe('Producer', () => {
 
     it('should throw when updating name with empty or whitespace only', () => {
       const producer = Producer.create({
-        document: validCPF,
+        ...validDefaultPFProducerProps,
         name: 'Old Name',
-        password: validPassword,
       });
 
       expect(() => producer.updateName('')).toThrow(
@@ -211,9 +191,8 @@ describe('Producer', () => {
 
     it('should throw when updating name with null or undefined', () => {
       const producer = Producer.create({
-        document: validCPF,
+        ...validDefaultPFProducerProps,
         name: 'Old Name',
-        password: validPassword,
       });
 
       const invalidNames = [null, undefined];
@@ -233,7 +212,8 @@ describe('Producer', () => {
         document: validCPF,
         name: 'Restored Producer',
         password: validPassword,
-        farms: [farm],
+        role: ProducerRole.PRODUCER_USER,
+        farms: [validFarm],
       });
 
       expect(producer.getFarms()).toHaveLength(1);
@@ -244,6 +224,7 @@ describe('Producer', () => {
         id: 'some-id',
         document: validCPF,
         name: 'Restored Producer',
+        role: ProducerRole.PRODUCER_USER,
         password: validPassword,
       });
 
