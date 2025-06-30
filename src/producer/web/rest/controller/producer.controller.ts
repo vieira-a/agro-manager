@@ -9,11 +9,13 @@ import {
   Param,
   Patch,
   Post,
+  UseGuards,
 } from '@nestjs/common';
-import { ProducerApplicationService } from 'src/producer/application/service/producer-application.service';
-import { CreateProducerRequest } from '../dto/request/create-producer.request';
+import { ProducerApplicationService } from '../../../../producer/application/service/producer-application.service';
+import { CreateProducerRequest } from '../dto/request';
 import { ApiResponse } from '../dto/response/api.response';
 import {
+  ApiBearerAuth,
   ApiBody,
   ApiCreatedResponse,
   ApiOkResponse,
@@ -24,7 +26,9 @@ import { ProducerMapper } from '../../../../producer/infrastructure/persistence/
 import { ApiProducerResponse } from '../dto/response/api-producer.response';
 import { DashBoardResponse } from '../dto/response/dashboard.response';
 import { Logger } from 'nestjs-pino';
-
+import { ProducerJwtAuthGuard } from '../guard/producer-jwt-auth.guard';
+import { ProducerRoles } from '../../../../identity/decorator/producer-role.decorator';
+import { ProducerRole } from '../../../../producer/domain/enum/producer-role.enum';
 @Controller('producers')
 export class ProducerController {
   constructor(
@@ -56,6 +60,7 @@ export class ProducerController {
     );
   }
 
+  @ProducerRoles(ProducerRole.PRODUCER_ADMIN)
   @Delete(':id')
   @ApiParam({ name: 'id', type: String, description: 'ID do produtor' })
   @HttpCode(HttpStatus.NO_CONTENT)
@@ -91,6 +96,8 @@ export class ProducerController {
     );
   }
 
+  @UseGuards(ProducerJwtAuthGuard)
+  @ApiBearerAuth('access-token')
   @Get('dashboard')
   @ApiOkResponse({
     description: 'Dados carregados com sucesso',
@@ -140,6 +147,8 @@ export class ProducerController {
     );
   }
 
+  @UseGuards(ProducerJwtAuthGuard)
+  @ApiBearerAuth('access-token')
   @Patch(':id')
   @ApiParam({ name: 'id', type: String, description: 'ID do produtor' })
   @HttpCode(HttpStatus.OK)

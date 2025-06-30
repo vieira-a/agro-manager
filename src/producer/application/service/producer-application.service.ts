@@ -13,7 +13,10 @@ import {
   IHarvestRepository,
   ICropRepository,
 } from '../repository';
-import { ProducerSummary } from '../dto/producer-summary';
+import { ProducerSummary } from '../dto/producer-summary.dto';
+import { PasswordFactory } from '../../../producer/domain/model/password.factory';
+import { PasswordNotMatchException } from '../exception/password-not-match.exception';
+import { InvalidHarvestParamException } from '../../../producer/domain/exception';
 
 @Injectable()
 export class ProducerApplicationService {
@@ -26,14 +29,22 @@ export class ProducerApplicationService {
     private readonly harvestRepository: IHarvestRepository,
     @Inject('ICropRepository')
     private readonly cropRepository: ICropRepository,
+    private readonly passwordFactory: PasswordFactory,
   ) {}
 
   async create(input: CreateProducerDto): Promise<Producer> {
+    if (input.password !== input.passwordConfirmation) {
+      throw new PasswordNotMatchException();
+    }
+
     const producerDocument = DocumentValidatorFactory.create(input.document);
+    const hashedPassword = await this.passwordFactory.create(input.password);
 
     const producer = Producer.create({
       document: producerDocument,
       name: input.name,
+      role: input.role,
+      password: hashedPassword,
     });
 
     if (input.farm) {
@@ -82,6 +93,10 @@ export class ProducerApplicationService {
             crop,
           });
 
+          if (!Number.isInteger(harvestProps.year) || harvestProps.year <= 0) {
+            throw new InvalidHarvestParamException('Ano');
+          }
+
           await this.harvestRepository.save(harvest);
         }
 
@@ -104,11 +119,20 @@ export class ProducerApplicationService {
   }
 
   async delete(id: string): Promise<boolean> {
+    const producer = await this.findById(id);
+
+    if (!producer) {
+      throw new NotFoundException(`Produtor com id ${id} não encontrado`);
+    }
     return await this.producerRepository.remove(id);
   }
 
   async findAll(): Promise<Producer[]> {
     return await this.producerRepository.findAll();
+  }
+
+  async findByDocument(document: string): Promise<Producer | null> {
+    return await this.producerRepository.findByDocument(document);
   }
 
   async findById(id: string): Promise<Producer | null> {

@@ -1,11 +1,11 @@
 import { ProducerResponse } from '../../../web/rest/dto/response/producer.response';
 import {
-  CPF,
   DocumentValidatorFactory,
   Producer,
 } from '../../../../producer/domain/model';
 import { ProducerEntity } from '../entity/producer.entity';
 import { FarmMapper } from './farm.mapper';
+import { Password } from '../../../../producer/domain/model/password';
 
 export class ProducerMapper {
   static toEntity(domain: Producer): ProducerEntity {
@@ -13,6 +13,8 @@ export class ProducerMapper {
     entity.id = domain.getId();
     entity.document = domain.getDocument();
     entity.name = domain.getName();
+    entity.role = domain.getRole();
+    entity.password = domain.getPassword();
     entity.farms = domain.getFarms().map(FarmMapper.toEntity);
     return entity;
   }
@@ -25,8 +27,10 @@ export class ProducerMapper {
     return Producer.restore({
       id: entity.id,
       name: entity.name,
+      role: entity.role,
       document,
       farms,
+      password: new Password(entity.password),
     });
   }
 
@@ -35,6 +39,7 @@ export class ProducerMapper {
       id: domain.getId(),
       document: domain.getDocument(),
       name: domain.getName(),
+      role: domain.getRole(),
       farms: domain.getFarms().map((farm) => FarmMapper.toResponse(farm)),
     };
   }

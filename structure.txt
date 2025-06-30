@@ -1,0 +1,98 @@
+src/producer
+├── application
+│   ├── dto
+│   │   ├── create-crop.dto.ts
+│   │   ├── create-farm.dto.ts
+│   │   ├── create-harvest.dto.ts
+│   │   ├── create-producer.dto.ts
+│   │   └── producer-summary.ts
+│   ├── exception
+│   │   └── password-not-match.exception.ts
+│   ├── repository
+│   │   ├── crop.repository.ts
+│   │   ├── farm.repository.ts
+│   │   ├── harvest.repository.ts
+│   │   ├── index.ts
+│   │   └── producer.repository.ts
+│   └── service
+│       ├── __test__
+│       │   └── producer-application-service.spec.ts
+│       ├── index.ts
+│       ├── producer-application.service.ts
+│       └── producer-auth.service.ts
+├── domain
+│   ├── exception
+│   │   ├── index.ts
+│   │   ├── invalid-crop-param.exception.ts
+│   │   ├── invalid-document.exception.ts
+│   │   ├── invalid-farm-area.exception.ts
+│   │   ├── invalid-farm-param.exception.ts
+│   │   ├── invalid-harvest-param.exception.ts
+│   │   ├── invalid-password.exception.ts
+│   │   └── invalid-producer-param.exception.ts
+│   └── model
+│       ├── __tests__
+│       │   ├── cnpj.spec.ts
+│       │   ├── cpf.spec.ts
+│       │   ├── crop.spec.ts
+│       │   ├── document-validator.factory.spec.ts
+│       │   ├── farm.spec.ts
+│       │   ├── harvest.spec.ts
+│       │   ├── password.spec.ts
+│       │   └── producer.spec.ts
+│       ├── cnpj.ts
+│       ├── cpf.ts
+│       ├── crop.ts
+│       ├── document-validator.factory.ts
+│       ├── document-validator.interface.ts
+│       ├── encrypt-password.ts
+│       ├── encrypter.interface.ts
+│       ├── farm.ts
+│       ├── harvest.ts
+│       ├── index.ts
+│       ├── password.factory.ts
+│       ├── password.ts
+│       └── producer.ts
+├── infrastructure
+│   ├── persistence
+│   │   ├── entity
+│   │   │   ├── crop.entity.ts
+│   │   │   ├── farm.entity.ts
+│   │   │   ├── harvest.entity.ts
+│   │   │   ├── index.ts
+│   │   │   └── producer.entity.ts
+│   │   ├── mapper
+│   │   │   ├── crop.mapper.ts
+│   │   │   ├── farm.mapper.ts
+│   │   │   ├── harvest.mapper.ts
+│   │   │   └── producer.mapper.ts
+│   │   └── repository
+│   │       └── typeorm
+│   │           ├── crop-typeorm.repository.ts
+│   │           ├── farm-typeorm.repository.ts
+│   │           ├── harvest-typeorm.repository.ts
+│   │           ├── index.ts
+│   │           └── producer-typeorm.repository.ts
+│   └── validators
+│       ├── __tests__
+│       │   ├── cnpj.validator.spec.ts
+│       │   └── cpf.validator.spec.ts
+│       ├── cnpj.validator.ts
+│       └── cpf.validator.ts
+├── producer.module.ts
+└── web
+    └── rest
+        ├── controller
+        │   └── producer.controller.ts
+        └── dto
+            ├── request
+            │   ├── create-producer.request.ts
+            │   ├── index.ts
+            │   └── login-producer.request.ts
+            └── response
+                ├── api-producer.response.ts
+                ├── api.response.ts
+                ├── dashboard.response.ts
+                └── producer.response.ts
+
+25 directories, 71 files

@@ -8,6 +8,10 @@ export class CNPJ {
     value: string,
     private readonly validator: DocumentValidator,
   ) {
+    if (!value) {
+      throw new InvalidDocumentException(`CNPJ: ${value}`);
+    }
+
     const normalized = value.replace(/\D/g, '');
 
     if (!validator.validate(normalized)) {

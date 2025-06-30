@@ -2,6 +2,8 @@ import { Farm } from '../farm';
 import {
   InvalidFarmParamException,
   InvalidFarmAreaException,
+  InvalidAgriculturalAreaException,
+  InvalidVegetationAreaException,
 } from '../../exception';
 import { Harvest } from '../harvest';
 import { Crop } from '../crop';
@@ -89,5 +91,61 @@ describe('Farm', () => {
     expect(() => Farm.create({ ...validProps, totalArea: 80 })).toThrow(
       InvalidFarmAreaException,
     );
+  });
+
+  describe('Area validations', () => {
+    it('should throw if agriculturalArea is negative', () => {
+      expect(() =>
+        Farm.create({ ...validProps, agriculturalArea: -1 }),
+      ).toThrow(InvalidAgriculturalAreaException);
+    });
+
+    it('should throw if agriculturalArea is zero', () => {
+      expect(() => Farm.create({ ...validProps, agriculturalArea: 0 })).toThrow(
+        InvalidAgriculturalAreaException,
+      );
+    });
+
+    it('should throw if agriculturalArea is greater than totalArea', () => {
+      expect(() =>
+        Farm.create({ ...validProps, agriculturalArea: 110 }),
+      ).toThrow(InvalidFarmAreaException);
+    });
+
+    it('should throw if vegetationArea is negative', () => {
+      expect(() => Farm.create({ ...validProps, vegetationArea: -1 })).toThrow(
+        InvalidVegetationAreaException,
+      );
+    });
+
+    it('should throw if vegetationArea is zero', () => {
+      expect(() => Farm.create({ ...validProps, vegetationArea: 0 })).toThrow(
+        InvalidVegetationAreaException,
+      );
+    });
+
+    it('should throw if vegetationArea is greater than totalArea', () => {
+      expect(() => Farm.create({ ...validProps, vegetationArea: 110 })).toThrow(
+        InvalidFarmAreaException,
+      );
+    });
+  });
+
+  describe('String field validations for name, city, and state', () => {
+    const invalidStrings = ['   ', '\t', '\n', ' \t\n '];
+
+    invalidStrings.forEach((invalidValue) => {
+      it('should throw if name is only whitespace or invisible chars', () => {
+        expect(() =>
+          Farm.create({ ...validProps, name: invalidValue }),
+        ).toThrow(InvalidFarmParamException);
+      });
+
+      it('should throw if city is only whitespace or invisible chars', () => {
+        expect(() =>
+          Farm.create({ ...validProps, city: invalidValue }),
+        ).toThrow(InvalidFarmParamException);
+      });
+    });
   });
 });

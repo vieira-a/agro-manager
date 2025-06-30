@@ -1,5 +1,26 @@
 # Projeto Agro Manager
 
+## Índice
+
+- [Documentação](#documentação)
+  - [Especificação de requisitos](#especificação-de-requisitos)
+  - [Board do Projeto (GitHub Project)](#board-do-projeto-github-project)
+  - [Arquitetura](#arquitetura)
+    - [API Design](#api-design)
+    - [C4 Model](#c4-model)
+    - [Bounded Contexts](#bounded-contexts)
+    - [Database ER Diagram](#database-er-diagram)
+  - [ADR - Architecture Decision Records](#adr---architecture-decision-records)
+    - [ADR 001 Architecture Overview](#adr-001-architecture-overview)
+    - [ADR 002 Persistence Architecture](#adr-002-persistence-architecture)
+    - [ADR 003 Definição do agregado Produtor (Substituída pela ADR-005)](#adr-003-definição-do-agregado-produtor-substituída-pela-adr-005)
+    - [ADR 004 Validação de CPF e CNPJ](#adr-004-validação-de-cpf-e-cnpj)
+    - [ADR 005 Revisão da definição do agregado Produtor](#adr-005-revisão-da-definição-do-agregado-produtor)
+    - [ADR 006 Estratégia de mapeamento entre entidades de domínio e entidades de persistência](#adr-006-estratégia-de-mapeamento-entre-entidades-de-domínio-e-entidades-de-persistência)
+  - [Como executar o projeto Agro Manager](#como-executar-o-projeto-agro-manager)
+
+---
+
 ## Documentação
 
 ### Especificação de requisitos
@@ -50,7 +71,7 @@ Mostra a revisão da definição do `Producer` como raiz de um agragado e seus r
 
 Mostra a abordagem adotada para o mapeamento manual entre entidades de domínio e entidades de persistência, garantindo desacoplamento do domínio da infraestrutura, melhor testabilidade e controle sobre a transformação dos dados.
 
-### Como executar o projeto Agro Manager 
+### Como executar o projeto Agro Manager
 
 Esta seção demonstrará como executar o projeto, bem como os testes unitários e de integração
 

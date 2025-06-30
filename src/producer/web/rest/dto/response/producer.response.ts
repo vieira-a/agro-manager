@@ -49,6 +49,9 @@ export class ProducerResponse {
   @ApiProperty({ example: 'João Silva' })
   name: string;
 
+  @ApiProperty({ example: 'producer_admin | producer_role' })
+  role: string;
+
   @ApiProperty({ type: [FarmResponse] })
   farms: FarmResponse[];
 }

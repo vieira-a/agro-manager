@@ -1,4 +1,3 @@
-import { UnprocessableEntityException } from '@nestjs/common';
 import { CNPJ } from './cnpj';
 import { CNPJValidator } from '../../infrastructure/validators/cnpj.validator';
 import { CPF } from './cpf';
@@ -10,6 +9,10 @@ export class DocumentValidatorFactory {
   private static cnpjValidator = new CNPJValidator();
 
   static create(document: string): CPF | CNPJ {
+    if (!document) {
+      throw new InvalidDocumentException(document);
+    }
+
     const normalized = document.replace(/\D/g, '');
 
     if (normalized.length === 11) {

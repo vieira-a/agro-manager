@@ -1,38 +1,62 @@
-import { Module } from '@nestjs/common';
-import { ProducerModule } from './producer/producer.module';
-import { TypeOrmModule } from '@nestjs/typeorm';
+import { Module, DynamicModule } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
+import { JwtModule } from '@nestjs/jwt';
 import { LoggerModule } from 'nestjs-pino';
-import { typeOrmConfig } from '../database/typeorm.config';
+import { TypeOrmModule } from '@nestjs/typeorm';
+import { IdentityModule } from './identity/identity.module';
+import { ProducerModule } from './producer/producer.module';
+import { typeOrmConfig } from './database/typeorm.config';
+import { DataSourceOptions } from 'typeorm';
+import { APP_FILTER } from '@nestjs/core';
+import { GlobalExceptionFilter } from './shared/exception/global-exception.filter';
+import { HealthModule } from './shared/health/health.module';
+import { SecurityModule } from './shared/security/security.module';
 
-@Module({
-  imports: [
-    ConfigModule.forRoot({
-      isGlobal: true,
-      envFilePath: process.env.NODE_ENV
-        ? `.env.${process.env.NODE_ENV}.local`
-        : '.env.development.local',
-      ignoreEnvFile: process.env.NODE_ENV === 'production',
-    }),
-    LoggerModule.forRoot({
-      pinoHttp: {
-        transport:
-          process.env.NODE_ENV !== 'production'
-            ? {
-                target: 'pino-pretty',
-                options: {
-                  colorize: true,
-                  translateTime: 'SYS:standard',
-                  ignore: 'pid,hostname',
-                },
-              }
-            : undefined,
-        level: process.env.NODE_ENV === 'production' ? 'info' : 'debug',
-        autoLogging: true,
-      },
-    }),
-    TypeOrmModule.forRoot(typeOrmConfig),
-    ProducerModule,
-  ],
-})
-export class AppModule {}
+@Module({})
+export class AppModule {
+  static forRoot(overrideDbConfig?: DataSourceOptions): DynamicModule {
+    return {
+      module: AppModule,
+      imports: [
+        SecurityModule,
+        ConfigModule.forRoot({
+          isGlobal: true,
+          envFilePath: [
+            `.env.${process.env.NODE_ENV}.local`,
+            `.env.${process.env.NODE_ENV}`,
+            '.env',
+          ],
+        }),
+        JwtModule.register({
+          secret: process.env.JWT_TOKEN_SECRET,
+          signOptions: { expiresIn: '15m' },
+        }),
+        LoggerModule.forRoot({
+          pinoHttp: {
+            transport:
+              process.env.NODE_ENV !== 'production'
+                ? {
+                    target: 'pino-pretty',
+                    options: {
+                      colorize: true,
+                      translateTime: 'SYS:standard',
+                      ignore: 'pid,hostname',
+                    },
+                  }
+                : undefined,
+          },
+        }),
+        HealthModule,
+        TypeOrmModule.forRoot(overrideDbConfig || typeOrmConfig),
+        IdentityModule,
+        ProducerModule,
+      ],
+      providers: [
+        {
+          provide: APP_FILTER,
+          useClass: GlobalExceptionFilter,
+        },
+      ],
+    };
+  }
+}

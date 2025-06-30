@@ -21,30 +21,26 @@ Retorna todos os produtores cadastrados.
 ```json
 [
   {
-    "id": "1ec941df-7a28-4c91-b17b-28071a4a0d7f",
-    "name": "João Silva",
-    "document": "12345678900",
-    "farms": [
-      {
-        "id": "c0ae687c-f382-491d-a650-d1623a80ccc3",
-        "name": "Fazenda São João",
-        "state": "GO",
-        "city": "Goiânia",
-        "totalArea": 100.5,
-        "agriculturalArea": 60.0,
-        "vegetationArea": 40.5,
-        "harvests": [
-          {
-            "id": "3f8c9c7f-8bcd-4e4c-a276-f11f3d9c07d1",
-            "description": "Safra de Verão",
-            "year": 2023,
-            "crop": {
-              "name": "Milho"
-            }
-          }
-        ]
+    "document": "71663081093",
+    "name": "João da Silva",
+    "role": "user",
+    "password": "P@ssword10",
+    "passwordConfirmation": "P@ssword10",
+    "farm": {
+      "name": "Fazenda Santos",
+      "city": "Santos",
+      "state": "SP",
+      "totalArea": 150.5,
+      "agriculturalArea": 75.0,
+      "vegetationArea": 52.5,
+      "harvest": {
+        "description": "Safra Inverno",
+        "year": 2024,
+        "crop": {
+          "name": "Arroz"
+        }
       }
-    ]
+    }
   }
 ]
 ```
@@ -52,6 +48,43 @@ Retorna todos os produtores cadastrados.
 #### GET /producers/:id
 
 Retorna os dados completos de um produtor específico.
+
+**Response**
+
+```json
+{
+  "statusCode": 200,
+  "timestamp": "2025-06-30T20:08:30.526Z",
+  "message": "Dados carregados com sucesso",
+  "data": [
+    {
+      "id": "e1fbede1-1105-49b2-9833-4ef31120ccce",
+      "document": "71663081093",
+      "name": "Neymar Junior",
+      "role": "user",
+      "farms": [
+        {
+          "name": "Fazenda Santos",
+          "city": "Santos",
+          "state": "SP",
+          "totalArea": 150.5,
+          "agriculturalArea": 75,
+          "vegetationArea": 52.5,
+          "harvests": [
+            {
+              "description": "Safra Inverno",
+              "year": 2024,
+              "crop": {
+                "name": "Arroz"
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
+```
 
 #### POST /producers
 
@@ -63,6 +96,7 @@ Cadastra um novo produtor com fazendas e culturas.
 {
   "name": "João Silva",
   "document": "12345678900",
+  !
   "farms": [
     {
       "name": "Fazenda São João",
@@ -101,7 +135,7 @@ Atualiza dados gerais do produtor (apenas nome para esse contexto). Não altera 
 
 ```json
 {
-  "name": "João da Silva Neto",
+  "name": "João da Silva Neto"
 }
 ```
 
@@ -167,12 +201,12 @@ Retorna os dados agregados do sistema.
     "vegetation": 600.5
   }
 }
-
 ```
+
 ---
 
 ## Change log
 
 | Responsável     | Criado em  | Versão | Atualizado em |
 | --------------- | ---------- | ------ | ------------- |
-| Anderson Vieira | 10-06-2025 | 003    | 13-06-2025   |
+| Anderson Vieira | 10-06-2025 | 003    | 30-06-2025    |

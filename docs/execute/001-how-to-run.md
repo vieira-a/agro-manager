@@ -23,17 +23,21 @@ git clone git@github.com:vieira-a/agro-manager.git
 
 ### Configuração das variáveis de ambiente
 
- Renomeie o arquivo `env-example` que está na raiz do projeto, para `.env.development.local`, e preencha as seguintes variáveis de ambiente:
+Renomeie o arquivo `env-example` que está na raiz do projeto, para `.env.development.local`, e preencha as seguintes variáveis de ambiente:
 
 ```json
+API_VERSION=v1
 NODE_ENV=development
 POSTGRES_DB_HOST=localhost
 POSTGRES_DB_PORT=5432
+POSTGRES_DB_NAME=nome_banco
 POSTGRES_USER=seu_usuario
 POSTGRES_PASSWORD=sua_senha
 POSTGRES_DB_NAME=nome_do_banco
 PGADMIN_EMAIL=email_valido
 PGADMIN_PASSWORD=senha
+JWT_TOKEN_SECRET=jwtTokenSecretExample
+JWT_REFRESH_TOKEN_SECRET=jwtRefreshTokenSecretExample
 ```
 
 Ajuste os valores conforme seu ambiente
@@ -103,6 +107,12 @@ Esse comando usa o ts-node para rodar a aplicação com recarregamento automáti
 
 ```bash
 npm run test
+```
+
+### Executando testes e2e
+
+```bash
+npm run test:e2e
 ```
 
 Este comando executará uma suite de testes que abrange as principais camadas e funcionalidades, contendo:
@@ -181,18 +191,22 @@ Após iniciar a aplicação, a documentação estará disponível localmente em:
 
 ---
 
+### URL para checar status da API
+
+Após iniciar a aplicação, um endpoint foi disponibilizado para retornar o status da API localmente em: [http://localhost:3000/api/v1/health](http://localhost:3000/api/v1/health)
+
 ### Arquivo de rotas (Postman)
 
 - [Producers.postman_collection.json](https://github.com/user-attachments/files/20734898/Producers.postman_collection.json)
 
 ### Estrutura importante para configurações
 
-- As entidades estão localizadas em: src/**/*.entity.ts
-- As migrações estão em: database/migrations/*.ts
+- As entidades estão localizadas em: src/\*_/_.entity.ts
+- As migrações estão em: database/migrations/\*.ts
 - A configuração do TypeORM está em: src/database/typeorm.config.ts
 - A instância do DataSource para CLI está em: src/database/data-source.ts
 
-#### Gerando novas migrações 
+#### Gerando novas migrações
 
 Utilize a sintaxe a seguir:
 
@@ -205,4 +219,4 @@ Utilize a sintaxe a seguir:
 - Nunca rode a aplicação em produção com synchronize: true para evitar perda de dados.
 - Use os comandos do TypeORM CLI sempre apontando para o arquivo que exporta a instância do DataSource (data-source.ts).
 
-Se precisar de ajuda para configurar ou rodar algum comando, só avisar! 
+Se precisar de ajuda para configurar ou rodar algum comando, só avisar!

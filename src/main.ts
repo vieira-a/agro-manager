@@ -1,13 +1,16 @@
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
-import { GlobalExceptionFilter } from './shared/exception/global-exception.filter';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import { Logger } from 'nestjs-pino';
+import * as cookieParser from 'cookie-parser';
+import { ValidationPipe } from '@nestjs/common';
 
 async function bootstrap() {
-  const app = await NestFactory.create(AppModule, {
+  const app = await NestFactory.create(AppModule.forRoot(), {
     bufferLogs: true,
   });
+
+  app.setGlobalPrefix('api/v1');
 
   const config = new DocumentBuilder()
     .setTitle('Agro Manager')
@@ -23,12 +26,21 @@ async function bootstrap() {
     },
   });
 
-  const logger = app.get(Logger);
+  app.useGlobalPipes(
+    new ValidationPipe({
+      whitelist: true,
+      forbidNonWhitelisted: true,
+      transform: true,
+      transformOptions: {
+        enableImplicitConversion: true,
+      },
+      errorHttpStatusCode: 400,
+    }),
+  );
 
-  app.useGlobalFilters(new GlobalExceptionFilter(logger));
-  app.setGlobalPrefix('api/v1');
+  app.useLogger(app.get(Logger));
+  app.use(cookieParser());
 
-  app.useLogger(logger);
   await app.listen(process.env.PORT ?? 3000);
 }
 bootstrap();
