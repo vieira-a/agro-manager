@@ -9,7 +9,7 @@ import { HelmetMiddleware } from './helmet.middleware';
       throttlers: [
         {
           ttl: 60000,
-          limit: 10,
+          limit: 60,
         },
       ],
     }),
