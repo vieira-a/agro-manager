@@ -4,9 +4,10 @@ import * as request from 'supertest';
 import { AppModule } from '../../../../../app.module';
 import { startPostgresContainer } from '../../../../../../test/utils/postgres-container';
 import * as cookieParser from 'cookie-parser';
-import { CreateProducerRequest } from 'src/producer/web/rest/dto/request';
+import { CreateProducerRequest } from '../../../../../producer/web/rest/dto/request';
 import { cleanDatabase } from '../../../../../../test/utils/clean-database';
 import { DataSource } from 'typeorm';
+import { ProducerRole } from '../../../../../producer/domain/enum/producer-role.enum';
 
 describe('AuthenticationController (e2e)', () => {
   let app: INestApplication;
@@ -18,6 +19,7 @@ describe('AuthenticationController (e2e)', () => {
   const validPayload: CreateProducerRequest = {
     document: '71663081093',
     name: 'Darth Vader',
+    role: ProducerRole.PRODUCER_USER,
     password: 'P@ssword10',
     passwordConfirmation: 'P@ssword10',
     farm: {

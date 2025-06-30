@@ -15,6 +15,7 @@ describe('IdentityApplicationService', () => {
   const mockProducer = {
     getId: () => 'producer-id',
     getDocument: () => '09779679057',
+    getRole: () => 'user',
     getPassword: () => 'hashed-password',
   };
 
