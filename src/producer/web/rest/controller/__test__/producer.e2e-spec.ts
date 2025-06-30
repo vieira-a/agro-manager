@@ -55,7 +55,6 @@ describe('ProducerController (e2e)', () => {
     dataSource = app.get(DataSource);
     await dataSource.runMigrations();
 
-    // Criar o produtor só uma vez
     const res = await request(app.getHttpServer())
       .post('/api/v1/producers')
       .send(validPayload)
@@ -65,7 +64,6 @@ describe('ProducerController (e2e)', () => {
   });
 
   afterAll(async () => {
-    // Limpeza final do banco após todos os testes
     await cleanDatabase(dataSource);
     await app.close();
     await container.stop();
