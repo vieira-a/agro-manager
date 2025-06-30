@@ -54,14 +54,12 @@ describe('AuthenticationController (e2e)', () => {
     dataSource = app.get(DataSource);
     await dataSource.runMigrations();
 
-    // Criar produtor só uma vez para testes
     const res = await request(app.getHttpServer())
       .post('/api/v1/producers')
       .send(validPayload)
       .expect(201);
     producerId = res.body.data.id;
 
-    // Obter refreshToken para testes de refresh token
     const loginRes = await request(app.getHttpServer())
       .post('/api/v1/auth/login/producers')
       .send({
@@ -113,7 +111,7 @@ describe('AuthenticationController (e2e)', () => {
         .send(payload)
         .expect(401);
 
-      expect(res.body.message).toBe('Senha incorreta.');
+      expect(res.body.exception.message).toBe('Senha incorreta.');
     });
   });
 
@@ -133,7 +131,7 @@ describe('AuthenticationController (e2e)', () => {
         .post('/api/v1/auth/refresh')
         .expect(401);
 
-      expect(res.body.message).toBe('Refresh token não informado.');
+      expect(res.body.exception.message).toBe('Refresh token não informado.');
     });
 
     it('should return 403 if refresh_token cookie is invalid', async () => {
@@ -142,7 +140,7 @@ describe('AuthenticationController (e2e)', () => {
         .set('Cookie', ['refresh_token=invalidtoken'])
         .expect(403);
 
-      expect(res.body.message).toBe('Token inválido ou expirado.');
+      expect(res.body.exception.message).toBe('Token inválido ou expirado.');
     });
   });
 });
