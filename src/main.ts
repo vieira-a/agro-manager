@@ -1,6 +1,5 @@
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
-import { GlobalExceptionFilter } from './shared/exception/global-exception.filter';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import { Logger } from 'nestjs-pino';
 import * as cookieParser from 'cookie-parser';
@@ -27,7 +26,6 @@ async function bootstrap() {
 
   const logger = app.get(Logger);
 
-  app.useGlobalFilters(new GlobalExceptionFilter(logger));
   app.setGlobalPrefix('api/v1');
 
   app.useGlobalPipes(
