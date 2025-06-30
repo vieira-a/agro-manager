@@ -9,6 +9,7 @@ import { typeOrmConfig } from '../database/typeorm.config';
 import { DataSourceOptions } from 'typeorm';
 import { APP_FILTER } from '@nestjs/core';
 import { GlobalExceptionFilter } from './shared/exception/global-exception.filter';
+import { HealthModule } from './shared/health/health.module';
 
 @Module({})
 export class AppModule {
@@ -43,6 +44,7 @@ export class AppModule {
                 : undefined,
           },
         }),
+        HealthModule,
         TypeOrmModule.forRoot(overrideDbConfig || typeOrmConfig),
         IdentityModule,
         ProducerModule,
