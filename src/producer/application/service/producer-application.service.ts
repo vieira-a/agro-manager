@@ -43,6 +43,7 @@ export class ProducerApplicationService {
     const producer = Producer.create({
       document: producerDocument,
       name: input.name,
+      role: input.role,
       password: hashedPassword,
     });
 

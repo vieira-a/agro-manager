@@ -84,6 +84,10 @@ export class Producer {
     return this.name;
   }
 
+  getRole(): ProducerRole {
+    return this.role;
+  }
+
   getPassword(): string {
     return this.password.getHashedValue();
   }
