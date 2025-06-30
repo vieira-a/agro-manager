@@ -5,7 +5,7 @@ import { LoggerModule } from 'nestjs-pino';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { IdentityModule } from './identity/identity.module';
 import { ProducerModule } from './producer/producer.module';
-import { typeOrmConfig } from '../database/typeorm.config';
+import { typeOrmConfig } from './database/typeorm.config';
 import { DataSourceOptions } from 'typeorm';
 import { APP_FILTER } from '@nestjs/core';
 import { GlobalExceptionFilter } from './shared/exception/global-exception.filter';

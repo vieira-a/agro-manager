@@ -1,0 +1,6 @@
+src/producer/web/rest/controller
+├── __test__
+│   └── producer.e2e-spec.ts
+└── producer.controller.ts
+
+2 directories, 2 files

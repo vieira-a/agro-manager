@@ -58,6 +58,8 @@ export class GlobalExceptionFilter implements ExceptionFilter {
       };
     }
 
+    console.log('ERRO', exception);
+
     this.logger.error(
       {
         exception,
