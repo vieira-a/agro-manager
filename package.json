@@ -6,10 +6,11 @@
   "private": true,
   "license": "UNLICENSED",
   "scripts": {
-    "build": "nest build && npm run copy:migrations",
+    "build": "tsc -p tsconfig.build.json && npm run copy:database",
+    "copy:database": "cp -r database dist/",
     "copy:migrations": "cp -r database/migrations dist/database/",
     "format": "prettier --write \"src/**/*.ts\" \"test/**/*.ts\"",
-    "start": "nest start",
+    "start": "NODE_ENV=production node dist/main",
     "start:dev:ts": "NODE_ENV=development ts-node -r tsconfig-paths/register src/main.ts nest start --watch",
     "start:dev": "NODE_ENV=development nest start --watch",
     "start:debug": "nest start --debug --watch",
