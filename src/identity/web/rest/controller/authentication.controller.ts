@@ -44,6 +44,7 @@ export class AuthenticationController {
       });
   }
 
+  @Throttle({ default: { limit: 10, ttl: 60000 } })
   @Post('refresh')
   @HttpCode(200)
   async refreshToken(@Req() req: Request, @Res() res: Response) {
