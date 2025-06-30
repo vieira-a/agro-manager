@@ -1,4 +1,4 @@
-import { ForbiddenException, Injectable } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { ProducerApplicationService } from '../../../producer/application/service';
 import { PasswordFactory } from '../../../producer/domain/model/password.factory';
@@ -7,6 +7,14 @@ import {
   InvalidCredentialsException,
   InvalidTokenException,
 } from '../exception';
+import { ProducerRole } from '../../../producer/domain/enum/producer-role.enum';
+
+type TokenPayload = {
+  sub: string;
+  document: string;
+  role: string | ProducerRole;
+  type: 'access' | 'refresh';
+};
 
 @Injectable()
 export class IdentityApplicationService {
@@ -39,15 +47,17 @@ export class IdentityApplicationService {
     if (!isPasswordValid)
       throw new InvalidCredentialsException('Senha incorreta.');
 
-    const accessTokenPayload = {
+    const accessTokenPayload: TokenPayload = {
       sub: producer.getId(),
       document: producer.getDocument(),
+      role: producer.getRole(),
       type: 'access',
     };
 
-    const refreshTokenPayload = {
+    const refreshTokenPayload: TokenPayload = {
       sub: producer.getId(),
       document: producer.getDocument(),
+      role: producer.getRole(),
       type: 'refresh',
     };
 
@@ -74,15 +84,17 @@ export class IdentityApplicationService {
         throw new InvalidTokenException('Token inválido para refresh');
       }
 
-      const newAccessTokenPayload = {
+      const newAccessTokenPayload: TokenPayload = {
         sub: payload.sub,
         document: payload.document,
+        role: payload.role,
         type: 'access',
       };
 
-      const newRefreshTokenPayload = {
+      const newRefreshTokenPayload: TokenPayload = {
         sub: payload.sub,
         document: payload.document,
+        role: payload.role,
         type: 'refresh',
       };
 

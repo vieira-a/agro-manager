@@ -10,6 +10,7 @@ import {
 } from 'class-validator';
 import { Type } from 'class-transformer';
 import { ApiProperty } from '@nestjs/swagger';
+import { ProducerRole } from '../../../../../producer/domain/enum/producer-role.enum';
 
 export class CreateCropRequest {
   @ApiProperty({ example: 'Milho' })
@@ -113,6 +114,11 @@ export class CreateProducerRequest {
   @IsNotEmpty()
   @IsString()
   name: string;
+
+  @ApiProperty({ example: 'admin | user' })
+  @IsNotEmpty()
+  @IsString()
+  role: ProducerRole;
 
   @ApiProperty({ type: CreateFarmRequest })
   @IsOptional()

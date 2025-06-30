@@ -16,6 +16,7 @@ import { PasswordFactory } from '../../../../producer/domain/model/password.fact
 import { Password } from '../../../../producer/domain/model/password';
 import { PasswordNotMatchException } from '../../exception/password-not-match.exception';
 import { InvalidPasswordException } from '../../../../producer/domain/exception/invalid-password.exception';
+import { ProducerRole } from '../../../../producer/domain/enum/producer-role.enum';
 
 describe('ProducerApplicationService', () => {
   let service: ProducerApplicationService;
@@ -50,6 +51,7 @@ describe('ProducerApplicationService', () => {
 
   const validProducer: CreateProducerDto = {
     name: 'João da Silva',
+    role: ProducerRole.PRODUCER_USER,
     document: '09779679057',
     password: 'P@ssword10',
     passwordConfirmation: 'P@ssword10',
@@ -90,6 +92,7 @@ describe('ProducerApplicationService', () => {
   it('should create a producer with only name and document', async () => {
     const input: CreateProducerDto = {
       name: 'João da Silva',
+      role: ProducerRole.PRODUCER_USER,
       document: '09779679057',
       password: 'P@ssword10',
       passwordConfirmation: 'P@ssword10',
